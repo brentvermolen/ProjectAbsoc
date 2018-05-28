@@ -20,6 +20,7 @@ namespace BL.Domain
         public string Email { get; set; }
         public string Adres { get; set; }
         public string Postcode { get; set; }
+        public virtual Gemeente Gemeente { get; set; }
 
         public bool EmailConfirmed { get; set; }
         public string PasswordHash { get; set; }

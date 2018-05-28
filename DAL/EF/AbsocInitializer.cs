@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BL.Domain;
+using Newtonsoft.Json;
 
 namespace DAL
 {
@@ -12,14 +14,23 @@ namespace DAL
     {
         protected override void Seed(AbsocContext context)
         {
-            Boek boek = new Boek()
-            {
-                Naam = "Dit is een test voor te zien of de DB werkt"
-            };
-
-            context.Boeken.Add(boek);
+            ReadGemeenten(context);
 
             context.SaveChanges();
+        }
+
+        private void ReadGemeenten(AbsocContext context)
+        {
+            using (StreamReader sr = new StreamReader(System.Web.HttpContext.Current.Server.MapPath("~/Content/gemeente.json")))
+            {
+                string json = sr.ReadToEnd();
+
+                List<Gemeente> gemeentes = JsonConvert.DeserializeObject<List<Gemeente>>(json);
+
+                gemeentes = gemeentes.Where(g => g.Deelgemeente.Equals("Neen")).ToList();
+
+                context.Gemeentes.AddRange(gemeentes);
+            }
         }
     }
 }

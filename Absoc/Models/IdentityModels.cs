@@ -1,5 +1,8 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -7,7 +10,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 namespace Absoc.Models
 {
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
-    public class MyUser : IdentityUser<int, MyLogin, MyUserRole, MyClaim>
+    public class MyUser : IdentityUser<int, MyLogin, MyUserRole, MyClaim>, IUser
     {
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<MyUser, int> manager)
         {
@@ -22,6 +25,8 @@ namespace Absoc.Models
         public string Geboortedatum { get; set; }
         public string Adres { get; set; }
         public string Postcode { get; set; }
+
+        string IUser<string>.Id => this.Id.ToString();
     }
 
     public class MyUserRole : IdentityUserRole<int> { }
@@ -65,6 +70,34 @@ namespace Absoc.Models
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
+        }
+    }
+
+    public class CustomUserValidator<TUser> : IIdentityValidator<TUser> where TUser : class, Microsoft.AspNet.Identity.IUser
+    {
+        private static readonly Regex EmailRegex = new Regex(@"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly UserManager<MyUser, int> _manager;
+
+        public CustomUserValidator() { }
+        public CustomUserValidator(UserManager<MyUser, int> manager) { _manager = manager; }
+
+        public async Task<IdentityResult> ValidateAsync(TUser item)
+        {
+            var errors = new List<string>();
+
+            if (!EmailRegex.IsMatch(item.UserName))
+                errors.Add("Gelieve een geldig e-mail adres op te geven.");
+
+            if (_manager != null)
+            {
+                var otherAccount = await _manager.FindByNameAsync(item.UserName);
+                if (otherAccount != null && otherAccount.Id != int.Parse(item.Id))
+                    errors.Add("Dit e-mail adres is al in gebruik.");
+            }
+
+            return errors.Any()
+                ? IdentityResult.Failed(errors.ToArray())
+                : IdentityResult.Success;
         }
     }
 }

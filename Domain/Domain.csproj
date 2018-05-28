@@ -7,8 +7,8 @@
     <ProjectGuid>{81F01C7C-82E1-49A2-AF18-3258E1F5DC79}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Domain</RootNamespace>
-    <AssemblyName>Domain</AssemblyName>
+    <RootNamespace>BL.Domain</RootNamespace>
+    <AssemblyName>BL.Domain</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Boek.cs" />
     <Compile Include="Gebruiker.cs" />
+    <Compile Include="Gemeente.cs" />
     <Compile Include="Identity\GebruikerLogin.cs" />
     <Compile Include="Identity\GebruikerRoles.cs" />
     <Compile Include="Identity\GebruikersClaim.cs" />

@@ -21,5 +21,10 @@ namespace DAL
             ctx.Entry(gebruiker).State = System.Data.Entity.EntityState.Modified;
             ctx.SaveChanges();
         }
+
+        public bool ValidPostcode(string postcode)
+        {
+            return ctx.Gemeentes.Find(postcode) != null;
+        }
     }
 }

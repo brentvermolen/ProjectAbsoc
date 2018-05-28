@@ -36,9 +36,9 @@ namespace Absoc.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -207,7 +207,7 @@ namespace Absoc.Controllers
             ModelState.AddModelError("", "Failed to verify phone");
             return View(model);
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> UpdateProfiel(IndexViewModel model)
@@ -219,15 +219,23 @@ namespace Absoc.Controllers
 
             if (ModelState.IsValid)
             {
-                currGebruiker.Achternaam = model.Gebruiker.Achternaam;
-                currGebruiker.Adres = model.Gebruiker.Adres;
-                currGebruiker.Geboortedatum = model.Gebruiker.Geboortedatum;
-                currGebruiker.Postcode = model.Gebruiker.Postcode;
-                currGebruiker.Voornaam = model.Gebruiker.Voornaam;
 
-                GebruikerMng.ChangeGebruiker(currGebruiker);
+                if (GebruikerMng.ValidPostcode(model.Gebruiker.Postcode))
+                {
+                    currGebruiker.Achternaam = model.Gebruiker.Achternaam;
+                    currGebruiker.Adres = model.Gebruiker.Adres;
+                    currGebruiker.Geboortedatum = model.Gebruiker.Geboortedatum;
+                    currGebruiker.Postcode = model.Gebruiker.Postcode;
+                    currGebruiker.Voornaam = model.Gebruiker.Voornaam;
+                    
+                    GebruikerMng.ChangeGebruiker(currGebruiker);
 
-                return View("Index", model);
+                    return View("Index", model);
+                }
+                else
+                {
+                    ModelState.AddModelError("postcode", "De opgegeven postcode is niet geldig");
+                }
             }
 
             return View("Index", model);
@@ -372,7 +380,7 @@ namespace Absoc.Controllers
             base.Dispose(disposing);
         }
 
-#region Helpers
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -423,6 +431,6 @@ namespace Absoc.Controllers
             Error
         }
 
-#endregion
+        #endregion
     }
 }

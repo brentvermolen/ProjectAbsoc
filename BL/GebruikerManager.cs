@@ -21,5 +21,10 @@ namespace BL
         {
             repo.UpdateGebruiker(gebruiker);
         }
+
+        public bool ValidPostcode(string postcode)
+        {
+            return repo.ValidPostcode(postcode);
+        }
     }
 }

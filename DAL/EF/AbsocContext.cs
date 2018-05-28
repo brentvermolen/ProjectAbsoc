@@ -42,9 +42,15 @@ namespace DAL
                     m.MapLeftKey("UserId");
                     m.MapRightKey("RoleId");
                 });
+
+            modelBuilder.Entity<Gebruiker>()
+                .HasRequired(g => g.Gemeente)
+                .WithMany(p => p.Gebruikers)
+                .HasForeignKey(g => g.Postcode);
         }
 
         public DbSet<Gebruiker> Gebruikers { get; set; }
         public DbSet<Boek> Boeken { get; set; }
+        public DbSet<Gemeente> Gemeentes { get; set; }
     }
 }
