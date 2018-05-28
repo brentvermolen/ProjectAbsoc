@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Absoc.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Absoc.Controllers
 {
@@ -16,16 +17,22 @@ namespace Absoc.Controllers
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
-        private ApplicationUserManager _userManager;
+        private UserManager<MyUser, int> _userManager;
 
         public AccountController()
+            : this(new UserManager<MyUser, int>(new UserStore<MyUser, MyRole, int, MyLogin, MyUserRole, MyClaim>(new ApplicationDbContext())))
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(UserManager<MyUser, int> userManager, ApplicationSignInManager signInManager )
         {
             UserManager = userManager;
             SignInManager = signInManager;
+        }
+
+        public AccountController(UserManager<MyUser, int> userManager)
+        {
+            UserManager = userManager;
         }
 
         public ApplicationSignInManager SignInManager
@@ -40,7 +47,7 @@ namespace Absoc.Controllers
             }
         }
 
-        public ApplicationUserManager UserManager
+        public UserManager<MyUser, int> UserManager
         {
             get
             {
@@ -151,7 +158,7 @@ namespace Absoc.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new MyUser { UserName = model.Email, Email = model.Email, Adres = model.Adres, Achternaam = model.Achternaam, Voornaam = model.Voornaam, Geboortedatum = model.Geboortedatum, Postcode = model.Postcode };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -181,7 +188,7 @@ namespace Absoc.Controllers
             {
                 return View("Error");
             }
-            var result = await UserManager.ConfirmEmailAsync(userId, code);
+            var result = await UserManager.ConfirmEmailAsync(int.Parse(userId), code);
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
@@ -288,7 +295,7 @@ namespace Absoc.Controllers
         public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe)
         {
             var userId = await SignInManager.GetVerifiedUserIdAsync();
-            if (userId == null)
+            if (userId == 0)
             {
                 return View("Error");
             }
@@ -367,7 +374,7 @@ namespace Absoc.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new MyUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

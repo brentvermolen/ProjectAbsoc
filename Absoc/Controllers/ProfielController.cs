@@ -7,20 +7,24 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Absoc.Models;
+using BL;
+using BL.Domain;
 
 namespace Absoc.Controllers
 {
     [Authorize]
-    public class ManageController : Controller
+    public class ProfielController : Controller
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
-        public ManageController()
+        private GebruikerManager GebruikerMng = new GebruikerManager();
+
+        public ProfielController()
         {
         }
 
-        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        public ProfielController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -64,13 +68,23 @@ namespace Absoc.Controllers
                 : "";
 
             var userId = User.Identity.GetUserId();
+            UpdateProfielViewModel profielModel = new UpdateProfielViewModel();
+            Gebruiker g = GebruikerMng.GetGebruiker(int.Parse(User.Identity.GetUserId()));
+            profielModel.Achternaam = g.Achternaam;
+            profielModel.Adres = g.Adres;
+            profielModel.Email = g.Email;
+            profielModel.Geboortedatum = g.Geboortedatum;
+            profielModel.Postcode = g.Postcode;
+            profielModel.Voornaam = g.Voornaam;
+
             var model = new IndexViewModel
             {
                 HasPassword = HasPassword(),
-                PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
-                TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
-                Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
+                PhoneNumber = await UserManager.GetPhoneNumberAsync(int.Parse(userId)),
+                TwoFactor = await UserManager.GetTwoFactorEnabledAsync(int.Parse(userId)),
+                Logins = await UserManager.GetLoginsAsync(int.Parse(userId)),
+                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId),
+                Gebruiker = profielModel
             };
             return View(model);
         }
@@ -82,10 +96,10 @@ namespace Absoc.Controllers
         public async Task<ActionResult> RemoveLogin(string loginProvider, string providerKey)
         {
             ManageMessageId? message;
-            var result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId(), new UserLoginInfo(loginProvider, providerKey));
+            var result = await UserManager.RemoveLoginAsync(int.Parse(User.Identity.GetUserId()), new UserLoginInfo(loginProvider, providerKey));
             if (result.Succeeded)
             {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                var user = await UserManager.FindByIdAsync(int.Parse(User.Identity.GetUserId()));
                 if (user != null)
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -117,7 +131,7 @@ namespace Absoc.Controllers
                 return View(model);
             }
             // Generate the token and send it
-            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), model.Number);
+            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(int.Parse(User.Identity.GetUserId()), model.Number);
             if (UserManager.SmsService != null)
             {
                 var message = new IdentityMessage
@@ -136,8 +150,8 @@ namespace Absoc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EnableTwoFactorAuthentication()
         {
-            await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId(), true);
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            await UserManager.SetTwoFactorEnabledAsync(int.Parse(User.Identity.GetUserId()), true);
+            var user = await UserManager.FindByIdAsync(int.Parse(User.Identity.GetUserId()));
             if (user != null)
             {
                 await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -151,8 +165,8 @@ namespace Absoc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DisableTwoFactorAuthentication()
         {
-            await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId(), false);
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            await UserManager.SetTwoFactorEnabledAsync(int.Parse(User.Identity.GetUserId()), false);
+            var user = await UserManager.FindByIdAsync(int.Parse(User.Identity.GetUserId()));
             if (user != null)
             {
                 await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -164,7 +178,7 @@ namespace Absoc.Controllers
         // GET: /Manage/VerifyPhoneNumber
         public async Task<ActionResult> VerifyPhoneNumber(string phoneNumber)
         {
-            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), phoneNumber);
+            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(int.Parse(User.Identity.GetUserId()), phoneNumber);
             // Send an SMS through the SMS provider to verify the phone number
             return phoneNumber == null ? View("Error") : View(new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });
         }
@@ -179,10 +193,10 @@ namespace Absoc.Controllers
             {
                 return View(model);
             }
-            var result = await UserManager.ChangePhoneNumberAsync(User.Identity.GetUserId(), model.PhoneNumber, model.Code);
+            var result = await UserManager.ChangePhoneNumberAsync(int.Parse(User.Identity.GetUserId()), model.PhoneNumber, model.Code);
             if (result.Succeeded)
             {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                var user = await UserManager.FindByIdAsync(int.Parse(User.Identity.GetUserId()));
                 if (user != null)
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -193,6 +207,31 @@ namespace Absoc.Controllers
             ModelState.AddModelError("", "Failed to verify phone");
             return View(model);
         }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UpdateProfiel(IndexViewModel model)
+        {
+            Gebruiker currGebruiker = GebruikerMng.GetGebruiker(int.Parse(User.Identity.GetUserId()));
+
+            model.HasPassword = HasPassword();
+            model.Gebruiker.Email = currGebruiker.Email;
+
+            if (ModelState.IsValid)
+            {
+                currGebruiker.Achternaam = model.Gebruiker.Achternaam;
+                currGebruiker.Adres = model.Gebruiker.Adres;
+                currGebruiker.Geboortedatum = model.Gebruiker.Geboortedatum;
+                currGebruiker.Postcode = model.Gebruiker.Postcode;
+                currGebruiker.Voornaam = model.Gebruiker.Voornaam;
+
+                GebruikerMng.ChangeGebruiker(currGebruiker);
+
+                return View("Index", model);
+            }
+
+            return View("Index", model);
+        }
 
         //
         // POST: /Manage/RemovePhoneNumber
@@ -200,12 +239,12 @@ namespace Absoc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RemovePhoneNumber()
         {
-            var result = await UserManager.SetPhoneNumberAsync(User.Identity.GetUserId(), null);
+            var result = await UserManager.SetPhoneNumberAsync(int.Parse(User.Identity.GetUserId()), null);
             if (!result.Succeeded)
             {
                 return RedirectToAction("Index", new { Message = ManageMessageId.Error });
             }
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            var user = await UserManager.FindByIdAsync(int.Parse(User.Identity.GetUserId()));
             if (user != null)
             {
                 await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -230,10 +269,10 @@ namespace Absoc.Controllers
             {
                 return View(model);
             }
-            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+            var result = await UserManager.ChangePasswordAsync(int.Parse(User.Identity.GetUserId()), model.OldPassword, model.NewPassword);
             if (result.Succeeded)
             {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                var user = await UserManager.FindByIdAsync(int.Parse(User.Identity.GetUserId()));
                 if (user != null)
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -259,10 +298,10 @@ namespace Absoc.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
+                var result = await UserManager.AddPasswordAsync(int.Parse(User.Identity.GetUserId()), model.NewPassword);
                 if (result.Succeeded)
                 {
-                    var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                    var user = await UserManager.FindByIdAsync(int.Parse(User.Identity.GetUserId()));
                     if (user != null)
                     {
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -284,12 +323,12 @@ namespace Absoc.Controllers
                 message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
                 : message == ManageMessageId.Error ? "An error has occurred."
                 : "";
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            var user = await UserManager.FindByIdAsync(int.Parse(User.Identity.GetUserId()));
             if (user == null)
             {
                 return View("Error");
             }
-            var userLogins = await UserManager.GetLoginsAsync(User.Identity.GetUserId());
+            var userLogins = await UserManager.GetLoginsAsync(int.Parse(User.Identity.GetUserId()));
             var otherLogins = AuthenticationManager.GetExternalAuthenticationTypes().Where(auth => userLogins.All(ul => auth.AuthenticationType != ul.LoginProvider)).ToList();
             ViewBag.ShowRemoveButton = user.PasswordHash != null || userLogins.Count > 1;
             return View(new ManageLoginsViewModel
@@ -318,7 +357,7 @@ namespace Absoc.Controllers
             {
                 return RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
             }
-            var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
+            var result = await UserManager.AddLoginAsync(int.Parse(User.Identity.GetUserId()), loginInfo.Login);
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
         }
 
@@ -355,7 +394,7 @@ namespace Absoc.Controllers
 
         private bool HasPassword()
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
+            var user = UserManager.FindById(int.Parse(User.Identity.GetUserId()));
             if (user != null)
             {
                 return user.PasswordHash != null;
@@ -365,7 +404,7 @@ namespace Absoc.Controllers
 
         private bool HasPhoneNumber()
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
+            var user = UserManager.FindById(int.Parse(User.Identity.GetUserId()));
             if (user != null)
             {
                 return user.PhoneNumber != null;
