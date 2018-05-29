@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace DAL
 {
-    public class AbsocInitializer : DropCreateDatabaseAlways<AbsocContext>
+    public class AbsocInitializer : CreateDatabaseIfNotExists<AbsocContext>
     {
         protected override void Seed(AbsocContext context)
         {

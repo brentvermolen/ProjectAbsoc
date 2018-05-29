@@ -77,7 +77,7 @@ namespace Absoc.Models
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Wachtwoord")]
         public string Password { get; set; }
 
         [Display(Name = "Mij onthouden?")]
@@ -94,7 +94,7 @@ namespace Absoc.Models
         [Required]
         [StringLength(100, ErrorMessage = "Het wachtwoord moet minstens {2} karakters lang zijn.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Wachtwoord")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
@@ -140,7 +140,7 @@ namespace Absoc.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Bevestig wachtwoord")]
-        [Compare("Wachtwoord", ErrorMessage = "De wachtwoorden komen niet overeen.")]
+        [Compare("Password", ErrorMessage = "De wachtwoorden komen niet overeen.")]
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }
