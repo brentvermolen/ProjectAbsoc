@@ -287,7 +287,7 @@ namespace Absoc.Controllers
 
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                await UserManager.SendEmailAsync(user.Id, "Wachtwoord Reset", "Gelieve uw wachtwoord <a href=\"" + callbackUrl + "\">hier</a> te resetten");
                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 

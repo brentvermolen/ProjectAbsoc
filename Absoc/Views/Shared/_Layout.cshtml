@@ -9,36 +9,69 @@
 
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
+   @*<div class="navbar navbar-inverse navbar-fixed-top">
+         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Absoc", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+               </button>
+               @Html.ActionLink("Absoc", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Over Ons", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>
-                @Html.Partial("_LoginPartial")
+               <ul class="nav navbar-nav">
+                  <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                  <li>@Html.ActionLink("Over Ons", "About", "Home")</li>
+                  <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+               </ul>
+               @Html.Partial("_LoginPartial")
             </div>
-        </div>
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Absoc</p>
-        </footer>
-    </div>
+         </div>
+      </div>*@
+   <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+         <nav class="navbar navbar-expand-xl navbar-light" style="width:100%">
+            @Html.ActionLink("Absoc", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+               <span class="navbar-toggler-icon"></span>
+            </button>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+               <ul class="navbar-nav mr-auto">
+                  <li class="nav-item active">
+                     <a class="nav-link" href="@Url.Action("Index", "Home")">Home <span class="sr-only">(current)</span></a>
+                  </li>
+                  <li class="nav-item active">
+                     <a class="nav-link" href="@Url.Action("About", "Home")">Over Ons</a>
+                  </li>
+                  <li class="nav-item active">
+                     <a class="nav-link" href="@Url.Action("Contact", "Home")">Contact</a>
+                  </li>
+               </ul>
+               <form class="form-inline my-2 my-lg-0">
+                  <input class="form-control mr-sm-2" type="search" placeholder="Zoeken" aria-label="Zoeken">
+                  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Zoeken</button>
+               </form>
+
+               <ul class="navbar-nav mr-auto" style="margin-left: auto; margin-right: 0 !important">
+                  @Html.Partial("_LoginPartial")
+               </ul>
+            </div>
+         </nav>
+      </div>
+   </div>
+
+   <div class="container body-content">
+      @RenderBody()
+      <hr />
+      <footer>
+         <p>&copy; @DateTime.Now.Year - Absoc</p>
+      </footer>
+   </div>
+
+   @Scripts.Render("~/bundles/jquery")
+   @Scripts.Render("~/bundles/bootstrap")
+   @RenderSection("scripts", required: false)
 </body>
 </html>
