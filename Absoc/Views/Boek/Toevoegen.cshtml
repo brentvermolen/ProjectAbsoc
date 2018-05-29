@@ -1,0 +1,78 @@
+﻿@model Absoc.Models.BoekModel
+
+@{
+   ViewBag.Title = "Toevoegen";
+}
+
+<h2>Toevoegen</h2>
+
+@using (Html.BeginForm())
+{
+   @Html.AntiForgeryToken()
+
+   <div class="form-horizontal">
+      <h4>Boek</h4>
+      <hr />
+      @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+      <div class="col-md-4">
+         @Html.HiddenFor(model => model.ImageLink)
+         <img style="max-width: 100%; max-height:250px; border:solid 1px" src="@Model.ImageLink" alt="Flap"/>
+      </div>
+      <div class="col-md-8">
+         <div class="form-group">
+            @Html.LabelFor(model => model.ISBN, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+               @Html.EditorFor(model => model.ISBN, new { htmlAttributes = new { @class = "form-control" } })
+               @Html.ValidationMessageFor(model => model.ISBN, "", new { @class = "text-danger" })
+            </div>
+         </div>
+
+         <div class="form-group">
+            @Html.LabelFor(model => model.Titel, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+               @Html.EditorFor(model => model.Titel, new { htmlAttributes = new { @class = "form-control" } })
+               @Html.ValidationMessageFor(model => model.Titel, "", new { @class = "text-danger" })
+            </div>
+         </div>
+
+         <div class="form-group">
+            @Html.LabelFor(model => model.Auteur, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+               @Html.EditorFor(model => model.Auteur, new { htmlAttributes = new { @class = "form-control" } })
+               @Html.ValidationMessageFor(model => model.Auteur, "", new { @class = "text-danger" })
+            </div>
+         </div>
+
+         <div class="form-group">
+            @Html.LabelFor(model => model.Omslag, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+               @Html.EditorFor(model => model.Omslag, new { htmlAttributes = new { @class = "form-control" } })
+               @Html.ValidationMessageFor(model => model.Omslag, "", new { @class = "text-danger" })
+            </div>
+         </div>
+
+         <div class="form-group">
+            @Html.LabelFor(model => model.FlapTekst, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+               @Html.TextAreaFor(model => model.FlapTekst, new { @class = "form-control", @cols = 60, @rows = 10, @style = "max-width: none" })
+               @Html.ValidationMessageFor(model => model.FlapTekst, "", new { @class = "text-danger" })
+            </div>
+         </div>
+
+         <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+               @if (Model.Titel == null || Model.Titel.Equals(""))
+               {
+                  <input type="submit" value="Boek Ophalen" class="btn btn-default" />
+                  <input type="submit" value="Manueel Opslaan" class="btn btn-success" />
+               }
+               else if (Model.alInDb == false)
+               {
+                  <input type="submit" value="Save" class="btn btn-success" />
+               }
+            </div>
+         </div>
+      </div>
+   </div>
+}

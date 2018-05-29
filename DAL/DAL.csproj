@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoekRepository.cs" />
     <Compile Include="EF\AbsocContext.cs" />
     <Compile Include="EF\AbsocInitializer.cs" />
     <Compile Include="GebruikerRepository.cs" />
