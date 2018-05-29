@@ -55,15 +55,15 @@ namespace Absoc
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
+            app.UseFacebookAuthentication(
+               appId: "369451336880590",
+               appSecret: "08959f279994e91d54faca86d48e93e9");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "642081202417-n98pqd3ic86a8bek248p9po1o6107sia.apps.googleusercontent.com",
+                ClientSecret = "lMZq5m0vH0VUs7r4ZvEvTSCG"
+            });
         }
     }
 }

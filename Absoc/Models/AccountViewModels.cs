@@ -8,6 +8,28 @@ namespace Absoc.Models
         [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
+
+        [Required]
+        [Display(Name = "Voornaam")]
+        public string Voornaam { get; set; }
+
+        [Required]
+        [Display(Name = "Achternaam")]
+        public string Achternaam { get; set; }
+
+        [Required]
+        [Display(Name = "Geboortedatum")]
+        [RegularExpression("^([0]?[1-9]|[1|2][0-9]|[3][0|1])[./-]([0]?[1-9]|[1][0-2])[./-]([0-9]{4}|[0-9]{2})$", ErrorMessage = "De geboortedatum moet van het formaat DD/MM/JJJJ zijn.")]
+        public string Geboortedatum { get; set; }
+
+        [Required]
+        [Display(Name = "Adres")]
+        public string Adres { get; set; }
+
+        [Required]
+        [Display(Name = "Postcode")]
+        [RegularExpression("^[0-9]{4}$", ErrorMessage = "Geef een geldige Postcode in.")]
+        public string Postcode { get; set; }
     }
 
     public class ExternalLoginListViewModel

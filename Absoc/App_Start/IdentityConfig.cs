@@ -11,6 +11,9 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Absoc.Models;
+using System.Net.Mail;
+using System.Net;
+using System.Configuration;
 
 namespace Absoc
 {
@@ -18,7 +21,35 @@ namespace Absoc
     {
         public Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
+            SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
+            client.EnableSsl = true;
+            client.UseDefaultCredentials = false;
+            client.Credentials = new NetworkCredential(ConfigurationManager.AppSettings["mailAdres"], ConfigurationManager.AppSettings["mailWw"]);
+
+            try
+            {
+                MailMessage msg = new MailMessage();
+                msg.IsBodyHtml = true;
+
+                msg.To.Add(message.Destination);
+
+                msg.From = new MailAddress(
+                    ConfigurationManager.AppSettings["mailAdres"],
+                    "Absoc");
+
+                msg.Subject = message.Subject;
+
+                msg.Body = message.Body;
+
+                client.Send(msg);
+
+                return Task.FromResult(0);
+            }
+            catch (Exception e)
+            {
+                e.ToString();
+            }
+
             return Task.FromResult(0);
         }
     }
@@ -71,18 +102,19 @@ namespace Absoc
             {
                 MessageFormat = "Your security code is {0}"
             });
-            manager.RegisterTwoFactorProvider("Email Code", new EmailTokenProvider<MyUser, int>
+            manager.RegisterTwoFactorProvider("EmailCode", new EmailTokenProvider<MyUser, int>
             {
-                Subject = "Security Code",
-                BodyFormat = "Your security code is {0}"
+                Subject = "BeveiligingsCode",
+                BodyFormat = "Uw beveiligingscode is {0}"
             });
+
             manager.EmailService = new EmailService();
             manager.SmsService = new SmsService();
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
-                manager.UserTokenProvider = 
-                    new DataProtectorTokenProvider<MyUser, int>(dataProtectionProvider.Create("ASP.NET Identity"));
+                manager.UserTokenProvider =
+                    new DataProtectorTokenProvider<MyUser, int>(dataProtectionProvider.Create("Absoc"));
             }
             return manager;
         }
