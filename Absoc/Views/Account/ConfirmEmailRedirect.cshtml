@@ -7,4 +7,7 @@
    <p>
       Open uw mail en bevestig uw e-mail adres
    </p>
+   <p>
+      @Html.ActionLink("Verzend mail opnieuw", "SendConfirmEmail", "Account", new { user = ViewBag.User }, null)
+   </p>
 </div>

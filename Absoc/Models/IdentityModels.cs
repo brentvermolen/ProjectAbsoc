@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
@@ -18,8 +19,6 @@ namespace Absoc.Models
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
 
-            Postcode = "0000";
-
             return userIdentity;
         }
 
@@ -28,6 +27,7 @@ namespace Absoc.Models
         public string Geboortedatum { get; set; }
         public string Adres { get; set; }
         public string Postcode { get; set; }
+        public DateTime? LastConfirmationMail { get; set; }
 
         string IUser<string>.Id => this.Id.ToString();
     }

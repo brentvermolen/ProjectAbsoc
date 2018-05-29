@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using BL;
 using System.Text.RegularExpressions;
 using Microsoft.Owin.Security.DataProtection;
+using BL.Domain;
 
 namespace Absoc.Controllers
 {
@@ -84,6 +85,17 @@ namespace Absoc.Controllers
             if (!ModelState.IsValid)
             {
                 return View(model);
+            }
+
+
+            var user = UserManager.FindByName(model.Email);
+            if (user != null)
+            {
+                if (!user.EmailConfirmed)
+                {
+                    ViewBag.User = user.UserName;
+                    return View("ConfirmEmailRedirect");
+                }
             }
 
             // This doesn't count login failures towards account lockout
@@ -175,16 +187,7 @@ namespace Absoc.Controllers
 
                         // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                         // Send an email with this link
-                        var provider = new DpapiDataProtectionProvider("Absoc");
-                        UserManager.UserTokenProvider = new DataProtectorTokenProvider<MyUser, int>(provider.Create("EmailConfirmation"));
-                        UserManager.EmailService = new EmailService();
-                        
-                        string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                        var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                        await UserManager.SendEmailAsync(user.Id, "Bevestig uw e-mail adres", "Gelieve uw e-mail adres <a href=\"" + callbackUrl + "\">hier</a> te bevestigen");
-                        
-                        //return View("DisplayEmail");
-                        return Redirect("ConfirmEmailRedirect");
+                        return await SendConfirmEmailAsync(user);
                     }
                     AddErrors(result);
                 }
@@ -197,6 +200,41 @@ namespace Absoc.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> SendConfirmEmail(string user)
+        {
+            var gebruiker = UserManager.FindByName(user);
+
+            return await SendConfirmEmailAsync(gebruiker);
+        }
+
+        public async Task<ActionResult> SendConfirmEmailAsync(MyUser user)
+        {
+            if (user.LastConfirmationMail == DateTime.Today)
+            {
+                return View("ConfirmEmailFail");
+            }
+            else
+            {
+                var provider = new DpapiDataProtectionProvider("Absoc");
+                UserManager.UserTokenProvider = new DataProtectorTokenProvider<MyUser, int>(provider.Create("EmailConfirmation"));
+                UserManager.EmailService = new EmailService();
+
+                string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                await UserManager.SendEmailAsync(user.Id, "Bevestig uw e-mail adres", "Gelieve uw e-mail adres <a href=\"" + callbackUrl + "\">hier</a> te bevestigen");
+
+                Gebruiker gebruiker = gebruikerMng.GetGebruiker(user.Id);
+                gebruiker.LastConfirmationMail = DateTime.Today;
+
+                gebruikerMng.ChangeGebruiker(gebruiker);
+
+                //return View("DisplayEmail");
+                ViewBag.User = user.Email;
+                return View("ConfirmEmailRedirect");
+            }
         }
 
         //
@@ -407,7 +445,7 @@ namespace Absoc.Controllers
                 }
                 else
                 {
-                    var user = new MyUser { UserName = model.Email, Email = model.Email, Postcode = model.Postcode, Achternaam = model.Achternaam, Voornaam = model.Voornaam, Adres = model.Adres, Geboortedatum = model.Geboortedatum };
+                    var user = new MyUser { UserName = model.Email, Email = model.Email, Postcode = model.Postcode, Achternaam = model.Achternaam, Voornaam = model.Voornaam, Adres = model.Adres, Geboortedatum = model.Geboortedatum, EmailConfirmed = true };
                     var result = await UserManager.CreateAsync(user);
                     if (result.Succeeded)
                     {

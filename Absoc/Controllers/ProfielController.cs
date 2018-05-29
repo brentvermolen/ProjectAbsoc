@@ -210,7 +210,7 @@ namespace Absoc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UpdateProfiel(IndexViewModel model)
+        public ActionResult UpdateProfiel(IndexViewModel model)
         {
             Gebruiker currGebruiker = GebruikerMng.GetGebruiker(int.Parse(User.Identity.GetUserId()));
 

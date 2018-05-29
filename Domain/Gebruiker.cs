@@ -23,6 +23,8 @@ namespace BL.Domain
         public virtual Gemeente Gemeente { get; set; }
 
         public bool EmailConfirmed { get; set; }
+        public DateTime? LastConfirmationMail { get; set; }
+
         public string PasswordHash { get; set; }
         public string SecurityStamp { get; set; }
         public string PhoneNumber { get; set; }
@@ -33,6 +35,8 @@ namespace BL.Domain
         public int AccessFailedCount { get; set; }
         [StringLength(256)]
         public string UserName { get; set; }
+
+
 
         public virtual ICollection<GebruikerLogin> GebruikerLogins { get; set; }
         public virtual ICollection<GebruikersClaim> GebruikersClaims { get; set; }
