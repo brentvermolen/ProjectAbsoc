@@ -51,7 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BoekRepository.cs" />
     <Compile Include="EF\TraktContext.cs" />
     <Compile Include="EF\TraktInitializer.cs" />
     <Compile Include="GebruikerRepository.cs" />

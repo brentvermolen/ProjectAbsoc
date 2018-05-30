@@ -29,7 +29,7 @@ namespace DAL
 
                 gemeentes = gemeentes.Where(g => g.Deelgemeente.Equals("Neen")).ToList();
 
-                gemeentes.Add(new Gemeente() { Deelgemeente = "Neen", Postcode = "0000", Plaatsnaam = "Onkbekend", Provincie = "Onbekend" });
+                gemeentes.Add(new Gemeente() { Deelgemeente = "Neen", Postcode = "0000", Plaatsnaam = "Onbekend", Provincie = "Onbekend" });
 
                 context.Gemeentes.AddRange(gemeentes);
             }
