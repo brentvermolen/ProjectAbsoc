@@ -1,0 +1,115 @@
+﻿@model Trakt.Models.CollectieViewModel
+
+@{
+   ViewBag.Title = "Collecties";
+}
+
+<h2>@ViewBag.Title</h2>
+@using (Html.BeginForm("Index", "Collecties", FormMethod.Post, new { id = "sorterenForm" }))
+{
+   <div class="row">
+      <div class="col-md-3 col-sm-3">
+         @Html.LabelFor(model => model.Sorteren, "Sorteren Op")
+         @Html.EnumDropDownListFor(model => model.Sorteren, null, new { /*@onchange = "javascript:document.getElementById('sorterenForm').submit()",*/ @class = "form-control" })
+      </div>
+      <div class="col-md-3 col-sm-3">
+         @Html.LabelFor(model => model.FilterOp, "Filter Op")
+         @Html.EnumDropDownListFor(model => model.FilterOp, null, new { /*@onchange = "javascript:document.getElementById('sorterenForm').submit()",*/ @class = "form-control" })
+      </div>
+      <div class="col-md-3 col-sm-3">
+         @Html.LabelFor(model => model.Filter)
+         @Html.TextBoxFor(model => model.Filter, new { /*@onblur = "javascript:document.getElementById('sorterenForm').submit()",*/ @placeholder = "Filter", @class = "form-control" })
+      </div>
+      <div class="col-md-2 col-sm-3" style="float:right">
+         @Html.LabelFor(model => model.MaxFilms, "Resultaten")
+         @Html.EnumDropDownListFor(model => model.MaxFilms, null, new { @class = "form-control" })
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-md-12">
+         <button type="submit" class="btn btn-success btnzoeken" style="width:100%">Zoeken</button>
+      </div>
+   </div>
+}
+
+<div class="row">
+   @foreach (var collectie in Model.Collecties)
+   {
+      <div class="col-lg-3 col-md-4 col-md-offset-0 col-sm-5 col-sm-offset-1 poster">
+         <a href="" title="@collectie.Naam">
+            @{ 
+                var source = "https://image.tmdb.org/t/p/w300/";
+                if (collectie.PosterPath == null)
+                {
+                   source = "/Content/Images/no_image.png";
+                }
+                else
+                {
+                    source += collectie.PosterPath;
+                }
+            }
+            <img src="@source" class="image" alt="@collectie.Naam" style="max-width:100%; height:400px" />
+            <div class="overlayPoster">
+               <div class="posterOverlayContent">@collectie.Naam</div>
+            </div>
+         </a>
+      </div>
+   }
+</div>
+<style>
+   .btnzoeken {
+      margin: 15px 0;
+   }
+
+   .poster {
+      position: relative;
+   }
+
+      .poster img {
+         margin: 1%;
+      }
+
+      .poster a {
+         color: inherit;
+      }
+
+      .poster h4 {
+         text-align: center;
+      }
+
+   .image {
+      opacity: 1;
+      display: block;
+      width: 100%;
+      height: auto;
+      transition: .5s ease;
+      backface-visibility: hidden;
+   }
+
+   .overlayPoster {
+      transition: .5s ease;
+      opacity: 0;
+      position: absolute;
+      top: 80%;
+      left: 50%;
+      width: 80%;
+      transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+      text-align: center;
+   }
+
+   .poster:hover .image {
+      opacity: 0.3;
+   }
+
+   .poster:hover .overlayPoster {
+      opacity: 1;
+   }
+
+   .posterOverlayContent {
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      padding: 5px;
+   }
+</style>

@@ -21,7 +21,7 @@ namespace BL.Domain
         public string Adres { get; set; }
         public string Postcode { get; set; }
         public virtual Gemeente Gemeente { get; set; }
-        
+
         public virtual List<Archief> Archief { get; set; }
 
         public bool EmailConfirmed { get; set; }
@@ -37,6 +37,8 @@ namespace BL.Domain
         public int AccessFailedCount { get; set; }
         [StringLength(256)]
         public string UserName { get; set; }
+
+        public bool IsAdmin { get; set; }
         
 
         public virtual ICollection<GebruikerLogin> GebruikerLogins { get; set; }

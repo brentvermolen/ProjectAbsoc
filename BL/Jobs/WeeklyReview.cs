@@ -20,8 +20,8 @@ namespace BL
 
         Task IJob.Execute(IJobExecutionContext context)
         {
-            List<Film> films = filmRepo.ReadFilms(f => f.Toegevoegd >= DateTime.Today.AddDays(-7));
-            List<Aflevering> afleveringen = serieRepo.ReadAfleveringen(f => f.Toegevoegd >= DateTime.Today.AddDays(-7));
+            List<Film> films = filmRepo.GetFilms().Where(f => f.Toegevoegd >= DateTime.Today.AddDays(-7)).ToList();
+            List<Aflevering> afleveringen = serieRepo.GetAfleveringen(f => f.Toegevoegd >= DateTime.Today.AddDays(-7));
                 
             if (films.Count > 0 || afleveringen.Count > 0)
             {

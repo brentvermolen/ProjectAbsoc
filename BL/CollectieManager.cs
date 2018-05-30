@@ -1,4 +1,5 @@
-﻿using DAL;
+﻿using BL.Domain;
+using DAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,10 @@ namespace BL
     public class CollectieManager
     {
         private readonly CollectieRepository repo = new CollectieRepository();
+
+        public List<Collectie> ReadCollecties()
+        {
+            return repo.GetCollecties().ToList();
+        }
     }
 }

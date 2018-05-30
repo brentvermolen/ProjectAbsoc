@@ -11,9 +11,14 @@ namespace DAL
     {
         private readonly TraktContext ctx = new TraktContext();
 
-        public List<Aflevering> ReadAfleveringen(Func<Aflevering, bool> predicate)
+        public List<Aflevering> GetAfleveringen(Func<Aflevering, bool> predicate)
         {
             return ctx.Afleveringen.Where(predicate).ToList();
+        }
+
+        public List<Serie> GetSeries()
+        {
+            return ctx.Series.ToList();
         }
     }
 }

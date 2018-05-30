@@ -82,6 +82,11 @@ namespace Absoc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -178,7 +183,7 @@ namespace Absoc.Controllers
             {
                 if (gebruikerMng.ValidPostcode(model.Postcode))
                 {
-                    var user = new MyUser { UserName = model.Email, Email = model.Email, Adres = model.Adres, Achternaam = model.Achternaam, Voornaam = model.Voornaam, Geboortedatum = model.Geboortedatum, Postcode = model.Postcode };
+                    var user = new MyUser { UserName = model.Email, Email = model.Email, Adres = model.Adres, Achternaam = model.Achternaam, Voornaam = model.Voornaam, Geboortedatum = model.Geboortedatum, Postcode = model.Postcode, IsAdmin = false };
                     var result = await UserManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
@@ -454,7 +459,7 @@ namespace Absoc.Controllers
                 }
                 else
                 {
-                    var user = new MyUser { UserName = model.Email, Email = model.Email, Postcode = model.Postcode, Achternaam = model.Achternaam, Voornaam = model.Voornaam, Adres = model.Adres, Geboortedatum = model.Geboortedatum, EmailConfirmed = true };
+                    var user = new MyUser { UserName = model.Email, Email = model.Email, Postcode = model.Postcode, Achternaam = model.Achternaam, Voornaam = model.Voornaam, Adres = model.Adres, Geboortedatum = model.Geboortedatum, EmailConfirmed = true, IsAdmin = false };
                     var result = await UserManager.CreateAsync(user);
                     if (result.Succeeded)
                     {

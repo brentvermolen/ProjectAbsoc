@@ -29,6 +29,8 @@ namespace Absoc.Models
         public string Postcode { get; set; }
         public DateTime? LastConfirmationMail { get; set; }
 
+        public bool IsAdmin { get; set; }
+
         string IUser<string>.Id => this.Id.ToString();
     }
 

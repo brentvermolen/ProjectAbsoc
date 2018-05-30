@@ -1,82 +1,121 @@
 ﻿@using Absoc.Models
-@model Absoc.Models.RegisterViewModel
+@model RegisterViewModel
 @{
-   ViewBag.Title = "Registreer";
+   ViewBag.Title = "Dashboard";
+   Layout = "";
 }
 
-<h2>@ViewBag.Title.</h2>
+<html lang="en">
+<head>
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+   <meta name="description" content="">
+   <meta name="author" content="">
+   <link rel="icon" href="../../favicon.ico">
 
-<div class="row">
-   <div class="col-md-8">
-   @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-   {
-      @Html.AntiForgeryToken()
-      <h4>Maak een nieuwe account.</h4>
-      <hr />
-      @Html.ValidationSummary("", new { @class = "text-danger" })
-      <div class="form-group">
-         @Html.LabelFor(m => m.Voornaam, new { @class = "col-md-2 control-label" })
-         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Voornaam, new { @class = "form-control" })
-         </div>
-      </div>
-      <div class="form-group">
-         @Html.LabelFor(m => m.Achternaam, new { @class = "col-md-2 control-label" })
-         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Achternaam, new { @class = "form-control" })
-         </div>
-      </div>
-      <div class="form-group">
-         @Html.LabelFor(m => m.Geboortedatum, new { @class = "col-md-2 control-label" })
-         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Geboortedatum, new { @class = "form-control" })
-         </div>
-      </div>
-      <div class="form-group">
-         @Html.LabelFor(m => m.Adres, new { @class = "col-md-2 control-label" })
-         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Adres, new { @class = "form-control" })
-         </div>
-      </div>
-      <div class="form-group">
-         @Html.LabelFor(m => m.Postcode, new { @class = "col-md-2 control-label" })
-         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Postcode, new { @class = "form-control" })
-         </div>
-      </div>
-      <div class="form-group">
-         @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
-         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-         </div>
-      </div>
-      <div class="form-group">
-         @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-         <div class="col-md-10">
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-         </div>
-      </div>
-      <div class="form-group">
-         @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
-         <div class="col-md-10">
-            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
-         </div>
-      </div>
-      <div class="form-group">
-         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Registreer" />
-         </div>
-      </div>
-   }
-</div>
+   <title>Registreren</title>
 
-<div class="col-md-4">
-   <section id="socialLoginForm">
+   <!-- Bootstrap core CSS -->
+
+   @Styles.Render("~/Content/css")
+   @Scripts.Render("~/bundles/modernizr")
+
+   <!-- Custom styles for this template -->
+   <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+   <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+   <!--[if lt IE 9]>
+   <![endif]-->
+</head>
+<body>
+
+   <div class="container">
+      @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-signin", role = "form" }))
+      {  
+         @Html.AntiForgeryToken()
+         <h2 class="form-signin-heading" style="text-align:center">Nieuwe account.</h2>
+         <hr />
+         @Html.ValidationSummary("", new { @class = "text-danger" })
+         @Html.LabelFor(m => m.Voornaam, new { @class = "sr-only" })
+         @Html.TextBoxFor(m => m.Voornaam, new { @class = "form-control", @placeholder = "Voornaam" })
+         @Html.LabelFor(m => m.Achternaam, new { @class = "sr-only" })
+         @Html.TextBoxFor(m => m.Achternaam, new { @class = "form-control", @placeholder = "Achternaam" })
+         @Html.LabelFor(m => m.Geboortedatum, new { @class = "sr-only" })
+         @Html.TextBoxFor(m => m.Geboortedatum, new { @class = "form-control", @placeholder = "Geboortedatum" })
+         @Html.LabelFor(m => m.Adres, new { @class = "sr-only" })
+         @Html.TextBoxFor(m => m.Adres, new { @class = "form-control", @placeholder = "Adres" })
+         @Html.LabelFor(m => m.Postcode, new { @class = "sr-only" })
+         @Html.TextBoxFor(m => m.Postcode, new { @class = "form-control", @placeholder = "Postcode" })
+         @Html.LabelFor(m => m.Email, new { @class = "sr-only" })
+         @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Email" })
+         @Html.LabelFor(m => m.Password, new { @class = "sr-only" })
+         @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Wachtwoord", @style = "margin-bottom:0" })
+         @Html.LabelFor(m => m.ConfirmPassword, new { @class = "sr-only" })
+         @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", @placeholder = "Herhaal" })
+
+         <button type="submit" class="btn btn-lg btn-primary btn-block">Registreer</button>
+      }
       @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
-   </section>
-</div>
-</div>
+   </div> <!-- /container -->
+   <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+   <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 
-@section Scripts {
-   @Scripts.Render("~/bundles/jqueryval")
-}
+
+   <style>
+      input {
+         max-width: none;
+      }
+
+      body {
+         padding-top: 40px;
+         padding-bottom: 40px;
+         background-color: #eee;
+      }
+
+      .form-signin {
+         max-width: 330px;
+         padding: 15px;
+         margin: 0 auto;
+      }
+
+         .form-signin .form-signin-heading,
+         .form-signin .checkbox {
+            margin-bottom: 10px;
+         }
+
+         .form-signin .checkbox {
+            font-weight: normal;
+         }
+
+         .form-signin .form-control {
+            position: relative;
+            height: auto;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            padding: 10px;
+            font-size: 16px;
+         }
+
+            .form-signin .form-control:focus {
+               z-index: 2;
+            }
+
+         .form-signin input[type="email"] {
+            margin-bottom: -1px;
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+         }
+
+         .form-signin input[type="password"] {
+            margin-bottom: 10px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+         }
+   </style>
+
+</body>
+</html>
+

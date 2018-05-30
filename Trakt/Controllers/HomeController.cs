@@ -6,8 +6,17 @@ using System.Web.Mvc;
 
 namespace Absoc.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
+        protected override void OnAuthorization(AuthorizationContext filterContext)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                RedirectToAction("Login", "Account");
+            }
+        }
+
         public ActionResult Index()
         {
             return View();

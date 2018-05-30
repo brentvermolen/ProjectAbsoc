@@ -11,7 +11,12 @@ namespace DAL
     {
         private readonly TraktContext ctx = new TraktContext();
 
-        public List<Film> ReadFilms(Func<Film, bool> predicate)
+        public List<Film> GetFilms()
+        {
+            return ctx.Films.ToList();
+        }
+
+        public List<Film> GetFilms(Func<Film, bool> predicate)
         {
             return ctx.Films.Where(predicate).ToList();
         }
