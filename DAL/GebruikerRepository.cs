@@ -26,5 +26,10 @@ namespace DAL
         {
             return ctx.Gemeentes.Find(postcode) != null;
         }
+
+        public List<Gebruiker> ReadGebruikers()
+        {
+            return ctx.Gebruikers.ToList();
+        }
     }
 }

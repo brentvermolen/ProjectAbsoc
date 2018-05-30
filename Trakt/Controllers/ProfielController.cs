@@ -68,14 +68,16 @@ namespace Absoc.Controllers
                 : "";
 
             var userId = User.Identity.GetUserId();
-            UpdateProfielViewModel profielModel = new UpdateProfielViewModel();
             Gebruiker g = GebruikerMng.GetGebruiker(int.Parse(User.Identity.GetUserId()));
-            profielModel.Achternaam = g.Achternaam;
-            profielModel.Adres = g.Adres;
-            profielModel.Email = g.Email;
-            profielModel.Geboortedatum = g.Geboortedatum;
-            profielModel.Postcode = g.Postcode;
-            profielModel.Voornaam = g.Voornaam;
+            UpdateProfielViewModel profielModel = new UpdateProfielViewModel()
+            {
+                Achternaam = g.Achternaam,
+                Adres = g.Adres,
+                Email = g.Email,
+                Geboortedatum = g.Geboortedatum,
+                Postcode = g.Postcode,
+                Voornaam = g.Voornaam
+            };
 
             var model = new IndexViewModel
             {
@@ -227,7 +229,7 @@ namespace Absoc.Controllers
                     currGebruiker.Geboortedatum = model.Gebruiker.Geboortedatum;
                     currGebruiker.Postcode = model.Gebruiker.Postcode;
                     currGebruiker.Voornaam = model.Gebruiker.Voornaam;
-                    
+
                     GebruikerMng.ChangeGebruiker(currGebruiker);
 
                     return View("Index", model);

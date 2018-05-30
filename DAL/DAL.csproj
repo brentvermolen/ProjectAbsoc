@@ -51,8 +51,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CollectieRepository.cs" />
     <Compile Include="EF\TraktContext.cs" />
     <Compile Include="EF\TraktInitializer.cs" />
+    <Compile Include="ActeurRepository.cs" />
+    <Compile Include="ArchiefRepository.cs" />
+    <Compile Include="SerieRepository.cs" />
+    <Compile Include="FilmRepository.cs" />
     <Compile Include="GebruikerRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
