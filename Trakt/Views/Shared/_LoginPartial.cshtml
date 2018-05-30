@@ -5,11 +5,24 @@
    {
       @Html.AntiForgeryToken()
       <ul class="nav navbar-nav navbar-right">
-         <li>
-            @Html.ActionLink(User.Identity.GetUserName(), "Index", "Profiel", routeValues: null, htmlAttributes: new { title = "Manage" })
+         <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@User.Identity.GetUserName() <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+               <li><a href="@Url.Action("Index", "Profiel")">Profiel</a></li>
+               <li><a href="#">Mijn Archief</a></li>
+               <li role="separator" class="divider"></li>
+               @*<li class="dropdown-header">Nav header</li>*@
+               <li><a href="javascript:document.getElementById('logoutForm').submit()">Uitloggen</a></li>
+            </ul>
          </li>
-         <li><a href="javascript:document.getElementById('logoutForm').submit()">Uitloggen</a></li>
       </ul>
+
+      @*<ul class="nav navbar-nav navbar-right">
+            <li>
+               @Html.ActionLink(User.Identity.GetUserName(), "Index", "Profiel", routeValues: null, htmlAttributes: new { title = "Manage" })
+            </li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()">Uitloggen</a></li>
+         </ul>*@
       @*  <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle active" href="@Url.Action("Index", "Profiel")" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                @User.Identity.GetUserName()
@@ -31,8 +44,13 @@ else
       <li class="nav-item active">
          <a class="nav-link" href="@Url.Action("Login", "Account")">Inloggen<span class="sr-only">(current)</span></a>
       </li>*@
+
    <ul class="nav navbar-nav navbar-right">
-      <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-      <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+      <li><a href="@Url.Action("Register", "Account")">Registreren</a></li>
+      <li><a href="@Url.Action("Login", "Account")">Inloggen</a></li>
    </ul>
+   @*<ul class="nav navbar-nav navbar-right">
+         <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+         <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+      </ul>*@
 }

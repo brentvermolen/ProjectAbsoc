@@ -16,12 +16,14 @@ namespace BL
     {
         private readonly GebruikerRepository gebruikerRepo = new GebruikerRepository();
         private readonly FilmRepository filmRepo = new FilmRepository();
+        private readonly SerieRepository serieRepo = new SerieRepository();
 
         Task IJob.Execute(IJobExecutionContext context)
         {
             List<Film> films = filmRepo.ReadFilms(f => f.Toegevoegd >= DateTime.Today.AddDays(-7));
+            List<Aflevering> afleveringen = serieRepo.ReadAfleveringen(f => f.Toegevoegd >= DateTime.Today.AddDays(-7));
                 
-            if (films.Count > 0)
+            if (films.Count > 0 || afleveringen.Count > 0)
             {
                 SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
                 client.EnableSsl = true;
@@ -41,7 +43,9 @@ namespace BL
 
                         msg.Subject = "Wekelijkse Update";
 
-                        msg.Body = "<h1>Wekelijkse Update</h1><p>Er zijn deze week " + films.Count.ToString() + " toegevoegd</p>";
+                        msg.Body = "<h1>Wekelijkse Update</h1>" +
+                            "<p>Er zijn deze week " + films.Count.ToString() + " film(s) toegevoegd</p>" +
+                            "<p>Er zijn deze week" + afleveringen.Count.ToString() + " aflevering(en) toegevoegd</p>";
 
                         client.Send(msg);
 
