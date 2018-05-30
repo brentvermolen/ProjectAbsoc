@@ -9,7 +9,7 @@ namespace DAL
 {
     public class BoekRepository
     {
-        private readonly AbsocContext ctx = new AbsocContext();
+        private readonly TraktContext ctx = new TraktContext();
 
         public Boek ReadBoek(int id)
         {

@@ -61,8 +61,8 @@ namespace Absoc
 
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             {
-                ClientId = "642081202417-n98pqd3ic86a8bek248p9po1o6107sia.apps.googleusercontent.com",
-                ClientSecret = "lMZq5m0vH0VUs7r4ZvEvTSCG"
+                ClientId = "45144626104-iqmmdqdil26re2oprijogo7klr7837t8.apps.googleusercontent.com",
+                ClientSecret = "nSVDtLxqwPyqAJF1gx4dt0hQ"
             });
         }
     }

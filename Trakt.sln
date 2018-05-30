@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Absoc", "Absoc\Absoc.csproj", "{B44ADC32-7B88-4E5C-BBEE-9381C4B16523}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trakt", "Absoc\Trakt.csproj", "{B44ADC32-7B88-4E5C-BBEE-9381C4B16523}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{81F01C7C-82E1-49A2-AF18-3258E1F5DC79}"
 EndProject

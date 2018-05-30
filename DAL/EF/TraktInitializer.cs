@@ -10,16 +10,16 @@ using Newtonsoft.Json;
 
 namespace DAL
 {
-    public class AbsocInitializer : CreateDatabaseIfNotExists<AbsocContext>
+    public class TraktInitializer : CreateDatabaseIfNotExists<TraktContext>
     {
-        protected override void Seed(AbsocContext context)
+        protected override void Seed(TraktContext context)
         {
             ReadGemeenten(context);
 
             context.SaveChanges();
         }
 
-        private void ReadGemeenten(AbsocContext context)
+        private void ReadGemeenten(TraktContext context)
         {
             using (StreamReader sr = new StreamReader(System.Web.HttpContext.Current.Server.MapPath("~/Content/gemeente.json")))
             {

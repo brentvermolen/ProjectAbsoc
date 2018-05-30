@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace DAL
 {
-    public class AbsocContext : DbContext
+    public class TraktContext : DbContext
     {
-        public AbsocContext() : base("DefaultConnection")
+        public TraktContext() : base("DefaultConnection")
         {
-            Database.SetInitializer(new AbsocInitializer());
+            Database.SetInitializer(new TraktInitializer());
 
             try
             {
