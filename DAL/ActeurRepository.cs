@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BL.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,14 @@ namespace DAL
     {
         private readonly TraktContext ctx = new TraktContext();
 
+        public List<Acteur> GetActeurs()
+        {
+            return ctx.Acteurs.ToList();
+        }
 
+        public object GetActeur(int id)
+        {
+            return ctx.Acteurs.Find(id);
+        }
     }
 }

@@ -16,5 +16,15 @@ namespace BL
         {
             return repo.GetSeries().ToList();
         }
+
+        public Aflevering ReadAflevering(int id)
+        {
+            return repo.GetAflevering(id);
+        }
+
+        public Serie ReadSerie(int id)
+        {
+            return repo.GetSerie(id);
+        }
     }
 }

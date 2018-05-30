@@ -36,7 +36,7 @@
    @foreach (var collectie in Model.Collecties)
    {
       <div class="col-lg-3 col-md-4 col-md-offset-0 col-sm-5 col-sm-offset-1 poster">
-         <a href="" title="@collectie.Naam">
+         <a href="@Url.Action("Details", "Collecties", new { id = collectie.ID })" title="@collectie.Naam">
             @{ 
                 var source = "https://image.tmdb.org/t/p/w300/";
                 if (collectie.PosterPath == null)
@@ -56,60 +56,3 @@
       </div>
    }
 </div>
-<style>
-   .btnzoeken {
-      margin: 15px 0;
-   }
-
-   .poster {
-      position: relative;
-   }
-
-      .poster img {
-         margin: 1%;
-      }
-
-      .poster a {
-         color: inherit;
-      }
-
-      .poster h4 {
-         text-align: center;
-      }
-
-   .image {
-      opacity: 1;
-      display: block;
-      width: 100%;
-      height: auto;
-      transition: .5s ease;
-      backface-visibility: hidden;
-   }
-
-   .overlayPoster {
-      transition: .5s ease;
-      opacity: 0;
-      position: absolute;
-      top: 80%;
-      left: 50%;
-      width: 80%;
-      transform: translate(-50%, -50%);
-      -ms-transform: translate(-50%, -50%);
-      text-align: center;
-   }
-
-   .poster:hover .image {
-      opacity: 0.3;
-   }
-
-   .poster:hover .overlayPoster {
-      opacity: 1;
-   }
-
-   .posterOverlayContent {
-      background-color: #4CAF50;
-      color: white;
-      font-size: 16px;
-      padding: 5px;
-   }
-</style>

@@ -16,5 +16,10 @@ namespace BL
         {
             return repo.GetFilms();
         }
+
+        public Film ReadFilm(int id)
+        {
+            return repo.GetFilm(id);
+        }
     }
 }

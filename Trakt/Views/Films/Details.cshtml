@@ -1,0 +1,95 @@
+﻿@model BL.Domain.Film
+@{
+   ViewBag.Title = Model.Naam;
+}
+
+<h1>@ViewBag.Title</h1>
+<h3>@Model.Tagline</h3>
+
+<div class="row">
+   <div class="col-md-4" style="padding-right: 20px;border-right:solid 1px">
+      @{
+         var source = "https://image.tmdb.org/t/p/w300/";
+         if (Model.PosterPath == null)
+         {
+            source = "/Content/Images/no_image.png";
+         }
+         else
+         {
+            source += Model.PosterPath;
+         }
+      }
+      <img src="@source" class="image" alt="@Model.Naam" style="width:100%;" />
+   </div>
+   <div class="col-md-8" style="padding-left: 20px">
+      <p><strong>Omschrijving</strong></p>
+      <p>@Model.Omschrijving</p>
+      @if (Model.CollectieID != 0)
+      {
+         <br />
+         <h4><a href="@Url.Action("Details", "Collecties", new { id = Model.CollectieID })">@Model.Collectie.Naam</a></h4>
+      }
+      <br />
+      <p class="col-sm-6" style="text-align:center"><strong>@Model.ReleaseDate</strong></p>
+      <p class="col-sm-6" style="text-align:center"><strong>@Model.Duur Min.</strong></p>
+      @if (Model.TrailerId != null)
+      {
+         <h4 style="text-align:center"><strong>Trailer</strong></h4>
+         <div class="row" style="text-align:center">
+            <iframe width="420" height="315" allowfullscreen="allowfullscreen"
+                    mozallowfullscreen="mozallowfullscreen"
+                    msallowfullscreen="msallowfullscreen"
+                    oallowfullscreen="oallowfullscreen"
+                    webkitallowfullscreen="webkitallowfullscreen"
+                    src="https://www.youtube.com/embed/@Model.TrailerId"></iframe>
+         </div>
+      }
+      else
+      {
+         <h4><strong>Geen trailer gevonden</strong></h4>
+      }
+   </div>
+</div>
+<hr />
+<div class="testimonial-group">
+   <h2>Acteurs</h2>
+   <div class="row">
+      @{
+         Model.Acteurs.Sort((a1, a2) => a1.Sort.CompareTo(a2.Sort));
+      }
+      @foreach (var acteur in Model.Acteurs)
+      {
+         <div class="col-md-3 col-sm-6 col-xs-12 poster">
+            <a href="@Url.Action("Details", "Acteurs", new { id = @acteur.ActeurID })" title="@acteur.Acteur.Naam">
+               @{
+                   var actSrc = "";
+                   var posterClass = "poster";
+                   var overlayClass = "overlayPoster";
+
+                   if (acteur.Acteur.ImagePath == null)
+                   {
+                      actSrc = "/Content/Images/no_image.png";
+                      posterClass += " posterhovered";
+                      overlayClass += " overlayhovered";
+                   }
+                   else
+                   {
+                      if (acteur.Acteur.ImagePath.StartsWith("http"))
+                      {
+                         actSrc = acteur.Acteur.ImagePath;
+                      }
+                      else
+                      {
+                         actSrc = "https://image.tmdb.org/t/p/w300/" + acteur.Acteur.ImagePath;
+                      }
+                   }
+               }
+               <img src="@actSrc" class="image" alt="@acteur.Acteur.Naam" style="max-width:100%; height:400px" />
+               <div class="overlayPoster">
+                  <div class="posterOverlayContent">@acteur.Acteur.Naam<br />@acteur.Karakter</div>
+               </div>
+            </a>
+         </div>
+      }
+   </div>
+</div>

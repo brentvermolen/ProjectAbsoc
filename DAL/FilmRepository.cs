@@ -20,5 +20,10 @@ namespace DAL
         {
             return ctx.Films.Where(predicate).ToList();
         }
+
+        public Film GetFilm(int id)
+        {
+            return ctx.Films.Find(id);
+        }
     }
 }

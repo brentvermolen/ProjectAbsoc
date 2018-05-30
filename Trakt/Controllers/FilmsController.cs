@@ -115,5 +115,24 @@ namespace Trakt.Controllers
 
             return View(model);
         }
+
+        public ActionResult Details(int id)
+        {
+            return View(FilmMng.ReadFilm(id));
+        }
+
+        public ActionResult Lijst(int id)
+        {
+            var films = FilmMng.ReadFilms().Where(f => f.Acteurs.FirstOrDefault(a => a.ActeurID == id) != null).OrderBy(f => f.Naam).ToList();
+
+            FilmViewModel model = new FilmViewModel()
+            {
+                Films = films,
+                Sorteren = FilmSorterenOp.Naam,
+                MaxFilms = DEFAULT_MAX_FILMS
+            };
+
+            return View("Index", model);
+        }
     }
 }

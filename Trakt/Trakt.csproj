@@ -215,6 +215,8 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ActeursController.cs" />
+    <Compile Include="Controllers\AfleveringController.cs" />
     <Compile Include="Controllers\CollectiesController.cs" />
     <Compile Include="Controllers\FilmsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -333,6 +335,12 @@
     <Content Include="Views\Account\Register - Copy.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation - Copy.cshtml" />
     <Content Include="Views\Series\Index.cshtml" />
+    <Content Include="Views\Acteurs\Index.cshtml" />
+    <Content Include="Views\Films\Details.cshtml" />
+    <Content Include="Views\Collecties\Details.cshtml" />
+    <Content Include="Views\Series\Details.cshtml" />
+    <Content Include="Views\Aflevering\Details.cshtml" />
+    <Content Include="Views\Acteurs\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

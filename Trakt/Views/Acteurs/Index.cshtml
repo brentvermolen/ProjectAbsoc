@@ -1,11 +1,11 @@
-﻿@model Trakt.Models.SerieViewModel
+﻿@model Trakt.Models.ActeurViewModel
 
 @{
-   ViewBag.Title = "Series";
+   ViewBag.Title = "Acteurs";
 }
 
 <h2>@ViewBag.Title</h2>
-@using (Html.BeginForm("Index", "Series", FormMethod.Post, new { id = "sorterenForm" }))
+@using (Html.BeginForm("Index", "Acteurs", FormMethod.Post, new { id = "sorterenForm" }))
 {
    <div class="row">
       <div class="col-md-3 col-sm-3">
@@ -33,24 +33,36 @@
 }
 
 <div class="row">
-   @foreach (var serie in Model.Series)
+   @foreach (var acteur in Model.Acteurs)
    {
-      <div class="col-lg-3 col-md-4 col-md-offset-0 col-sm-5 col-sm-offset-1 poster">
-         <a href="@Url.Action("Details", "Series", new { id = serie.ID })" title="@serie.Naam">
-            @{
-               var source = "";
-               if (serie.PosterPath == null)
-               {
-                  source = "/Content/Images/no_image.png";
-               }
-               else
-               {
-                  source = serie.PosterPath;
-               }
-            }
-            <img src="@source" class="image" alt="@serie.Naam" style="max-width:100%; height:400px" />
-            <div class="overlayPoster">
-               <div class="posterOverlayContent">@serie.Naam</div>
+
+      var source = "";
+      var posterClass = "poster";
+      var overlayClass = "overlayPoster";
+
+      if (acteur.ImagePath == null)
+      {
+         source = "/Content/Images/no_image.png";
+         posterClass += " posterhovered";
+         overlayClass += " overlayhovered";
+      }
+      else
+      {
+         if (acteur.ImagePath.StartsWith("http"))
+         {
+            source = acteur.ImagePath;
+         }
+         else
+         {
+            source = "https://image.tmdb.org/t/p/w300/" + acteur.ImagePath;
+         }
+      }
+
+      <div class="col-lg-3 col-md-4 col-md-offset-0 col-sm-5 col-sm-offset-1 @posterClass">
+         <a href="@Url.Action("Details", "Acteurs", new { id = acteur.ID })" title="@acteur.Naam">
+            <img src="@source" class="image" alt="@acteur.Naam" style="max-width:100%; height:400px" />
+            <div class="@overlayClass">
+               <div class="posterOverlayContent">@acteur.Naam</div>
             </div>
          </a>
       </div>

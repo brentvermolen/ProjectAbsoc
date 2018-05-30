@@ -1,0 +1,46 @@
+﻿@model BL.Domain.Aflevering
+
+@{
+    ViewBag.Title = Model.Naam;
+}
+
+<h2><a href="@Url.Action("Details", "Series", new { id = Model.SerieID })">@Model.Serie.Naam</a> - @ViewBag.Title</h2>
+<hr />
+<div class="row">
+   <div class="col-md-4" style="padding-right: 20px;border-right:solid 1px">
+      @{
+         var source = "";
+         if (Model.ImagePath == null)
+         {
+            source = "/Content/Images/no_image.png";
+         }
+         else
+         {
+            source += Model.ImagePath;
+         }
+      }
+      <img src="@source" class="image" alt="@Model.Naam" style="width:100%;margin-bottom:10px" />      @{
+         source = "";
+         if (Model.Serie.PosterPath == null)
+         {
+            source = "/Content/Images/no_image.png";
+         }
+         else
+         {
+            source = Model.Serie.PosterPath;
+         }
+      }
+      <img src="@source" class="image" alt="@Model.Naam" style="width:100%;" />
+   </div>
+   <div class="col-md-8">
+      <img style="width:100%" src="@Model.Serie.BannerPath" />
+      <hr />
+      <p><strong>Omschrijving</strong></p>
+      <p>@Model.Omschrijving</p>
+      <br />
+      <p><strong>Seizoen @Model.Seizoen Aflevering @Model.Nummer</strong></p>
+      <br />
+      <p class="col-sm-4" style="text-align:center"><strong>@Model.AirDate</strong></p>
+      <p class="col-sm-4" style="text-align:center"><strong>Afl. @Model.AfleveringNr</strong></p>
+   </div>
+</div>

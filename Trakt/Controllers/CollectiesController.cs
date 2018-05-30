@@ -77,5 +77,10 @@ namespace Trakt.Controllers
 
             return View(model);
         }
+
+        public ActionResult Details(int id)
+        {
+            return View(CollectieMng.ReadCollectie(id));
+        }
     }
 }

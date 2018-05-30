@@ -1,0 +1,35 @@
+﻿@model BL.Domain.Acteur
+@{
+    ViewBag.Title = Model.Naam;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+   <div class="col-md-4" style="padding-right:20px; border-right: solid 1px">
+      @{
+          var source = "";
+
+          if (Model.ImagePath == null)
+          {
+             source = "/Content/Images/no_image.png";
+          }
+          else
+          {
+             if (Model.ImagePath.StartsWith("http"))
+             {
+                source = Model.ImagePath;
+             }
+             else
+             {
+                source = "https://image.tmdb.org/t/p/w300/" + Model.ImagePath;
+             }
+          }
+      }
+      <img src="@source" class="image" alt="@Model.Naam" style="width:100%" />
+   </div>
+   <div class="col-md-8">
+      <p><strong>Aantal Films: </strong>@Model.Films.Count <a href="@Url.Action("Lijst", "Films", new { id = Model.ID })">Zie Lijst</a></p>
+      <p><strong>Aantal Series: </strong>@Model.Series.Count <a href="@Url.Action("Lijst", "Series", new { id = Model.ID })">Zie Lijst</a></p>
+   </div>
+</div>

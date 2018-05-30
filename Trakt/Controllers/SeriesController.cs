@@ -74,12 +74,29 @@ namespace Trakt.Controllers
                     model.Series.Sort((f1, f2) => f1.Afleveringen.Count.CompareTo(f2.Afleveringen.Count));
                     break;
             }
-
-
+            
             model.Series = model.Series.Where(f => count++ < (int)model.MaxFilms).ToList();
 
             return View(model);
         }
 
+        public ActionResult Details(int id)
+        {
+            return View(SerieMng.ReadSerie(id));
+        }
+
+        public ActionResult Lijst(int id)
+        {
+            var series = SerieMng.ReadSeries().Where(f => f.Acteurs.FirstOrDefault(a => a.ActeurID == id) != null).OrderBy(f => f.Naam).ToList();
+
+            SerieViewModel model = new SerieViewModel()
+            {
+                Series = series,
+                Sorteren = SerieSorterenOp.Naam,
+                MaxFilms = DEFAULT_MAX
+            };
+
+            return View("Index", model);
+        }
     }
 }

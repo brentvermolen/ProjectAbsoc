@@ -15,5 +15,10 @@ namespace DAL
         {
             return ctx.Collecties.ToList();
         }
+
+        public object GetCollectie(int id)
+        {
+            return ctx.Collecties.Find(id);
+        }
     }
 }

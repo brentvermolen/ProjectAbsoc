@@ -1,0 +1,129 @@
+﻿@model BL.Domain.Serie
+
+@{
+   ViewBag.Title = Model.Naam;
+}
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+@{
+   List<int> seizoenen = new List<int>();
+   foreach (var aflevering in Model.Afleveringen)
+   {
+      if (!seizoenen.Contains(aflevering.Seizoen))
+      {
+         seizoenen.Add(aflevering.Seizoen);
+      }
+   }
+}
+<div class="row">
+   <div class="col-md-4" style="padding-right: 20px;border-right:solid 1px">
+      @{
+         var source = "";
+         if (Model.PosterPath == null)
+         {
+            source = "/Content/Images/no_image.png";
+         }
+         else
+         {
+            source = Model.PosterPath;
+         }
+      }
+      <img src="@source" class="image" alt="@Model.Naam" style="width:100%;" />
+   </div>
+   <div class="col-md-8" style="padding-left: 20px;">
+      <img style="width:100%" src="@Model.BannerPath" />
+      <hr />
+      <p><strong>Omschrijving</strong></p>
+      <p>@Model.Omschrijving</p>
+      <br />
+      <p class="col-sm-4" style="text-align:center"><strong>@seizoenen.Count Seizoenen</strong></p>
+      <p class="col-sm-4" style="text-align:center"><strong>@Model.AirDate</strong></p>
+      <p class="col-sm-4" style="text-align:center"><strong>@Model.Netwerk</strong></p>
+   </div>
+</div>
+
+
+<div class="testimonial-group">
+   <h2>Acteurs</h2>
+   <div class="row">
+      @{
+         Model.Acteurs.Sort((a1, a2) => a1.Sort.CompareTo(a2.Sort));
+      }
+      @foreach (var acteur in Model.Acteurs)
+      {
+         <div class="col-md-3 col-sm-6 col-xs-12 poster">
+            <a href="@Url.Action("Details", "Acteurs", new { id = @acteur.ActeurID })" title="@acteur.Acteur.Naam">
+               @{
+                  var actSrc = "";
+                  var posterClass = "poster";
+                  var overlayClass = "overlayPoster";
+
+                  if (acteur.Acteur.ImagePath == null)
+                  {
+                     source = "/Content/Images/no_image.png";
+                     posterClass += " posterhovered";
+                     overlayClass += " overlayhovered";
+                  }
+                  else
+                  {
+                     if (acteur.Acteur.ImagePath.StartsWith("http"))
+                     {
+                        actSrc = acteur.Acteur.ImagePath;
+                     }
+                     else
+                     {
+                        actSrc = "https://image.tmdb.org/t/p/w300/" + acteur.Acteur.ImagePath;
+                     }
+                  }
+               }
+               <img src="@actSrc" class="image" alt="@acteur.Acteur.Naam" style="max-width:100%; height:400px" />
+               <div class="overlayPoster">
+                  <div class="posterOverlayContent">@acteur.Acteur.Naam<br />@acteur.Karakter</div>
+               </div>
+            </a>
+         </div>
+      }
+   </div>
+</div>
+
+@foreach (var seizoen in seizoenen)
+{
+   <div class="testimonial-group">
+      <h1>Seizoen @seizoen</h1>
+      <div class="row">
+         @{
+            var afleveringen = Model.Afleveringen.Where(a => a.Seizoen == seizoen).ToList();
+            afleveringen.Sort((a1, a2) => a1.Nummer.CompareTo(a2.Nummer));
+         }
+         @foreach (var aflevering in afleveringen)
+         {
+            <div class="col-md-3 col-sm-6 col-xs-12 poster">
+               <a href="@Url.Action("Details", "Aflevering", new { id = aflevering.ID })" title="@aflevering.Naam">
+                  @{
+                     var actSrc = "";
+                     var posterClass = "poster";
+                     var overlayClass = "overlayPoster";
+
+                     if (aflevering.ImagePath == null)
+                     {
+                        source = "/Content/Images/no_image.png";
+                        posterClass += " posterhovered";
+                        overlayClass += " overlayhovered";
+                     }
+                     else
+                     {
+                        actSrc = aflevering.ImagePath;
+                     }
+                  }
+                  <img src="@actSrc" class="image" alt="@aflevering.Naam" style="width:100%;" />
+                  <div class="overlayPoster">
+                     <div class="posterOverlayContent">@aflevering.Naam<br />Afl. @aflevering.Nummer</div>
+                  </div>
+               </a>
+            </div>
+         }
+      </div>
+   </div>
+}

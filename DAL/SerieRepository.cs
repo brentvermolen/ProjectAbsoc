@@ -20,5 +20,15 @@ namespace DAL
         {
             return ctx.Series.ToList();
         }
+
+        public Aflevering GetAflevering(int id)
+        {
+            return ctx.Afleveringen.Find(id);
+        }
+
+        public Serie GetSerie(int id)
+        {
+            return ctx.Series.Find(id);
+        }
     }
 }

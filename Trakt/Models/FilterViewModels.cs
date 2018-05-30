@@ -30,6 +30,14 @@ namespace Trakt.Models
         public virtual SerieFilterOp FilterOp { get; set; }
         public virtual string Filter { get; set; }
     }
+    public class ActeurViewModel
+    {
+        public virtual List<Acteur> Acteurs { get; set; }
+        public virtual FilterMaxFilms MaxFilms { get; set; }
+        public virtual ActeurSorterenOp Sorteren { get; set; }
+        public virtual ActeurFilterOp FilterOp { get; set; }
+        public virtual string Filter { get; set; }
+    }
 
     public enum FilterMaxFilms
     {
@@ -37,7 +45,8 @@ namespace Trakt.Models
         Twintig = 20,
         Dertig = 30,
         Vijftig = 50,
-        Honderd = 100
+        Honderd = 100,
+        Tweehonderd = 200
     }
 
     public enum FilmSorterenOp
@@ -72,6 +81,17 @@ namespace Trakt.Models
     }
 
     public enum SerieFilterOp
+    {
+        Naam = 0
+    }
+
+    public enum ActeurSorterenOp
+    {
+        Naam = 0,
+        AantalVermeldingen
+    }
+
+    public enum ActeurFilterOp
     {
         Naam = 0
     }
