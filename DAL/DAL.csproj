@@ -52,8 +52,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoekRepository.cs" />
-    <Compile Include="EF\AbsocContext.cs" />
-    <Compile Include="EF\AbsocInitializer.cs" />
+    <Compile Include="EF\TraktContext.cs" />
+    <Compile Include="EF\TraktInitializer.cs" />
     <Compile Include="GebruikerRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
