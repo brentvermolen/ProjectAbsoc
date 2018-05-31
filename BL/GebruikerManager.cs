@@ -26,5 +26,10 @@ namespace BL
         {
             return repo.ValidPostcode(postcode);
         }
+
+        public List<Gebruiker> GetGebruikers()
+        {
+            return repo.ReadGebruikers();
+        }
     }
 }

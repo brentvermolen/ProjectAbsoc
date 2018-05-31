@@ -1,7 +1,4 @@
-﻿@using BL;
-@using Microsoft.AspNet.Identity;
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
    <meta charset="utf-8" />
@@ -29,16 +26,6 @@
                <li><a href="@Url.Action("Index","Collecties")">Collecties</a></li>
                <li><a href="@Url.Action("Index","Series")">Series</a></li>
                <li><a href="@Url.Action("Index","Acteurs")">Acteurs</a></li>
-               @if (User.Identity.IsAuthenticated)
-               {
-                  var mng = new GebruikerManager();
-                  var isAdmin = mng.GetGebruiker(int.Parse(User.Identity.GetUserId())).IsAdmin;
-
-                  if (isAdmin)
-                  {
-                     <li><a href="#">Admin</a></li>
-                  }
-               }
             </ul>
             @Html.Partial("_LoginPartial")
             @*<form class="navbar-form navbar-right">
@@ -106,7 +93,7 @@
       @RenderBody()
       <hr />
       <footer>
-         <p>&copy; @DateTime.Now.Year - Absoc</p>
+         <p>&copy; @DateTime.Now.Year - Trakt</p>
       </footer>
    </div>
 

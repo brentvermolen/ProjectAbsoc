@@ -35,7 +35,7 @@ namespace Absoc
 
                 msg.From = new MailAddress(
                     ConfigurationManager.AppSettings["mailAdres"],
-                    "Absoc");
+                    "Trakt");
 
                 msg.Subject = message.Subject;
 

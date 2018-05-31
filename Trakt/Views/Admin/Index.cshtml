@@ -1,0 +1,147 @@
+﻿@model Trakt.Models.AdminViewModel
+
+@{
+   Layout = "";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+   <title>Admin</title>
+
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+   <link rel="stylesheet" href="~/Content/Config.css">
+   <script src="~/Scripts/jquery-3.0.0.min.js"></script>
+   <script>
+      $(document).ready(function () {
+         var subpage = window.location.href.split('#')[1].replace("%20", " ");
+         if (subpage != undefined) {
+            showPage(subpage);
+         }
+         filterPersoon(document.getElementById("filterPersoon").value);
+         filterGebruiker(document.getElementById("filterGebruiker").value);
+      });
+   </script>
+</head>
+<body>
+   <div class="wrapper">
+      <nav id="sidebar">
+         <a href="@Url.Action("Index", "Home")">
+            <div class="sidebar-header">
+               <h3>Admin</h3>
+               <strong>Ad</strong>
+            </div>
+         </a>
+         <ul class="list-unstyled components">
+            <li class="active sidebar">
+               <a class="subpageRef" href="javascript:void(0)" data-id="films" onclick="showPage('films')">
+                  <i class="glyphicon glyphicon-facetime-video"></i>
+                  Films
+               </a>
+            </li>
+            <li class="sidebar">
+               <a class="subpageRef" href="javascript:void(0)" data-id="series" onclick="showPage('series')">
+                  <i class="glyphicon glyphicon-film"></i>
+                  Series
+               </a>
+            </li>
+            <li class="sidebar">
+               <a class="subpageRef" href="javascript:void(0)" data-id="gebruikers" onclick="showPage('gebruikers')">
+                  <i class="glyphicon glyphicon-user" aria-hidden="true"></i>
+                  Gebruikers
+               </a>
+            </li>
+            <li class="sidebar">
+               <a class="subpageRef" href="javascript:void(0)" data-id="archieven" onclick="showPage('archieven')">
+                  <i class="glyphicon glyphicon-folder-open" aria-hidden="true"></i>
+                  Archieven
+               </a>
+            </li>
+         </ul>
+      </nav>
+      <!-- Page Content Holder -->
+      <div id="content">
+         <nav class="navbar navbar-default">
+            <div class="container-fluid">
+
+               <div class="navbar-header">
+                  <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                     <i class="glyphicon glyphicon-align-left"></i>
+                     <span>Toggle Sidebar</span>
+                  </button>
+               </div>
+
+               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                  <ul class="nav navbar-nav navbar-right">
+                     <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                  </ul>
+               </div>
+            </div>
+         </nav>
+
+         <div id="films" class="subpage" style="display:block">
+            @Html.Partial("_Films", Model)
+         </div>
+
+         <div id="series" class="subpage" style="display:none">
+            @Html.Partial("_Series", Model)
+         </div>
+
+         <div id="gebruikers" class="subpage" style="display:none">
+            @Html.Partial("_Gebruikers", Model)
+         </div>
+
+         <div id="archieven" class="subpage" style="display:none">
+            @Html.Partial("_Archieven", Model)
+         </div>
+      </div>
+   </div>
+
+   <!-- jQuery CDN -->
+   <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+   <!-- Bootstrap Js CDN -->
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+   <script type="text/javascript">
+      $(document).ready(function () {
+         $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+
+         });
+         $('#sidebarCollapse').click();
+      });
+
+      function showPage(subpage) {
+         var lis = document.getElementsByClassName("sidebar");
+         for (var i = 0; i < lis.length; i++) {
+            lis[i].className = lis[i].className.replace("active", "");
+         }
+         var refs = document.getElementsByClassName("subpageRef");
+         for (var i = 0; i < refs.length; i++) {
+            var dataId = $(refs[i]).attr("data-id");
+            if (dataId == subpage) {
+               refs[i].className = refs[i].className + " active";
+            }
+         }
+
+         var id = subpage;
+         var divs = document.getElementsByClassName("subpage");
+
+         for (var i = 0; i < divs.length; i++) {
+            var div = divs[i];
+
+            div.style.display = "none";
+
+            if (div.id == id) {
+               div.style.display = "block";
+            }
+         }
+      }
+   </script>
+</body>
+</html>

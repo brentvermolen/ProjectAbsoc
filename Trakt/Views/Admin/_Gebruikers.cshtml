@@ -1,0 +1,48 @@
+﻿@model Trakt.Models.AdminViewModel
+@using Microsoft.AspNet.Identity
+
+<h2>Gebruikers</h2>
+
+<div class="col-md-12">
+   <ul class="list-group" id="gebruikerList">
+      @using (Html.BeginForm("ChangeGebruikerState", "Admin", FormMethod.Post))
+      {
+         foreach (var gebruiker in Model.Gebruikers)
+         {
+            <li class="list-group-item" style="height:55px" id="@gebruiker.ID" @*onclick="setActive(this);"*@>
+               <p class="col-lg-2 visible-lg">@gebruiker.Voornaam @gebruiker.Achternaam</p>
+               <p class="col-lg-3 col-xs-6">@gebruiker.Email</p>
+               <p class="col-lg-5 visible-lg">@gebruiker.Adres, @gebruiker.Postcode @gebruiker.Gemeente.Plaatsnaam</p>
+               <p class="col-lg-2" style="text-align:right">
+                  @if (gebruiker.EmailConfirmed)
+                  {
+                     <button type="submit" value="@gebruiker.ID" class="btn btn-danger" name="id">Deactiveer Gebruiker</button>
+                  }
+                  else
+                  {
+                     <button type="submit" value="@gebruiker.ID" class="btn btn-success" name="id">Activeer Gebruiker</button>
+                  }
+               </p>
+            </li>
+         }
+      }
+   </ul>
+</div>
+
+@*<script>
+      function setActive(element) {
+         var list = document.getElementById("gebruikerList");
+         list = list.getElementsByClassName("list-group-item");
+
+         for (var i = 0; i < list.length; i++) {
+            list[i].className = list[i].className.replace(" active", "");
+         }
+
+         element.className = element.className + " active";
+      }
+   </script>*@
+<style>
+   .list-group-item p {
+      color: black;
+   }
+</style>

@@ -33,7 +33,7 @@
 
    <div class="container">
       @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-signin", role = "form" }))
-      {  
+      {
          @Html.AntiForgeryToken()
          <h2 class="form-signin-heading" style="text-align:center">Nieuwe account.</h2>
          <hr />
@@ -57,7 +57,7 @@
 
          <button type="submit" class="btn btn-lg btn-primary btn-block">Registreer</button>
       }
-      @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+      @* @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl }) *@
    </div> <!-- /container -->
    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>

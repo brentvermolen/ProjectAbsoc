@@ -14,6 +14,9 @@ using BL;
 using System.Text.RegularExpressions;
 using Microsoft.Owin.Security.DataProtection;
 using BL.Domain;
+using System.Net.Mail;
+using System.Net;
+using System.Configuration;
 
 namespace Absoc.Controllers
 {
@@ -223,22 +226,54 @@ namespace Absoc.Controllers
             }
             else
             {
-                var provider = new DpapiDataProtectionProvider("Absoc");
+                /*var provider = new DpapiDataProtectionProvider("Absoc");
                 UserManager.UserTokenProvider = new DataProtectorTokenProvider<MyUser, int>(provider.Create("EmailConfirmation"));
                 UserManager.EmailService = new EmailService();
 
                 string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                 await UserManager.SendEmailAsync(user.Id, "Bevestig uw e-mail adres", "Gelieve uw e-mail adres <a href=\"" + callbackUrl + "\">hier</a> te bevestigen");
-
+                */
                 Gebruiker gebruiker = gebruikerMng.GetGebruiker(user.Id);
                 gebruiker.LastConfirmationMail = DateTime.Today;
-
+                
                 gebruikerMng.ChangeGebruiker(gebruiker);
 
-                //return View("DisplayEmail");
+                //return View("DisplayEmail");*/
+                await SendNewUserMailAsync(gebruiker);
+
                 ViewBag.User = user.Email;
                 return View("ConfirmEmailRedirect");
+            }
+        }
+
+        private async Task SendNewUserMailAsync(Gebruiker gebruiker)
+        {
+            SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
+            client.EnableSsl = true;
+            client.UseDefaultCredentials = false;
+            client.Credentials = new NetworkCredential(ConfigurationManager.AppSettings["mailAdres"], ConfigurationManager.AppSettings["mailWw"]);
+
+            try
+            {
+                MailMessage msg = new MailMessage();
+                msg.IsBodyHtml = true;
+
+                msg.To.Add(ConfigurationManager.AppSettings["mailAdres"]);
+
+                msg.From = new MailAddress(
+                    ConfigurationManager.AppSettings["mailAdres"],
+                    "Trakt");
+
+                msg.Subject = "Nieuwe Login op brentvermolen.be";
+
+                msg.Body = "<p><strong>" + gebruiker.Voornaam + " " + gebruiker.Achternaam + "</strong> heeft zich zojuist geregistreerd op www.brentvermolen.be</p>";
+
+                client.Send(msg);
+            }
+            catch (Exception e)
+            {
+                e.ToString();
             }
         }
 
@@ -459,16 +494,20 @@ namespace Absoc.Controllers
                 }
                 else
                 {
-                    var user = new MyUser { UserName = model.Email, Email = model.Email, Postcode = model.Postcode, Achternaam = model.Achternaam, Voornaam = model.Voornaam, Adres = model.Adres, Geboortedatum = model.Geboortedatum, EmailConfirmed = true, IsAdmin = false };
+                    var user = new MyUser { UserName = model.Email, Email = model.Email, Postcode = model.Postcode, Achternaam = model.Achternaam, Voornaam = model.Voornaam, Adres = model.Adres, Geboortedatum = model.Geboortedatum, EmailConfirmed = false, IsAdmin = false };
                     var result = await UserManager.CreateAsync(user);
                     if (result.Succeeded)
                     {
-                        result = await UserManager.AddLoginAsync(user.Id, info.Login);
+                        await SendNewUserMailAsync(gebruikerMng.GetGebruiker(user.Id));
+
+                        ViewBag.User = user.Email;
+                        return View("ConfirmEmailRedirect");
+                        /*result = await UserManager.AddLoginAsync(user.Id, info.Login);
                         if (result.Succeeded)
                         {
                             await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                             return RedirectToLocal(returnUrl);
-                        }
+                        }*/
                     }
                     AddErrors(result);
                 }

@@ -11,5 +11,10 @@ namespace BL
     public class ArchiefManager
     {
         private readonly ArchiefRepository repo = new ArchiefRepository();
+
+        public List<Archief> GetArchieven()
+        {
+            return repo.ReadArchieven();
+        }
     }
 }
