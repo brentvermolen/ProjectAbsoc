@@ -1,5 +1,6 @@
 ﻿using BL.Domain.ActeurKlassen;
 using BL.Domain.FilmKlassen;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,14 +13,21 @@ namespace BL.Domain
     public class Film
     {
         [Key]
+        [JsonProperty("id")]
         public int ID { get; set; }
+        [JsonProperty("title")]
         public string Naam { get; set; }
+        [JsonProperty("release_date")]
         public string ReleaseDate { get; set; }
+        [JsonProperty("tagline")]
         public string Tagline { get; set; }
+        [JsonProperty("runtime")]
         public int Duur { get; set; }
+        [JsonProperty("overview")]
         public string Omschrijving { get; set; }
         public string TrailerId { get; set; }
         public DateTime? Toegevoegd { get; set; }
+        [JsonProperty("poster_path")]
         public string PosterPath { get; set; }
         public int CollectieID { get; set; }
         public virtual Collectie Collectie { get; set; }

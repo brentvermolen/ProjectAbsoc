@@ -134,5 +134,13 @@ namespace Trakt.Controllers
 
             return View("Index", model);
         }
+
+        [HttpPost]
+        public ActionResult VerwijderFilm(Film model)
+        {
+            FilmMng.RemoveFilm(model.ID);
+
+            return RedirectToAction("Index");
+        }
     }
 }

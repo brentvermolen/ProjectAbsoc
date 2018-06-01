@@ -9,7 +9,11 @@
             <h3 class="panel-title">Film Toevoegen</h3>
          </div>
          <div class="panel-body">
-
+            <div class="row">
+               <input class="col-md-8" id="naamFilm" placeholder="Naam" />
+               <input type="number" id="jaartalFilm" min="1900" max="@DateTime.Today.Year" maxlength="4" class="col-md-4" placeholder="Jaartal" />
+               <button onclick="zoekFilms();" class="btn btn-success" style="margin:5px">Zoek Films</button>
+            </div>
          </div>
       </div>
    </div>
@@ -34,3 +38,54 @@
       </div>
    </div>
 </div>
+
+<div class="row" id="filmResultaten">
+
+</div>
+
+<script>
+   @Html.Raw(TempData["msg"])
+
+   function zoekFilms() {
+      var naam = document.getElementById("naamFilm").value;
+      var jaartal = document.getElementById("jaartalFilm").value;
+
+      if (jaartal.length == 4 && naam != "") {
+         var request = "https://api.themoviedb.org/3/search/movie?api_key=" + "2719fd17f1c54d219dedc3aa9309a1e2" + "&language=nl-BE&query=" + naam + "&year=" + jaartal;
+
+         $.ajax(request, {
+            type: 'GET',
+            dataType: 'json'
+         }).done(function (data) {
+            toonFilmResultaten(data["results"]);
+         }).fail(function () {
+            alert('fail');
+         });
+      } else {
+         alert("Geldige data invoeren aub")
+      }
+   }
+
+   function toonFilmResultaten(data) {
+      var element = document.getElementById("filmResultaten");
+      var inner = '<ul class="list-group" style="margin:5px;">';
+      for (var i = 0; i < data.length; i++) {
+         inner += '<li class="list-group-item col-xs-12">';
+         inner += '<img class="col-xs-2 poster" src = "http://image.tmdb.org/t/p/w154/' + data[i]["poster_path"] + '" alt = "poster" />';
+         inner += "<p class='col-xs-2'>" + data[i]["original_title"] + "</p>";
+         inner += "<p class='col-xs-2'>" + data[i]["release_date"] + "</p>";
+         inner += "<p class='col-xs-10'>" + data[i]["overview"] + "</p>";
+         inner += "<form action='Admin/FilmToevoegen/' method='POST'><input type='hidden' name='id' value='" + data[i]["id"] + "' /><button type='submit' class='col-xs-2 btn btn-success' onclick='filmToevoegen(" + data[i]["id"] + ")'>Toevoegen</button></form>";
+         inner += "</li>";
+      }
+      inner += "</ul>";
+
+      element.innerHTML = inner;
+   }
+</script>
+<style>
+   .poster {
+      max-height: 154px;
+      width: auto;
+   }
+</style>

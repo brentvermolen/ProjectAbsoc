@@ -21,5 +21,15 @@ namespace BL
         {
             return repo.GetFilm(id);
         }
+
+        public void AddFilm(Film film)
+        {
+            repo.CreateFilm(film);
+        }
+
+        public void RemoveFilm(int ID)
+        {
+            repo.DeleteFilm(ID);
+        }
     }
 }

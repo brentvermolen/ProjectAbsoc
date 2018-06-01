@@ -25,5 +25,16 @@ namespace DAL
         {
             return ctx.Films.Find(id);
         }
+
+        public void CreateFilm(Film film)
+        {
+            ctx.Films.Add(film);
+            ctx.SaveChanges();
+        }
+
+        public void DeleteFilm(int ID)
+        {
+            ctx.Films.Remove(GetFilm(ID));
+        }
     }
 }
