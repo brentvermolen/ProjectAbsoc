@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace DAL
 {
-    public class TraktInitializer : CreateDatabaseIfNotExists<TraktContext>
+    public class TraktInitializer : DropCreateDatabaseAlways<TraktContext>
     {
         protected override void Seed(TraktContext context)
         {
