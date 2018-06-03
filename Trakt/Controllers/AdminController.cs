@@ -1,5 +1,6 @@
 ﻿using BL;
 using BL.Domain;
+using BL.Domain.ActeurKlassen;
 using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -78,6 +79,7 @@ namespace Trakt.Controllers
         }
 
         private readonly FilmManager FilmMng = new FilmManager();
+        private readonly ActeurManager ActeurMng = new ActeurManager();
 
         [HttpPost]
         public ActionResult FilmToevoegen(AdminViewModel model, string id)
@@ -89,7 +91,7 @@ namespace Trakt.Controllers
             {
                 if (FilmMng.ReadFilm(intId) != null)
                 {
-                    TempData["msg"] = "<script>alert('Film staat al in de databank...')</script>";
+                    TempData["msg"] = "";
                 }
                 else
                 {
@@ -140,12 +142,58 @@ namespace Trakt.Controllers
 
                         FilmMng.AddFilm(film);
 
+                        using (WebClient clientActeurs = new WebClient())
+                        {
+                            request = string.Format("https://api.themoviedb.org/3/movie/{0}/credits?api_key={1}", film.ID, "2719fd17f1c54d219dedc3aa9309a1e2");
+                            clientActeurs.Encoding = Encoding.UTF8;
+                            json = client.DownloadString(request);
+
+                            obj = JObject.Parse(json);
+                            film.Acteurs = new List<ActeurFilm>();
+                            foreach (var acteur in obj.SelectToken("cast"))
+                            {
+                                if ((int)acteur.SelectToken("order") < 15)
+                                {
+                                    int acteurId = (int)acteur.SelectToken("id");
+                                    Acteur a = ActeurMng.ReadActeur(acteurId);
+
+                                    if (a == null)
+                                    {
+                                        a = new Acteur();
+                                        a.ID = acteurId;
+                                        a.Naam = (string)acteur.SelectToken("name");
+                                        a.ImagePath = (string)acteur.SelectToken("profile_path");
+
+                                        ActeurMng.AddActeur(a);
+                                    }
+
+                                    ActeurFilm acteurFilm = new ActeurFilm()
+                                    {
+                                        ActeurID = acteurId,
+                                        FilmID = film.ID,
+                                        Sort = (int)acteur.SelectToken("order"),
+                                        Karakter = (string)acteur.SelectToken("character")
+                                    };
+
+                                    film.Acteurs.Add(acteurFilm);
+                                }
+                            }
+                        }
+
+                        FilmMng.ChangeFilm(film);
+
                         TempData["msg"] = "";
                     }
                 }
             }
 
             return RedirectToAction("Index");
+        }
+
+        private class ActeurJson
+        {
+            [JsonProperty("cast")]
+            public List<Acteur> Acteurs { get; set; }
         }
     }
 }

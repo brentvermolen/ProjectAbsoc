@@ -11,6 +11,7 @@ namespace BL.Domain
     public class Aflevering
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ID { get; set; }
         public string Naam { get; set; }
         public int Nummer { get; set; }

@@ -16,9 +16,15 @@ namespace DAL
             return ctx.Acteurs.ToList();
         }
 
-        public object GetActeur(int id)
+        public Acteur GetActeur(int id)
         {
             return ctx.Acteurs.Find(id);
+        }
+
+        public void CreateActeur(Acteur a)
+        {
+            ctx.Acteurs.Add(a);
+            ctx.SaveChanges();
         }
     }
 }

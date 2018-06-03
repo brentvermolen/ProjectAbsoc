@@ -31,5 +31,10 @@ namespace BL
         {
             repo.DeleteFilm(ID);
         }
+
+        public void ChangeFilm(Film film)
+        {
+            repo.UpdateFilm(film);
+        }
     }
 }

@@ -26,6 +26,12 @@ namespace DAL
             return ctx.Films.Find(id);
         }
 
+        public void UpdateFilm(Film film)
+        {
+            ctx.Entry(film).State = System.Data.Entity.EntityState.Modified;
+            ctx.SaveChanges();
+        }
+
         public void CreateFilm(Film film)
         {
             ctx.Films.Add(film);
@@ -35,6 +41,7 @@ namespace DAL
         public void DeleteFilm(int ID)
         {
             ctx.Films.Remove(GetFilm(ID));
+            ctx.SaveChanges();
         }
     }
 }

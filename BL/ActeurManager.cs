@@ -17,9 +17,14 @@ namespace BL
             return repo.GetActeurs().ToList();
         }
 
-        public object ReadActeur(int id)
+        public Acteur ReadActeur(int id)
         {
             return repo.GetActeur(id);
+        }
+
+        public void AddActeur(Acteur a)
+        {
+            repo.CreateActeur(a);
         }
     }
 }
