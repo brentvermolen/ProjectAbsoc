@@ -7,23 +7,23 @@
 <h2>@ViewBag.Title</h2>
 
 <ul class="nav nav-tabs">
-   @for (var i = 0; i < Model.Archiefen.Count; i++)
+   @for (var i = 0; i < Model.Archieven.Count; i++)
    {
       if (i == 0)
       {
-         <li class="active"><a data-toggle="tab" href="#@Model.Archiefen[i].ID">@Model.Archiefen[i].Naam</a></li>
+         <li class="active"><a data-toggle="tab" href="#@Model.Archieven[i].ID">@Model.Archieven[i].Naam</a></li>
       }
       else
       {
-         <li><a data-toggle="tab" href="#@Model.Archiefen[i].ID">@Model.Archiefen[i].Naam</a></li>
+         <li><a data-toggle="tab" href="#@Model.Archieven[i].ID">@Model.Archieven[i].Naam</a></li>
       }
    }
 </ul>
 
 <div class="tab-content">
-   @for (var i = 0; i < Model.Archiefen.Count; i++)
+   @for (var i = 0; i < Model.Archieven.Count; i++)
    {
-      Model.Archiefen[i].Films.Sort((f1, f2) => f1.Naam.CompareTo(f2.Naam));
+      Model.Archieven[i].Films.Sort((f1, f2) => f1.Naam.CompareTo(f2.Naam));
 
       var klasse = "tab-pane fade";
       if (i == 0)
@@ -31,40 +31,40 @@
          klasse += " in active";
       }
 
-      <div id="@Model.Archiefen[i].ID" class="@klasse">
-         <h3>@Model.Archiefen[i].Naam</h3>
+      <div id="@Model.Archieven[i].ID" class="@klasse">
+         <h3>@Model.Archieven[i].Naam</h3>
 
-         <div class="panel-group" id="@Model.Archiefen[i].ID-panel">
+         <div class="panel-group" id="@Model.Archieven[i].ID-panel">
             <div class="panel panel-default">
                <div class="panel-heading">
                   <h4 class="panel-title">
-                     <a data-toggle="collapse" data-parent="#@Model.Archiefen[i].ID-panel" href="#@Model.Archiefen[i].ID-Films">
+                     <a data-toggle="collapse" data-parent="#@Model.Archieven[i].ID-panel" href="#@Model.Archieven[i].ID-Films">
                         Films
                      </a>
                   </h4>
                </div>
-               <div id="@Model.Archiefen[i].ID-Films" class="panel-collapse collapse in">
+               <div id="@Model.Archieven[i].ID-Films" class="panel-collapse collapse in">
                   <div class="panel-body">
-                     @if (Model.Archiefen[i].Films.Count == 0)
+                     @if (Model.Archieven[i].Films.Count == 0)
                      {
-                         <p>Geen films gevonden</p>
+                        <p>Geen films gevonden</p>
                      }
                      else
                      {
                         <div class="col-md-6">
-                           <input type="text" onchange="filterFilms(this.value, @Model.Archiefen[i].ID)" style="width:100%" placeholder="filter" />
+                           <input type="text" onchange="filterFilms(this.value, @Model.Archieven[i].ID)" style="width:100%" placeholder="filter" />
                            <div style="max-height:400px; overflow-y:scroll">
                               <table>
-                                 @foreach (var film in Model.Archiefen[i].Films)
+                                 @foreach (var film in Model.Archieven[i].Films)
                                  {
-                                    <tr class="@Model.Archiefen[i].ID-film" id="@film.ID">
-                                       <td><a href="javascript:void(0);" onclick="getFilmData(@film.ID)">@Html.DisplayFor(model => film.Naam)</a></td>
+                                    <tr class="@Model.Archieven[i].ID-film" id="@film.ID">
+                                       <td><a href="javascript:void(0);" onclick="getFilmData(@film.ID, @Model.Archieven[i].ID)">@Html.DisplayFor(model => film.Naam)</a></td>
                                     </tr>
                                  }
                               </table>
                            </div>
                         </div>
-                        <div class="col-md-6" id="filmData">
+                        <div class="col-md-6" id="@Model.Archieven[i].ID-filmData" style="max-height:400px; overflow-y:scroll">
 
                         </div>
                      }
@@ -74,17 +74,16 @@
             <div class="panel panel-default">
                <div class="panel-heading">
                   <h4 class="panel-title">
-                     <a data-toggle="collapse" data-parent="#@Model.Archiefen[i].ID-panel" href="#@Model.Archiefen[i].ID-Series">
+                     <a data-toggle="collapse" data-parent="#@Model.Archieven[i].ID-panel" href="#@Model.Archieven[i].ID-Series">
                         Series
                      </a>
                   </h4>
                </div>
-               <div id="@Model.Archiefen[i].ID-Series" class="panel-collapse collapse">
+               <div id="@Model.Archieven[i].ID-Series" class="panel-collapse collapse">
                   <div class="panel-body">
-                     Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                     sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                     minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                     commodo consequat.
+                     <div class="col-md-6">
+
+                     </div>
                   </div>
                </div>
             </div>
@@ -109,13 +108,24 @@
       }
    }
 
-   function getFilmData(id) {
+   function getFilmData(id, archief) {
       $.ajax("api/Films/GetFilm/" + id, {
          type: 'GET',
          dataType: 'json'
       }).done(function (data) {
-         var test = "";
-         test += "125";
+         var res = document.getElementById(archief + "-filmData");
+         var inner = "";
+
+         inner += '<img class="col-xs-12 poster154" src = "http://image.tmdb.org/t/p/w92/' + data["poster_path"] + '" alt = "poster" />';
+         inner += "<h4 class='col-xs-6'><a href='/Films/Details/" + id + "'>" + data["title"] + "</a></h4>";
+         if (data["tagline"] != null) {
+            inner += "<p class='col-xs-6'>" + data["tagline"] + "</p>";
+         }
+         inner += "<p class='col-xs-6'>" + data["release_date"] + "</p>";
+         inner += "<p class='col-xs-6'>" + data["runtime"] + " Minuten</p>";
+         inner += "<p class='col-xs-12'>" + data["overview"] + "</p>";
+
+         res.innerHTML = inner;
       }).fail(function () {
          alert("fail");
       });

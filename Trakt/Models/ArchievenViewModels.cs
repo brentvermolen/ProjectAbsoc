@@ -8,6 +8,6 @@ namespace Trakt.Models
 {
     public class ArchiefIndexModel
     {
-        public List<Archief> Archiefen { get; set; }
+        public List<Archief> Archieven { get; set; }
     }
 }

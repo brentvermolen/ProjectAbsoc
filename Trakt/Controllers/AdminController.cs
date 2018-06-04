@@ -62,8 +62,7 @@ namespace Trakt.Controllers
         [HttpPost]
         public ActionResult ChangeGebruikerState(AdminViewModel model, string id)
         {
-            int intId = 0;
-            if (int.TryParse(id, out intId))
+            if (int.TryParse(id, out int intId))
             {
                 var gebruiker = GebruikerMng.GetGebruiker(intId);
 
@@ -84,10 +83,9 @@ namespace Trakt.Controllers
         [HttpPost]
         public ActionResult FilmToevoegen(AdminViewModel model, string id)
         {
-            int intId;
             TempData["msg"] = "<script>alert('Er ging iets mis bij het toevoegen van de film...')</script>";
 
-            if (int.TryParse(id, out intId) == true)
+            if (int.TryParse(id, out int intId) == true)
             {
                 if (FilmMng.ReadFilm(intId) != null)
                 {
@@ -159,10 +157,12 @@ namespace Trakt.Controllers
 
                                     if (a == null)
                                     {
-                                        a = new Acteur();
-                                        a.ID = acteurId;
-                                        a.Naam = (string)acteur.SelectToken("name");
-                                        a.ImagePath = (string)acteur.SelectToken("profile_path");
+                                        a = new Acteur
+                                        {
+                                            ID = acteurId,
+                                            Naam = (string)acteur.SelectToken("name"),
+                                            ImagePath = (string)acteur.SelectToken("profile_path")
+                                        };
 
                                         ActeurMng.AddActeur(a);
                                     }

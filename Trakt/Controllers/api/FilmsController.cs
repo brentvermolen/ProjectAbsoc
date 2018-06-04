@@ -1,4 +1,5 @@
 ﻿using BL;
+using BL.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +13,23 @@ namespace Trakt.Controllers.api
     {
         private readonly FilmManager FilmMng = new FilmManager();
         
+        [Route("~/api/Films/GetFilm/{id}")]
         public IHttpActionResult GetFilm(string id)
         {
-            int intId;
-            if (int.TryParse(id, out intId))
+            if (int.TryParse(id, out int intId))
             {
-                return Ok(FilmMng.ReadFilm(intId));
+                var film = FilmMng.ReadFilm(intId);
+                var retFilm = new Film()
+                {
+                    Naam = film.Naam,
+                    Tagline = film.Tagline,
+                    Duur = film.Duur,
+                    PosterPath = film.PosterPath,
+                    Omschrijving = film.Omschrijving,
+                    ReleaseDate = film.ReleaseDate
+                };
+
+                return Ok(retFilm);
             }
 
             return NotFound();

@@ -29,7 +29,7 @@ namespace Trakt.Controllers
         {
             var model = new ArchiefIndexModel()
             {
-                Archiefen = ArchiefMng.GetArchievenFromGebruiker(int.Parse(User.Identity.GetUserId()))
+                Archieven = ArchiefMng.GetArchievenFromGebruiker(int.Parse(User.Identity.GetUserId()))
             };
 
             return View(model);

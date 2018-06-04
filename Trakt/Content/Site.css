@@ -97,3 +97,12 @@ textarea {
    padding: 5px;
    white-space: normal;
 }
+.poster92 {
+   max-height: 92px;
+   width: auto;
+}
+
+.poster154 {
+   max-height: 154px;
+   width: auto;
+}

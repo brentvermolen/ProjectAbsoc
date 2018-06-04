@@ -71,7 +71,7 @@
       var inner = '<ul class="list-group" style="margin:5px;">';
       for (var i = 0; i < data.length; i++) {
          inner += '<li class="list-group-item col-xs-12">';
-         inner += '<img class="col-xs-2 poster" src = "http://image.tmdb.org/t/p/w154/' + data[i]["poster_path"] + '" alt = "poster" />';
+         inner += '<img class="col-xs-2 poster" src = "http://image.tmdb.org/t/p/w154/' + data[i]["poster_path"] + '" alt = "poster154" />';
          inner += "<p class='col-xs-2'>" + data[i]["original_title"] + "</p>";
          inner += "<p class='col-xs-2'>" + data[i]["release_date"] + "</p>";
          inner += "<p class='col-xs-10'>" + data[i]["overview"] + "</p>";
@@ -83,9 +83,3 @@
       element.innerHTML = inner;
    }
 </script>
-<style>
-   .poster {
-      max-height: 154px;
-      width: auto;
-   }
-</style>
