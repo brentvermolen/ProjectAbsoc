@@ -1,0 +1,123 @@
+﻿@model Trakt.Models.ArchiefIndexModel
+
+@{
+   ViewBag.Title = "Archieven";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<ul class="nav nav-tabs">
+   @for (var i = 0; i < Model.Archiefen.Count; i++)
+   {
+      if (i == 0)
+      {
+         <li class="active"><a data-toggle="tab" href="#@Model.Archiefen[i].ID">@Model.Archiefen[i].Naam</a></li>
+      }
+      else
+      {
+         <li><a data-toggle="tab" href="#@Model.Archiefen[i].ID">@Model.Archiefen[i].Naam</a></li>
+      }
+   }
+</ul>
+
+<div class="tab-content">
+   @for (var i = 0; i < Model.Archiefen.Count; i++)
+   {
+      Model.Archiefen[i].Films.Sort((f1, f2) => f1.Naam.CompareTo(f2.Naam));
+
+      var klasse = "tab-pane fade";
+      if (i == 0)
+      {
+         klasse += " in active";
+      }
+
+      <div id="@Model.Archiefen[i].ID" class="@klasse">
+         <h3>@Model.Archiefen[i].Naam</h3>
+
+         <div class="panel-group" id="@Model.Archiefen[i].ID-panel">
+            <div class="panel panel-default">
+               <div class="panel-heading">
+                  <h4 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#@Model.Archiefen[i].ID-panel" href="#@Model.Archiefen[i].ID-Films">
+                        Films
+                     </a>
+                  </h4>
+               </div>
+               <div id="@Model.Archiefen[i].ID-Films" class="panel-collapse collapse in">
+                  <div class="panel-body">
+                     @if (Model.Archiefen[i].Films.Count == 0)
+                     {
+                         <p>Geen films gevonden</p>
+                     }
+                     else
+                     {
+                        <div class="col-md-6">
+                           <input type="text" onchange="filterFilms(this.value, @Model.Archiefen[i].ID)" style="width:100%" placeholder="filter" />
+                           <div style="max-height:400px; overflow-y:scroll">
+                              <table>
+                                 @foreach (var film in Model.Archiefen[i].Films)
+                                 {
+                                    <tr class="@Model.Archiefen[i].ID-film" id="@film.ID">
+                                       <td><a href="javascript:void(0);" onclick="getFilmData(@film.ID)">@Html.DisplayFor(model => film.Naam)</a></td>
+                                    </tr>
+                                 }
+                              </table>
+                           </div>
+                        </div>
+                        <div class="col-md-6" id="filmData">
+
+                        </div>
+                     }
+                  </div>
+               </div>
+            </div>
+            <div class="panel panel-default">
+               <div class="panel-heading">
+                  <h4 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#@Model.Archiefen[i].ID-panel" href="#@Model.Archiefen[i].ID-Series">
+                        Series
+                     </a>
+                  </h4>
+               </div>
+               <div id="@Model.Archiefen[i].ID-Series" class="panel-collapse collapse">
+                  <div class="panel-body">
+                     Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                     sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                     minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                     commodo consequat.
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   }
+</div>
+
+
+<script>
+   function filterFilms(filter, archief) {
+      var films = document.getElementsByClassName(archief + "-film");
+
+      for (var i = 0; i < films.length; i++) {
+         var filmnaam = films[i].children[0].children[0].innerHTML.toLowerCase();
+
+         if (!filmnaam.includes(filter.toLowerCase())) {
+            films[i].style.display = "none";
+         } else {
+            films[i].style.display = "block";
+         }
+      }
+   }
+
+   function getFilmData(id) {
+      $.ajax("api/Films/GetFilm/" + id, {
+         type: 'GET',
+         dataType: 'json'
+      }).done(function (data) {
+         var test = "";
+         test += "125";
+      }).fail(function () {
+         alert("fail");
+      });
+   }
+</script>

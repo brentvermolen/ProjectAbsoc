@@ -11,7 +11,7 @@
 
             <ul class="dropdown-menu">
                <li><a href="@Url.Action("Index", "Profiel")">Profiel</a></li>
-               <li><a href="#">Mijn Archieven</a></li>
+               <li><a href="@Url.Action("Index", "Archieven")">Mijn Archieven</a></li>
                <li role="separator" class="divider"></li>
 
                @if (User.Identity.IsAuthenticated)

@@ -13,7 +13,7 @@ namespace BL.Domain
         public int ID { get; set; }
         public string Naam { get; set; }
         
-        public virtual List<Gebruiker> Gebruiker { get; set; }
+        public virtual List<Gebruiker> Gebruikers { get; set; }
 
         public virtual List<Film> Films { get; set; }
         public virtual List<Aflevering> Afleveringen { get; set; }

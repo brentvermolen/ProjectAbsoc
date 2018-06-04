@@ -1,9 +1,6 @@
 ﻿using BL.Domain;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL
 {
@@ -14,6 +11,26 @@ namespace DAL
         public List<Archief> ReadArchieven()
         {
             return ctx.Archieven.ToList();
+        }
+
+        public List<Archief> ReadArchievenFromGebruiker(int gebruikerID)
+        {
+            List<Archief> archiefs = ReadArchieven();
+            List<Archief> retArchiefs = new List<Archief>();
+
+            foreach(Archief a in archiefs)
+            {
+                foreach(Gebruiker gebruiker in a.Gebruikers)
+                {
+                    if (gebruiker.ID == gebruikerID)
+                    {
+                        retArchiefs.Add(a);
+                        break;
+                    }
+                }
+            }
+
+            return retArchiefs;
         }
     }
 }

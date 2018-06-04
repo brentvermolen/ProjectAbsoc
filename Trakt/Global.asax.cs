@@ -21,6 +21,10 @@ namespace Absoc
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
+            var config = GlobalConfiguration.Configuration;
+            config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling
+                        = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+
             //JobTrigger.StartAsync();
         }
     }

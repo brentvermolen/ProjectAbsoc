@@ -16,5 +16,10 @@ namespace BL
         {
             return repo.ReadArchieven();
         }
+
+        public List<Archief> GetArchievenFromGebruiker(int gebruikerID)
+        {
+            return repo.ReadArchievenFromGebruiker(gebruikerID);
+        }
     }
 }

@@ -51,7 +51,7 @@ namespace DAL
 
             modelBuilder.Entity<Gebruiker>()
                 .HasMany(g => g.Archief)
-                .WithMany(a => a.Gebruiker);
+                .WithMany(a => a.Gebruikers);
 
             modelBuilder.Entity<ActeurFilm>()
                 .HasRequired(a => a.Film)
