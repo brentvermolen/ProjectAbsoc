@@ -51,7 +51,6 @@ namespace Trakt.Controllers
                 filter = model.Filter;
             }
 
-            var count = 0;
             List<Film> films = new List<Film>();
 
             switch (model.FilterOp)
@@ -60,8 +59,7 @@ namespace Trakt.Controllers
                     films = FilmMng.ReadFilms().Where(f => f.Acteurs.FirstOrDefault(a => a.Acteur.Naam.ToLower().Contains(filter)) != null).ToList();
                     break;
                 case FilmFilterOp.Jaar:
-                    int jaartal;
-                    if (int.TryParse(model.Filter, out jaartal) == false)
+                    if (int.TryParse(model.Filter, out int jaartal) == false)
                     { 
                         model.Filter = DateTime.Today.Year.ToString();
                     }
@@ -81,7 +79,10 @@ namespace Trakt.Controllers
                 case FilmSorterenOp.Release:
                     model.Films.Sort((f1, f2) => f1.ReleaseDate.CompareTo(f2.ReleaseDate));
                     break;
-                case FilmSorterenOp.Toegevoegd:
+                case FilmSorterenOp.Release_Desc:
+                    model.Films.Sort((f1, f2) => f2.ReleaseDate.CompareTo(f1.ReleaseDate));
+                    break;
+                case FilmSorterenOp.Toegevoegd_Op:
                     model.Films.Sort((f1, f2) =>
                     {
                         if (f1.Toegevoegd.HasValue && f2.Toegevoegd.HasValue)
@@ -110,7 +111,7 @@ namespace Trakt.Controllers
                     break;
             }
 
-            
+            var count = 0;
             model.Films = model.Films.Where(f => count++ < (int)model.MaxFilms).ToList();
 
             return View(model);

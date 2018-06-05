@@ -44,7 +44,7 @@ namespace Trakt.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var gebruikers = GebruikerMng.GetGebruikers().Where(g => g.IsAdmin == false).ToList();
+            var gebruikers = GebruikerMng.GetGebruikers().ToList();
             gebruikers.Sort((g1, g2) => g1.Voornaam.CompareTo(g2.Voornaam));
             var archieven = ArchiefMng.GetArchieven();
             archieven.Sort((a1, a2) => a1.Naam.CompareTo(a2.Naam));
@@ -74,6 +74,28 @@ namespace Trakt.Controllers
                 }
             }
 
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult VerwijderGebruiker(AdminViewModel model, string id)
+        {
+            if (int.TryParse(id, out int intId))
+            {
+                var gebruiker = GebruikerMng.GetGebruiker(intId);
+
+                if (gebruiker != null)
+                {
+                    GebruikerMng.DeleteGebruiker(gebruiker);
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult UpdateGebruikerArchief(AdminViewModel model)
+        {
             return RedirectToAction("Index");
         }
 

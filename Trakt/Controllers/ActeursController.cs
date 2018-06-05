@@ -70,13 +70,22 @@ namespace Trakt.Controllers
                 default:
                     model.Acteurs.Sort((f1, f2) => f1.Naam.CompareTo(f2.Naam));
                     break;
-                case ActeurSorterenOp.AantalVermeldingen:
+                case ActeurSorterenOp.Aantal_Vermeldingen_Desc:
                     model.Acteurs.Sort((f1, f2) =>
                     {
                         int count1 = f1.Films.Count + f1.Series.Count;
                         int count2 = f2.Films.Count + f2.Series.Count;
 
                         return count2.CompareTo(count1);
+                    });
+                    break;
+                case ActeurSorterenOp.Aantal_Vermeldingen:
+                    model.Acteurs.Sort((f1, f2) =>
+                    {
+                        int count1 = f1.Films.Count + f1.Series.Count;
+                        int count2 = f2.Films.Count + f2.Series.Count;
+
+                        return count1.CompareTo(count2);
                     });
                     break;
             }

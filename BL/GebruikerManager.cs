@@ -31,5 +31,10 @@ namespace BL
         {
             return repo.ReadGebruikers();
         }
+
+        public void DeleteGebruiker(Gebruiker gebruiker)
+        {
+            repo.RemoveGebruiker(gebruiker);
+        }
     }
 }

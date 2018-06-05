@@ -50,7 +50,32 @@
             }
             <img src="@source" class="image" alt="@film.Naam" style="max-width:100%; height:400px" />
             <div class="overlayPoster">
-               <div class="posterOverlayContent">@film.Naam</div>
+               <div class="posterOverlayContent">
+                  @film.Naam
+                  @if (Model.Sorteren != Trakt.Models.FilmSorterenOp.Naam)
+                  {
+                     <br />
+                     switch (Model.Sorteren)
+                     {
+                        case Trakt.Models.FilmSorterenOp.Release:
+                        case Trakt.Models.FilmSorterenOp.Release_Desc:
+                           <text>
+                              @film.ReleaseDate
+                           </text>
+                           break;
+                        case Trakt.Models.FilmSorterenOp.Toegevoegd_Op:
+                           <text>
+                              @film.Toegevoegd.Value.ToShortDateString()
+                           </text>
+                           break;
+                        case Trakt.Models.FilmSorterenOp.Collectie:
+                           <text>
+                              @film.Collectie.Naam
+                           </text>
+                           break;
+                     }
+                  }
+               </div>
             </div>
          </a>
       </div>

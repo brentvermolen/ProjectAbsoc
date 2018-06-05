@@ -4,17 +4,22 @@
 <h2>Gebruikers</h2>
 
 <div class="col-md-12">
-   <ul class="list-group" id="gebruikerList">
-      @using (Html.BeginForm("ChangeGebruikerState", "Admin", FormMethod.Post))
-      {
-         foreach (var gebruiker in Model.Gebruikers)
+   @if (Model.Gebruikers.Count > 0)
+   {
+      <ul class="list-group" id="gebruikerList">
+         @foreach (var gebruiker in Model.Gebruikers.Where(g => g.IsAdmin == false))
          {
             <li class="list-group-item" style="height:55px" id="@gebruiker.ID" @*onclick="setActive(this);"*@>
                <p class="col-lg-2 visible-lg">@gebruiker.Voornaam @gebruiker.Achternaam</p>
                <p class="col-lg-3 col-xs-6">@gebruiker.Email</p>
-               <p class="col-lg-5 visible-lg">@gebruiker.Adres, @gebruiker.Postcode @gebruiker.Gemeente.Plaatsnaam</p>
-               <p class="col-lg-2" style="text-align:right">
-                  @if (gebruiker.EmailConfirmed)
+               <p class="col-lg-3 visible-lg">@gebruiker.Adres, @gebruiker.Postcode @gebruiker.Gemeente.Plaatsnaam</p>
+               @using (Html.BeginForm("VerwijderGebruiker", "Admin", FormMethod.Post, new { @style = "float:right; margin-left:15px" }))
+               {
+                  <button type="submit" value="@gebruiker.ID" class="btn btn-danger" name="id">Verwijder Gebruiker</button>
+               }
+               @using (Html.BeginForm("ChangeGebruikerState", "Admin", FormMethod.Post, new { @style = "float:right" }))
+               {
+                  if (gebruiker.EmailConfirmed)
                   {
                      <button type="submit" value="@gebruiker.ID" class="btn btn-danger" name="id">Deactiveer Gebruiker</button>
                   }
@@ -22,11 +27,15 @@
                   {
                      <button type="submit" value="@gebruiker.ID" class="btn btn-success" name="id">Activeer Gebruiker</button>
                   }
-               </p>
+               }
             </li>
          }
-      }
-   </ul>
+      </ul>
+   }
+   else
+   {
+      <p>Momenteel geen nieuwe gebruikers</p>
+   }
 </div>
 
 @*<script>

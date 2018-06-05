@@ -53,7 +53,8 @@ namespace Trakt.Models
     {
         Naam = 0,
         Release,
-        Toegevoegd,
+        Release_Desc,
+        Toegevoegd_Op,
         Collectie
     }
 
@@ -77,7 +78,8 @@ namespace Trakt.Models
     public enum SerieSorterenOp
     {
         Naam = 0,
-        AantalAfleveringen
+        Aantal_Afleveringen,
+        Aantal_Afleveringen_Desc
     }
 
     public enum SerieFilterOp
@@ -88,7 +90,8 @@ namespace Trakt.Models
     public enum ActeurSorterenOp
     {
         Naam = 0,
-        AantalVermeldingen
+        Aantal_Vermeldingen,
+        Aantal_Vermeldingen_Desc
     }
 
     public enum ActeurFilterOp

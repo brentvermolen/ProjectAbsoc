@@ -70,8 +70,11 @@ namespace Trakt.Controllers
                 default:
                     model.Series.Sort((f1, f2) => f1.Naam.CompareTo(f2.Naam));
                     break;
-                case SerieSorterenOp.AantalAfleveringen:
+                case SerieSorterenOp.Aantal_Afleveringen:
                     model.Series.Sort((f1, f2) => f1.Afleveringen.Count.CompareTo(f2.Afleveringen.Count));
+                    break;
+                case SerieSorterenOp.Aantal_Afleveringen_Desc:
+                    model.Series.Sort((f1, f2) => f2.Afleveringen.Count.CompareTo(f1.Afleveringen.Count));
                     break;
             }
             

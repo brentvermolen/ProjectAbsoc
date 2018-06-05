@@ -31,5 +31,11 @@ namespace DAL
         {
             return ctx.Gebruikers.ToList();
         }
+
+        public void RemoveGebruiker(Gebruiker gebruiker)
+        {
+            ctx.Gebruikers.Remove(gebruiker);
+            ctx.SaveChanges();
+        }
     }
 }

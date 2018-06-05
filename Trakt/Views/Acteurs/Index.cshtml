@@ -62,7 +62,25 @@
          <a href="@Url.Action("Details", "Acteurs", new { id = acteur.ID })" title="@acteur.Naam">
             <img src="@source" class="image" alt="@acteur.Naam" style="max-width:100%; height:400px" />
             <div class="@overlayClass">
-               <div class="posterOverlayContent">@acteur.Naam</div>
+               <div class="posterOverlayContent">
+                  @acteur.Naam
+
+
+                  @if (Model.Sorteren != Trakt.Models.ActeurSorterenOp.Naam)
+                  {
+                     <br />
+                     switch (Model.Sorteren)
+                     {
+                        case Trakt.Models.ActeurSorterenOp.Aantal_Vermeldingen:
+                        case Trakt.Models.ActeurSorterenOp.Aantal_Vermeldingen_Desc:
+                           var vermeldingen = acteur.Films.Count + acteur.Series.Count;
+
+                           <text>@vermeldingen Vermeldingen</text>
+                           break;
+                     }
+                  }
+
+               </div>
             </div>
          </a>
       </div>

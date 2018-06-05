@@ -1,3 +1,70 @@
 ﻿@model Trakt.Models.AdminViewModel
 
 <h2>Archieven</h2>
+
+
+<div class="col-md-12">
+   @using (Html.BeginForm("UpdateGebruikerArchief", "Admin", FormMethod.Post))
+   {
+      <div class="row" style="margin-bottom:20px">
+         @for (var i = 0; i < Model.Gebruikers.Count; i++)
+         {
+            <p class="col-md-2 btn btn-primary" ondragstart="drag(event)" draggable="true" id="@Model.Gebruikers[i].ID">@Model.Gebruikers[i].Email</p>
+         }
+      </div>
+
+      <div class="row">
+         @for (var i = 0; i < Model.Archieven.Count; i++)
+         {
+            <div class="col-md-4">
+               <div class="panel panel-primary">
+                  <div class="panel-heading">
+                     <h3 class="panel-title">@Html.HiddenFor(m => m.Archieven[i].ID)@Model.Archieven[i].Naam</h3>
+                  </div>
+                  <div class="panel-body" id="@Model.Archieven[i].ID" style="min-height:350px" ondrop="drop(event, this.id)" ondragover="allowDrop(event)">
+
+                  </div>
+               </div>
+            </div>
+         }
+      </div>
+   }
+</div>
+
+<script>
+   function allowDrop(event) {
+      event.preventDefault();
+   }
+
+   function drag(event) {
+      event.dataTransfer.setData("id", event.target.id);
+      event.dataTransfer.setData("inner", event.target.innerHTML);
+   }
+
+   function drop(event, archiefId) {
+      event.preventDefault();
+
+      var index = 
+
+      var gebruikerId = event.dataTransfer.getData("id");
+      var elemHidden = '<input data-val="true" data-val-required="" data-val-number="" id="Archieven_' + archiefId + '__Gebruikers_' + gebruikerId + '__ID" value="' + gebruikerId + '" type="hidden" name="Archieven[' + archiefId + '].Gebruikers[' + 0 + '].ID" />';
+      var elemShow = '<button class="col-md-6 btn btn-primary">' + event.dataTransfer.getData("inner") + '</button>'
+
+      event.target.innerHTML += elemHidden + elemShow;
+      @*<input data-val="true" data-val-number="The field ID must be a number." data-val-required="Het veld ID is vereist." id="Archieven_2__Gebruikers_0__ID" name="Archieven[2].Gebruikers[0].ID" value="1" type="hidden">*@
+   }
+</script>
+
+   @for (var i = 0; i < Model.Archieven.Count; i++)
+   {
+      @Html.HiddenFor(m => m.Archieven[i].ID)
+      @Html.HiddenFor(m => m.Archieven[i].Naam)
+      @Html.DisplayFor(m => m.Archieven[i].Naam)
+      <br /><br />
+      for (var j = 0; j < Model.Archieven[i].Gebruikers.Count; j++)
+      {
+         @Html.HiddenFor(m => Model.Archieven[i].Gebruikers[j].ID)
+         @Html.HiddenFor(m => Model.Archieven[i].Gebruikers[j].Email)
+         @Html.DisplayFor(m => Model.Archieven[i].Gebruikers[j].Email)
+      }
+   }
