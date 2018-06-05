@@ -31,64 +31,64 @@
          klasse += " in active";
       }
 
-      <div id="@Model.Archieven[i].ID" class="@klasse">
-         <h3>@Model.Archieven[i].Naam</h3>
+   <div id="@Model.Archieven[i].ID" class="@klasse">
+      <h3>@Model.Archieven[i].Naam</h3>
 
-         <div class="panel-group" id="@Model.Archieven[i].ID-panel">
-            <div class="panel panel-default">
-               <div class="panel-heading">
-                  <h4 class="panel-title">
-                     <a data-toggle="collapse" data-parent="#@Model.Archieven[i].ID-panel" href="#@Model.Archieven[i].ID-Films">
-                        Films
-                     </a>
-                  </h4>
-               </div>
-               <div id="@Model.Archieven[i].ID-Films" class="panel-collapse collapse in">
-                  <div class="panel-body">
-                     @if (Model.Archieven[i].Films.Count == 0)
-                     {
-                        <p>Geen films gevonden</p>
-                     }
-                     else
-                     {
-                        <div class="col-md-6">
-                           <input type="text" onchange="filterFilms(this.value, @Model.Archieven[i].ID)" style="width:100%" placeholder="filter" />
-                           <div style="max-height:400px; overflow-y:scroll">
-                              <table>
-                                 @foreach (var film in Model.Archieven[i].Films)
-                                 {
-                                    <tr class="@Model.Archieven[i].ID-film" id="@film.ID">
-                                       <td><a href="javascript:void(0);" onclick="getFilmData(@film.ID, @Model.Archieven[i].ID)">@Html.DisplayFor(model => film.Naam)</a></td>
-                                    </tr>
-                                 }
-                              </table>
-                           </div>
-                        </div>
-                        <div class="col-md-6" id="@Model.Archieven[i].ID-filmData" style="max-height:400px; overflow-y:scroll">
-
-                        </div>
-                     }
-                  </div>
-               </div>
+      <div class="panel-group" id="@Model.Archieven[i].ID-panel">
+         <div class="panel panel-default">
+            <div class="panel-heading">
+               <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#@Model.Archieven[i].ID-panel" href="#@Model.Archieven[i].ID-Films">
+                     Films
+                  </a>
+               </h4>
             </div>
-            <div class="panel panel-default">
-               <div class="panel-heading">
-                  <h4 class="panel-title">
-                     <a data-toggle="collapse" data-parent="#@Model.Archieven[i].ID-panel" href="#@Model.Archieven[i].ID-Series">
-                        Series
-                     </a>
-                  </h4>
-               </div>
-               <div id="@Model.Archieven[i].ID-Series" class="panel-collapse collapse">
-                  <div class="panel-body">
+            <div id="@Model.Archieven[i].ID-Films" class="panel-collapse collapse in">
+               <div class="panel-body">
+                  @if (Model.Archieven[i].Films.Count == 0)
+                  {
+                     <p>Geen films gevonden</p>
+                  }
+                  else
+                  {
                      <div class="col-md-6">
+                        <input type="text" onchange="filterFilms(this.value, @Model.Archieven[i].ID)" style="width:100%" placeholder="filter" />
+                        <div style="max-height:400px; overflow-y:scroll">
+                           <table>
+                              @foreach (var film in Model.Archieven[i].Films)
+                              {
+                                 <tr class="@Model.Archieven[i].ID-film" id="@film.ID">
+                                    <td><a href="javascript:void(0);" onclick="getFilmData(@film.ID, @Model.Archieven[i].ID)">@Html.DisplayFor(model => film.Naam)</a></td>
+                                 </tr>
+                              }
+                           </table>
+                        </div>
+                     </div>
+                     <div class="col-md-6" id="@Model.Archieven[i].ID-filmData" style="max-height:400px; overflow-y:scroll">
 
                      </div>
+                  }
+               </div>
+            </div>
+         </div>
+         <div class="panel panel-default">
+            <div class="panel-heading">
+               <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#@Model.Archieven[i].ID-panel" href="#@Model.Archieven[i].ID-Series">
+                     Series
+                  </a>
+               </h4>
+            </div>
+            <div id="@Model.Archieven[i].ID-Series" class="panel-collapse collapse">
+               <div class="panel-body">
+                  <div class="col-md-6">
+
                   </div>
                </div>
             </div>
          </div>
       </div>
+   </div>
    }
 </div>
 
