@@ -250,7 +250,7 @@ namespace Absoc.Controllers
         private async Task SendNewUserMailAsync(Gebruiker gebruiker)
         {
             SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
-            client.EnableSsl = true;
+            //client.EnableSsl = true;
             client.UseDefaultCredentials = false;
             client.Credentials = new NetworkCredential(ConfigurationManager.AppSettings["mailAdres"], ConfigurationManager.AppSettings["mailWw"]);
 

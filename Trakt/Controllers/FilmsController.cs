@@ -14,7 +14,7 @@ namespace Trakt.Controllers
     {
         private readonly FilmManager FilmMng = new FilmManager();
 
-        private const FilterMaxFilms DEFAULT_MAX_FILMS = FilterMaxFilms.Tien;
+        private const FilterMax DEFAULT_MAX_FILMS = FilterMax.Twaalf;
 
         protected override void OnAuthorization(AuthorizationContext filterContext)
         {
@@ -86,7 +86,7 @@ namespace Trakt.Controllers
                     {
                         if (f1.Toegevoegd.HasValue && f2.Toegevoegd.HasValue)
                         {
-                            return f1.Toegevoegd.Value.CompareTo(f2.Toegevoegd.Value);
+                            return f2.Toegevoegd.Value.CompareTo(f1.Toegevoegd.Value);
                         }
                         else
                         {

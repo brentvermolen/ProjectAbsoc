@@ -14,7 +14,7 @@ namespace Trakt.Controllers
     {
         private readonly ActeurManager ActeurMng = new ActeurManager();
 
-        private const FilterMaxFilms DEFAULT_MAX = FilterMaxFilms.Twintig;
+        private const FilterMax DEFAULT_MAX = FilterMax.Twintig;
 
         protected override void OnAuthorization(AuthorizationContext filterContext)
         {

@@ -9,7 +9,7 @@ namespace Trakt.Models
     public class FilmViewModel
     {
         public virtual List<Film> Films { get; set; }
-        public virtual FilterMaxFilms MaxFilms { get; set; }
+        public virtual FilterMax MaxFilms { get; set; }
         public virtual FilmSorterenOp Sorteren { get; set; }
         public virtual FilmFilterOp FilterOp { get; set; }
         public virtual string Filter { get; set; }
@@ -17,7 +17,7 @@ namespace Trakt.Models
     public class CollectieViewModel
     {
         public virtual List<Collectie> Collecties { get; set; }
-        public virtual FilterMaxFilms MaxFilms { get; set; }
+        public virtual FilterMax MaxFilms { get; set; }
         public virtual CollectieSorterenOp Sorteren { get; set; }
         public virtual CollectieFilterOp FilterOp { get; set; }
         public virtual string Filter { get; set; }
@@ -25,7 +25,7 @@ namespace Trakt.Models
     public class SerieViewModel
     {
         public virtual List<Serie> Series { get; set; }
-        public virtual FilterMaxFilms MaxFilms { get; set; }
+        public virtual FilterMax MaxFilms { get; set; }
         public virtual SerieSorterenOp Sorteren { get; set; }
         public virtual SerieFilterOp FilterOp { get; set; }
         public virtual string Filter { get; set; }
@@ -33,15 +33,15 @@ namespace Trakt.Models
     public class ActeurViewModel
     {
         public virtual List<Acteur> Acteurs { get; set; }
-        public virtual FilterMaxFilms MaxFilms { get; set; }
+        public virtual FilterMax MaxFilms { get; set; }
         public virtual ActeurSorterenOp Sorteren { get; set; }
         public virtual ActeurFilterOp FilterOp { get; set; }
         public virtual string Filter { get; set; }
     }
 
-    public enum FilterMaxFilms
+    public enum FilterMax
     {
-        Tien = 10,
+        Twaalf = 12,
         Twintig = 20,
         Dertig = 30,
         Vijftig = 50,

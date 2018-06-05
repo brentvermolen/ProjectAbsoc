@@ -14,7 +14,7 @@ namespace Trakt.Controllers
     {
         private readonly CollectieManager CollectieMng = new CollectieManager();
 
-        private const FilterMaxFilms DEFAULT_MAX = FilterMaxFilms.Tien;
+        private const FilterMax DEFAULT_MAX = FilterMax.Twaalf;
 
         protected override void OnAuthorization(AuthorizationContext filterContext)
         {

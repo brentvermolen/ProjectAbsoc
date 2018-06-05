@@ -29,7 +29,23 @@
       <img src="@source" class="image" alt="@Model.Naam" style="width:100%" />
    </div>
    <div class="col-md-8">
-      <p><strong>Aantal Films: </strong>@Model.Films.Count <a href="@Url.Action("Lijst", "Films", new { id = Model.ID })">Zie Lijst</a></p>
-      <p><strong>Aantal Series: </strong>@Model.Series.Count <a href="@Url.Action("Lijst", "Series", new { id = Model.ID })">Zie Lijst</a></p>
+      @if (Model.Films.Count == 0)
+      {
+         <p>Er zijn geen films voor deze acteur</p>
+         <p>Let op, sommige acteurs zitten meerdere keren in het systeem, probeer eens te zoeken op <a href="@Url.Action("Index", "Acteurs")">deze pagina</a> met als filter de acteur naam</p>
+      }
+      else
+      {
+         <p><strong>Aantal Films: </strong>@Model.Films.Count <a href="@Url.Action("Lijst", "Films", new { id = Model.ID })">Zie Lijst</a></p>
+      }
+      @if (Model.Series.Count == 0)
+      {
+         <p>Er zijn geen series voor deze acteur</p>
+         <p>Let op, sommige acteurs zitten meerdere keren in het systeem, probeer eens te zoeken op <a href="@Url.Action("Index", "Acteurs")">deze pagina</a> met als filter de acteur naam</p>
+      }
+      else
+      {
+         <p><strong>Aantal Series: </strong>@Model.Series.Count <a href="@Url.Action("Lijst", "Series", new { id = Model.ID })">Zie Lijst</a></p>
+      }
    </div>
 </div>

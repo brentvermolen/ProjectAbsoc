@@ -1,4 +1,5 @@
 ﻿@model Trakt.Models.ArchiefIndexModel
+@using BL.Domain
 
 @{
    ViewBag.Title = "Archieven";
@@ -39,11 +40,11 @@
             <div class="panel-heading">
                <h4 class="panel-title">
                   <a data-toggle="collapse" data-parent="#@Model.Archieven[i].ID-panel" href="#@Model.Archieven[i].ID-Films">
-                     Films
+                     Films <span class="badge" style="float:right">#@Model.Archieven[i].Films.Count</span>
                   </a>
                </h4>
             </div>
-            <div id="@Model.Archieven[i].ID-Films" class="panel-collapse collapse in">
+            <div id="@Model.Archieven[i].ID-Films" class="panel-collapse collapse">
                <div class="panel-body">
                   @if (Model.Archieven[i].Films.Count == 0)
                   {
@@ -64,26 +65,70 @@
                            </table>
                         </div>
                      </div>
-                     <div class="col-md-6" id="@Model.Archieven[i].ID-filmData" style="max-height:400px; overflow-y:scroll">
+                     <div class="col-md-6" id="@Model.Archieven[i].ID-filmData">
 
                      </div>
                   }
                </div>
             </div>
          </div>
+         @{
+            var serieIds = new List<int>();
+
+            foreach (var aflevering in Model.Archieven[i].Afleveringen)
+            {
+               if (!serieIds.Contains(aflevering.SerieID))
+               {
+                  serieIds.Add(aflevering.SerieID);
+               }
+            }
+
+            var series = new List<Serie>();
+            foreach (var aflevering in Model.Archieven[i].Afleveringen)
+            {
+               if (serieIds.Contains(aflevering.SerieID))
+               {
+                  series.Add(aflevering.Serie);
+                  serieIds.Remove(aflevering.SerieID);
+               }
+            }
+
+            series.Sort((s1, s2) => s1.Naam.CompareTo(s2.Naam));
+         }
          <div class="panel panel-default">
             <div class="panel-heading">
                <h4 class="panel-title">
                   <a data-toggle="collapse" data-parent="#@Model.Archieven[i].ID-panel" href="#@Model.Archieven[i].ID-Series">
-                     Series
+                     Series <span class="badge" style="float:right">#@series.Count</span>
                   </a>
                </h4>
             </div>
             <div id="@Model.Archieven[i].ID-Series" class="panel-collapse collapse">
                <div class="panel-body">
-                  <div class="col-md-6">
 
-                  </div>
+                  @if (Model.Archieven[i].Afleveringen.Count == 0)
+                  {
+                     <p>Geen series gevonden</p>
+                  }
+                  else
+                  {
+                     <div class="col-md-6">
+                        <input type="text" onchange="filterSeries(this.value, @Model.Archieven[i].ID)" style="width:100%" placeholder="filter" />
+                        <div style="max-height:400px; overflow-y:scroll">
+                           <table>
+                              @foreach (var serie in series)
+                              {
+                                 <tr class="@Model.Archieven[i].ID-serie" id="@serie.ID">
+                                    <td><a href="javascript:void(0);" onclick="getSerieData(@serie.ID, @Model.Archieven[i].ID)">@Html.DisplayFor(model => serie.Naam)</a></td>
+                                 </tr>
+                              }
+                           </table>
+                        </div>
+                     </div>
+                     <div class="col-md-6" id="@Model.Archieven[i].ID-serieData">
+
+                     </div>
+                  }
                </div>
             </div>
          </div>
@@ -108,6 +153,20 @@
       }
    }
 
+   function filterSeries(filter, archief) {
+      var series = document.getElementsByClassName(archief + "-serie");
+
+      for (var i = 0; i < series.length; i++) {
+         var serienaam = series[i].children[0].children[0].innerHTML.toLowerCase();
+
+         if (!serienaam.includes(filter.toLowerCase())) {
+            series[i].style.display = "none";
+         } else {
+            series[i].style.display = "block";
+         }
+      }
+   }
+
    function getFilmData(id, archief) {
       $.ajax("api/Films/GetFilm/" + id, {
          type: 'GET',
@@ -124,6 +183,27 @@
          inner += "<p class='col-xs-6'>" + data["release_date"] + "</p>";
          inner += "<p class='col-xs-6'>" + data["runtime"] + " Minuten</p>";
          inner += "<p class='col-xs-12'>" + data["overview"] + "</p>";
+
+         res.innerHTML = inner;
+      }).fail(function () {
+         alert("fail");
+      });
+   }
+
+   function getSerieData(id, archief) {
+      $.ajax("api/Series/GetSerie/" + id, {
+         type: 'GET',
+         dataType: 'json'
+      }).done(function (data) {
+         var res = document.getElementById(archief + "-serieData");
+         var inner = "";
+
+         inner += '<img class="col-xs-12 poster154" src = "' + data["PosterPath"] + '" alt = "poster" />';
+         inner += "<h4 class='col-xs-6'><a href='/Series/Details/" + id + "'>" + data["Naam"] + "</a></h4>";
+         inner += "<p class='col-xs-6'>" + data["AirDate"] + "</p>";
+         inner += "<p class='col-xs-6'>" + data["Netwerk"] + "</p>";
+         inner += "<p class='col-xs-12'>" + data["Omschrijving"] + "</p>";
+         inner += '<img class="col-xs-12 poster154" src = "' + data["BannerPath"] + '" alt = "banner" style="width:100%;height:auto;margin-bottom:10px;" />';
 
          res.innerHTML = inner;
       }).fail(function () {
