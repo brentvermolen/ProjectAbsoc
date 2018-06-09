@@ -11,8 +11,7 @@ namespace BL.Domain
         Naam = 0,
         Toegevoegd,
         Release,
-        Release_Desc,
-        Collectie
+        Release_Desc
     }
 
     public enum AfleveringSortEnum

@@ -49,8 +49,6 @@ namespace DAL
                     return ctx.Films.OrderBy(f => f.ReleaseDate).Take(top).ToList();
                 case FilmSortEnum.Release_Desc:
                     return ctx.Films.OrderByDescending(f => f.ReleaseDate).Take(top).ToList();
-                case FilmSortEnum.Collectie:
-                    return ctx.Films.OrderBy(f => f.CollectieID).Take(top).ToList();
                 case FilmSortEnum.Toegevoegd:
                     return ctx.Films.OrderByDescending(f => f.Toegevoegd).Take(top).ToList();
                 case FilmSortEnum.Naam:
@@ -67,8 +65,6 @@ namespace DAL
                     return ctx.Films.Where(predicate).OrderBy(f => f.ReleaseDate).Take(top).ToList();
                 case FilmSortEnum.Release_Desc:
                     return ctx.Films.Where(predicate).OrderByDescending(f => f.ReleaseDate).Take(top).ToList();
-                case FilmSortEnum.Collectie:
-                    return ctx.Films.Where(predicate).OrderBy(f => f.CollectieID).Take(top).ToList();
                 case FilmSortEnum.Toegevoegd:
                     return ctx.Films.Where(predicate).OrderByDescending(f => f.Toegevoegd).Take(top).ToList();
                 case FilmSortEnum.Naam:

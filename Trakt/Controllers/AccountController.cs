@@ -120,7 +120,7 @@ namespace Absoc.Controllers
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, model.RememberMe });
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Email en wachtwoord komen niet overeen");
@@ -253,15 +253,19 @@ namespace Absoc.Controllers
 
         private async Task SendNewUserMailAsync(Gebruiker gebruiker)
         {
-            SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
-            //client.EnableSsl = true;
-            client.UseDefaultCredentials = false;
-            client.Credentials = new NetworkCredential(ConfigurationManager.AppSettings["mailAdres"], ConfigurationManager.AppSettings["mailWw"]);
+            SmtpClient client = new SmtpClient("smtp.gmail.com", 587)
+            {
+                //client.EnableSsl = true;
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(ConfigurationManager.AppSettings["mailAdres"], ConfigurationManager.AppSettings["mailWw"])
+            };
 
             try
             {
-                MailMessage msg = new MailMessage();
-                msg.IsBodyHtml = true;
+                MailMessage msg = new MailMessage
+                {
+                    IsBodyHtml = true
+                };
 
                 msg.To.Add(ConfigurationManager.AppSettings["mailAdres"]);
 
@@ -330,7 +334,7 @@ namespace Absoc.Controllers
                 UserManager.EmailService = new EmailService();
 
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);
                 await UserManager.SendEmailAsync(user.Id, "Wachtwoord Reset", "Gelieve uw wachtwoord <a href=\"" + callbackUrl + "\">hier</a> te resetten");
                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
@@ -436,7 +440,7 @@ namespace Absoc.Controllers
             {
                 return View("Error");
             }
-            return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
+            return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, model.ReturnUrl, model.RememberMe });
         }
 
         //

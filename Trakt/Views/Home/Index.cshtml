@@ -10,8 +10,17 @@
    <p class="">U kan ook zien welke films en series er al op uw schijf staan in '@Html.ActionLink("Mijn Archieven", "Index", "Archieven")'<p>
 </div>
 
-
-<h1>Laatst toegevoegde films</h1>
+@using (Html.BeginForm("Index", "Films", FormMethod.Post, new { @id = "laatstToegevoegd" }))
+{
+   var model = new Trakt.Models.FilmViewModel()
+   {
+      Sorteren = BL.Domain.FilmSortEnum.Toegevoegd,
+      MaxFilms = Trakt.Models.FilterMax.Twintig
+   };
+   <h1><a href="javascript:void(0)" onclick="document.getElementById('laatstToegevoegd').submit();">Laatst toegevoegde films</a></h1>
+   @Html.HiddenFor(m => model.Sorteren);
+   @Html.HiddenFor(m => model.MaxFilms);
+}
 
 <div class="testimonial-group">
    <div class="row">
@@ -32,7 +41,18 @@
       }
    </div>
 </div>
-<h1>Laatste nieuwe films</h1>
+@using (Html.BeginForm("Index", "Films", FormMethod.Post, new { @id = "nieuwsteFilms" }))
+{
+   var model = new Trakt.Models.FilmViewModel()
+   {
+      Sorteren = BL.Domain.FilmSortEnum.Release_Desc,
+      MaxFilms = Trakt.Models.FilterMax.Twintig
+   };
+   <h1><a href="javascript:void(0)" onclick="document.getElementById('nieuwsteFilms').submit();">Laatste nieuwe films</a></h1>
+   @Html.HiddenFor(m => model.Sorteren);
+   @Html.HiddenFor(m => model.MaxFilms);
+}
+
 <div class="testimonial-group">
    <div class="row">
       @foreach (var film in Model.NieuwsteFilms)
