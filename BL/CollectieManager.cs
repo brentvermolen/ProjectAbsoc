@@ -21,5 +21,15 @@ namespace BL
         {
             return repo.GetCollectie(id);
         }
+
+        public List<Collectie> ReadCollecties(CollectieSortEnum order, int top)
+        {
+            return repo.GetCollecties(order, top);
+        }
+
+        public List<Collectie> ReadCollecties(Func<Collectie, bool> predicate, CollectieSortEnum sorteren, int maxFilms)
+        {
+            return repo.GetCollecties(predicate, sorteren, maxFilms);
+        }
     }
 }

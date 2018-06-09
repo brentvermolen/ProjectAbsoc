@@ -26,5 +26,15 @@ namespace BL
         {
             repo.CreateActeur(a);
         }
+
+        public List<Acteur> ReadActeurs(ActeurSortEnum sorteren, int top)
+        {
+            return repo.GetActeurs(sorteren, top);
+        }
+
+        public List<Acteur> ReadActeurs(Func<Acteur, bool> predicate, ActeurSortEnum sorteren, int top)
+        {
+            return repo.GetActeurs(predicate, sorteren, top);
+        }
     }
 }

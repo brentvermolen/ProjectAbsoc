@@ -49,6 +49,7 @@
     <Compile Include="Aflevering.cs" />
     <Compile Include="Archief.cs" />
     <Compile Include="Collectie.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="Film.cs" />
     <Compile Include="ActeurKlassen\ActeurFilm.cs" />
     <Compile Include="FilmKlassen\Tag.cs" />

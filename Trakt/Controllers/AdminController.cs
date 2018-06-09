@@ -96,6 +96,29 @@ namespace Trakt.Controllers
         [HttpPost]
         public ActionResult UpdateGebruikerArchief(AdminViewModel model)
         {
+            foreach(Archief archief in model.Archieven)
+            {
+                Archief aDb = GebruikerMng.GetArchief(archief.ID);
+
+                foreach(Gebruiker gebruiker in archief.Gebruikers)
+                {
+                    List<int> ids = new List<int>();
+                    foreach(Gebruiker archiefGebruiker in aDb.Gebruikers)
+                    {
+                        ids.Add(archiefGebruiker.ID);
+                    }
+
+                    if (!ids.Contains(gebruiker.ID))
+                    {
+                        Gebruiker gDb = GebruikerMng.GetGebruiker(gebruiker.ID);
+                        gDb.Archief.Add(aDb);
+
+                        GebruikerMng.ChangeGebruiker(gDb);
+                        ids.Add(gebruiker.ID);
+                    }
+                }                
+            }
+
             return RedirectToAction("Index");
         }
 

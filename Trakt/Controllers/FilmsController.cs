@@ -31,11 +31,12 @@ namespace Trakt.Controllers
             int count = 0;
 
             var films = FilmMng.ReadFilms().OrderBy(f => f.Naam).Where(f => count++ < (int)DEFAULT_MAX_FILMS).ToList();
+            films = FilmMng.ReadFilms(FilmSortEnum.Naam, (int)DEFAULT_MAX_FILMS);
 
             FilmViewModel model = new FilmViewModel()
             {
                 Films = films,
-                Sorteren = FilmSorterenOp.Naam,
+                Sorteren = FilmSortEnum.Naam,
                 MaxFilms = DEFAULT_MAX_FILMS
             };
 
@@ -51,65 +52,27 @@ namespace Trakt.Controllers
                 filter = model.Filter;
             }
 
-            List<Film> films = new List<Film>();
-
+            Func<Film, bool> predicate;
             switch (model.FilterOp)
             {
                 case FilmFilterOp.Acteur:
-                    films = FilmMng.ReadFilms().Where(f => f.Acteurs.FirstOrDefault(a => a.Acteur.Naam.ToLower().Contains(filter)) != null).ToList();
+                    predicate = f => f.Acteurs.FirstOrDefault(a => a.Acteur.Naam.ToLower().Contains(filter.ToLower())) != null;
                     break;
                 case FilmFilterOp.Jaar:
                     if (int.TryParse(model.Filter, out int jaartal) == false)
                     { 
                         model.Filter = DateTime.Today.Year.ToString();
                     }
-
-                    films = FilmMng.ReadFilms().Where(f => f.ReleaseDate.StartsWith(filter.ToLower())).ToList();
+                    
+                    predicate = f => f.ReleaseDate.StartsWith(filter.ToLower());
                     break;
                 case FilmFilterOp.Naam:
                 default:
-                    films = FilmMng.ReadFilms().Where(f => f.Naam.ToLower().Contains(filter.ToLower())).ToList();
+                    predicate = f => f.Naam.ToLower().Contains(filter.ToLower());
                     break;
             }
 
-            model.Films = films;
-
-            switch (model.Sorteren)
-            {
-                case FilmSorterenOp.Release:
-                    model.Films.Sort((f1, f2) => f1.ReleaseDate.CompareTo(f2.ReleaseDate));
-                    break;
-                case FilmSorterenOp.Release_Desc:
-                    model.Films.Sort((f1, f2) => f2.ReleaseDate.CompareTo(f1.ReleaseDate));
-                    break;
-                case FilmSorterenOp.Toegevoegd_Op:
-                    model.Films.Sort((f1, f2) =>
-                    {
-                        if (f1.Toegevoegd.HasValue && f2.Toegevoegd.HasValue)
-                        {
-                            return f2.Toegevoegd.Value.CompareTo(f1.Toegevoegd.Value);
-                        }
-                        else
-                        {
-                            if (f1.Toegevoegd.HasValue)
-                            {
-                                return -1;
-                            }
-                            else
-                            {
-                                return 1;
-                            }
-                        }
-                    });
-                    break;
-                case FilmSorterenOp.Collectie:
-                    model.Films.Sort((f1, f2) => f1.Collectie.Naam.CompareTo(f2.Collectie.Naam));
-                    break;
-                case FilmSorterenOp.Naam:
-                default:
-                    model.Films.Sort((f1, f2) => f1.Naam.CompareTo(f2.Naam));
-                    break;
-            }
+            model.Films = FilmMng.ReadFilms(predicate, model.Sorteren, (int)model.MaxFilms);
 
             var count = 0;
             model.Films = model.Films.Where(f => count++ < (int)model.MaxFilms).ToList();
@@ -129,7 +92,7 @@ namespace Trakt.Controllers
             FilmViewModel model = new FilmViewModel()
             {
                 Films = films,
-                Sorteren = FilmSorterenOp.Naam,
+                Sorteren = FilmSortEnum.Naam,
                 MaxFilms = DEFAULT_MAX_FILMS
             };
 

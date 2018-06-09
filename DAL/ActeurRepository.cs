@@ -26,5 +26,33 @@ namespace DAL
             ctx.Acteurs.Add(a);
             ctx.SaveChanges();
         }
+
+        public List<Acteur> GetActeurs(ActeurSortEnum sorteren, int top)
+        {
+            switch (sorteren)
+            {
+                case ActeurSortEnum.Aantal_Vermeldingen:
+                    return ctx.Acteurs.OrderBy(a => a.Films.Count + a.Series.Count).Take(top).ToList();
+                case ActeurSortEnum.Aantal_Vermeldingen_Desc:
+                    return ctx.Acteurs.OrderByDescending(a => a.Films.Count + a.Series.Count).Take(top).ToList();
+                case ActeurSortEnum.Naam:
+                default:
+                    return ctx.Acteurs.OrderBy(a => a.Naam).Take(top).ToList();
+            }
+        }
+
+        public List<Acteur> GetActeurs(Func<Acteur, bool> predicate, ActeurSortEnum sorteren, int top)
+        {
+            switch (sorteren)
+            {
+                case ActeurSortEnum.Aantal_Vermeldingen:
+                    return ctx.Acteurs.Where(predicate).OrderBy(a => a.Films.Count + a.Series.Count).Take(top).ToList();
+                case ActeurSortEnum.Aantal_Vermeldingen_Desc:
+                    return ctx.Acteurs.Where(predicate).OrderByDescending(a => a.Films.Count + a.Series.Count).Take(top).ToList();
+                case ActeurSortEnum.Naam:
+                default:
+                    return ctx.Acteurs.Where(predicate).OrderBy(a => a.Naam).Take(top).ToList();
+            }
+        }
     }
 }

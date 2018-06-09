@@ -20,5 +20,25 @@ namespace DAL
         {
             return ctx.Collecties.Find(id);
         }
+
+        public List<Collectie> GetCollecties(CollectieSortEnum order, int top)
+        {
+            switch (order)
+            {
+                case CollectieSortEnum.Naam:
+                default:
+                    return ctx.Collecties.OrderBy(c => c.Naam).Take(top).ToList();
+            }
+        }
+
+        public List<Collectie> GetCollecties(Func<Collectie, bool> predicate, CollectieSortEnum sorteren, int maxFilms)
+        {
+            switch (sorteren)
+            {
+                case CollectieSortEnum.Naam:
+                default:
+                    return ctx.Collecties.Where(predicate).OrderBy(c => c.Naam).Take(maxFilms).ToList();
+            }
+        }
     }
 }

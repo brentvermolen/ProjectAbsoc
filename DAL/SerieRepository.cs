@@ -30,5 +30,42 @@ namespace DAL
         {
             return ctx.Series.Find(id);
         }
+
+        public List<Aflevering> GetAfleveringen()
+        {
+            return ctx.Afleveringen.ToList();
+        }
+
+        public List<Aflevering> GetAfleveringen(AfleveringSortEnum toegevoegd, int top)
+        {
+            switch (toegevoegd)
+            {
+                default:
+                    return ctx.Afleveringen.OrderByDescending(a => a.Toegevoegd).Take(top).ToList();
+            }
+        }
+
+        public List<Serie> GetSeries(Func<Serie, bool> predicate, SerieSortEnum sort, int maxFilms)
+        {
+            switch (sort)
+            {
+                case SerieSortEnum.Aantal_Afleveringen:
+                    return ctx.Series.Where(predicate).OrderBy(s => s.Afleveringen.Count).Take(maxFilms).ToList();
+                case SerieSortEnum.Aantal_Afleveringen_Desc:
+                    return ctx.Series.Where(predicate).OrderByDescending(s => s.Afleveringen.Count).Take(maxFilms).ToList();
+                case SerieSortEnum.Naam:
+                default:
+                    return ctx.Series.Where(predicate).OrderBy(s => s.Naam).Take(maxFilms).ToList();
+            }
+        }
+
+        public List<Serie> GetSeries(SerieSortEnum sort, int top)
+        {
+            switch (sort)
+            {
+                default:
+                    return ctx.Series.OrderBy(s => s.Naam).Take(top).ToList();
+            }
+        }
     }
 }

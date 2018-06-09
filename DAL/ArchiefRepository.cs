@@ -1,4 +1,5 @@
 ﻿using BL.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -31,6 +32,11 @@ namespace DAL
             }
 
             return retArchiefs;
+        }
+
+        public Archief ReadArchief(int iD)
+        {
+            return ctx.Archieven.Find(iD);
         }
     }
 }

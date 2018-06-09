@@ -36,5 +36,15 @@ namespace BL
         {
             repo.RemoveGebruiker(gebruiker);
         }
+
+        public Archief GetArchief(int iD)
+        {
+            return repo.ReadArchief(iD);
+        }
+
+        public void AddLogin(int user)
+        {
+            repo.CreateLogin(user);
+        }
     }
 }

@@ -7,22 +7,34 @@
    @using (Html.BeginForm("UpdateGebruikerArchief", "Admin", FormMethod.Post))
    {
       <div class="row" style="margin-bottom:20px">
-         @for (var i = 0; i < Model.Gebruikers.Count; i++)
-         {
-            <p class="col-md-2 btn btn-primary" ondragstart="drag(event)" draggable="true" id="@Model.Gebruikers[i].ID">@Model.Gebruikers[i].Email</p>
-         }
+         <div class="col-md-10">
+            @for (var i = 0; i < Model.Gebruikers.Count; i++)
+            {
+               <p class="col-md-2 btn btn-primary" ondragstart="drag(event)" draggable="true" id="@Model.Gebruikers[i].ID">@Model.Gebruikers[i].Email</p>
+
+            }
+         </div>
+         <div class="col-md-2">
+            <button type="submit" class="btn btn-success" style="float:right">Opslaan</button>
+         </div>
       </div>
 
       <div class="row">
          @for (var i = 0; i < Model.Archieven.Count; i++)
          {
-            <div class="col-md-4">
+            <div class="col-md-3">
                <div class="panel panel-primary">
                   <div class="panel-heading">
-                     <h3 class="panel-title">@Html.HiddenFor(m => m.Archieven[i].ID)@Model.Archieven[i].Naam</h3>
+                     <h3 class="panel-title">@Html.HiddenFor(m => m.Archieven[i].ID)@Html.HiddenFor(m => m.Archieven[i].Naam)@Model.Archieven[i].Naam</h3>
                   </div>
-                  <div class="panel-body" id="@Model.Archieven[i].ID" style="min-height:350px" ondrop="drop(event, this.id)" ondragover="allowDrop(event)">
-
+                  <div class="panel-body" id="@i" style="min-height:350px" ondrop="drop(event, this.id, @Model.Archieven[i].ID)" ondragover="allowDrop(event)">
+                     @for (var j = 0; j < Model.Archieven[i].Gebruikers.Count; j++)
+                     {
+                        <div>
+                           @Html.HiddenFor(m => m.Archieven[i].Gebruikers[j].ID)
+                           <p class="col-md-12 btn btn-primary">@Model.Archieven[i].Gebruikers[j].Email</p>
+                        </div>
+                     }
                   </div>
                </div>
             </div>
@@ -32,6 +44,17 @@
 </div>
 
 <script>
+   var archieven = [];
+
+   $(document).ready(function () {
+      @foreach(var archief in Model.Archieven)
+      {
+          <text>
+            archieven[@archief.ID] = @archief.Gebruikers.Count;
+         </text>
+      }
+   });
+
    function allowDrop(event) {
       event.preventDefault();
    }
@@ -41,30 +64,19 @@
       event.dataTransfer.setData("inner", event.target.innerHTML);
    }
 
-   function drop(event, archiefId) {
+   function drop(event, aIndex, archiefId) {
       event.preventDefault();
 
-      var index = 
+      var index = archieven[archiefId];
+
 
       var gebruikerId = event.dataTransfer.getData("id");
-      var elemHidden = '<input data-val="true" data-val-required="" data-val-number="" id="Archieven_' + archiefId + '__Gebruikers_' + gebruikerId + '__ID" value="' + gebruikerId + '" type="hidden" name="Archieven[' + archiefId + '].Gebruikers[' + 0 + '].ID" />';
-      var elemShow = '<button class="col-md-6 btn btn-primary">' + event.dataTransfer.getData("inner") + '</button>'
+      var elemHidden = '<input data-val="true" data-val-required="" data-val-number="" id="Archieven_' + aIndex + '__Gebruikers_' + index + '__ID" value="' + gebruikerId + '" type="hidden" name="Archieven[' + aIndex + '].Gebruikers[' + index + '].ID" />';
+      var elemShow = '<p class="col-md-12 btn btn-primary">' + event.dataTransfer.getData("inner") + '</p>'
 
-      event.target.innerHTML += elemHidden + elemShow;
+      archieven[archiefId] = index + 1;
+
+      event.target.innerHTML += "<div>" + elemHidden + elemShow + "</div>";
       @*<input data-val="true" data-val-number="The field ID must be a number." data-val-required="Het veld ID is vereist." id="Archieven_2__Gebruikers_0__ID" name="Archieven[2].Gebruikers[0].ID" value="1" type="hidden">*@
    }
 </script>
-
-   @for (var i = 0; i < Model.Archieven.Count; i++)
-   {
-      @Html.HiddenFor(m => m.Archieven[i].ID)
-      @Html.HiddenFor(m => m.Archieven[i].Naam)
-      @Html.DisplayFor(m => m.Archieven[i].Naam)
-      <br /><br />
-      for (var j = 0; j < Model.Archieven[i].Gebruikers.Count; j++)
-      {
-         @Html.HiddenFor(m => Model.Archieven[i].Gebruikers[j].ID)
-         @Html.HiddenFor(m => Model.Archieven[i].Gebruikers[j].Email)
-         @Html.DisplayFor(m => Model.Archieven[i].Gebruikers[j].Email)
-      }
-   }

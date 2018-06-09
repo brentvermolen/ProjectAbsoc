@@ -28,7 +28,7 @@ textarea {
    white-space: nowrap;
 }
 
-.testimonial-group > .row > .col-md-3, col-sm-6, col-xs-12 {
+.testimonial-group > .row > .col-lg-3, .col-md-3, col-md-4, col-sm-5, col-sm-6, col-xs-12 {
    display: inline-block;
    float: none;
 }

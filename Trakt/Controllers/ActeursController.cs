@@ -31,11 +31,12 @@ namespace Trakt.Controllers
             int count = 0;
 
             var acteurs = ActeurMng.ReadActeurs().OrderBy(f => f.Naam).Where(f => count++ < (int)DEFAULT_MAX).ToList();
+            acteurs = ActeurMng.ReadActeurs(ActeurSortEnum.Naam, (int)DEFAULT_MAX);
 
             ActeurViewModel model = new ActeurViewModel()
             {
                 Acteurs = acteurs,
-                Sorteren = ActeurSorterenOp.Naam,
+                Sorteren = ActeurSortEnum.Naam,
                 MaxFilms = DEFAULT_MAX
             };
 
@@ -51,46 +52,17 @@ namespace Trakt.Controllers
                 filter = model.Filter;
             }
 
-            var count = 0;
-            List<Acteur> series = new List<Acteur>();
-
+            Func<Acteur, bool> predicate;
             switch (model.FilterOp)
             {
                 case ActeurFilterOp.Naam:
                 default:
-                    series = ActeurMng.ReadActeurs().Where(f => f.Naam.ToLower().Contains(filter.ToLower())).ToList();
+                    predicate = f => f.Naam.ToLower().Contains(filter.ToLower());
                     break;
             }
 
-            model.Acteurs = series;
 
-            switch (model.Sorteren)
-            {
-                case ActeurSorterenOp.Naam:
-                default:
-                    model.Acteurs.Sort((f1, f2) => f1.Naam.CompareTo(f2.Naam));
-                    break;
-                case ActeurSorterenOp.Aantal_Vermeldingen_Desc:
-                    model.Acteurs.Sort((f1, f2) =>
-                    {
-                        int count1 = f1.Films.Count + f1.Series.Count;
-                        int count2 = f2.Films.Count + f2.Series.Count;
-
-                        return count2.CompareTo(count1);
-                    });
-                    break;
-                case ActeurSorterenOp.Aantal_Vermeldingen:
-                    model.Acteurs.Sort((f1, f2) =>
-                    {
-                        int count1 = f1.Films.Count + f1.Series.Count;
-                        int count2 = f2.Films.Count + f2.Series.Count;
-
-                        return count1.CompareTo(count2);
-                    });
-                    break;
-            }
-            
-            model.Acteurs = model.Acteurs.Where(f => count++ < (int)model.MaxFilms).ToList();
+            model.Acteurs = ActeurMng.ReadActeurs(predicate, model.Sorteren, (int)model.MaxFilms);
 
             return View(model);
         }

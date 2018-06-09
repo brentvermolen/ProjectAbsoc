@@ -28,14 +28,12 @@ namespace Trakt.Controllers
         // GET: Films
         public ActionResult Index()
         {
-            int count = 0;
-
-            var series = SerieMng.ReadSeries().OrderBy(f => f.Naam).Where(f => count++ < (int)DEFAULT_MAX).ToList();
+            var series = SerieMng.ReadSeries(SerieSortEnum.Naam, (int)DEFAULT_MAX);
 
             SerieViewModel model = new SerieViewModel()
             {
                 Series = series,
-                Sorteren = SerieSorterenOp.Naam,
+                Sorteren = SerieSortEnum.Naam,
                 MaxFilms = DEFAULT_MAX
             };
 
@@ -51,34 +49,16 @@ namespace Trakt.Controllers
                 filter = model.Filter;
             }
 
-            var count = 0;
-            List<Serie> series = new List<Serie>();
-
+            Func<Serie, bool> predicate;
             switch (model.FilterOp)
             {
                 case SerieFilterOp.Naam:
                 default:
-                    series = SerieMng.ReadSeries().Where(f => f.Naam.ToLower().Contains(filter.ToLower())).ToList();
+                    predicate = f => f.Naam.ToLower().Contains(filter.ToLower());
                     break;
             }
 
-            model.Series = series;
-
-            switch (model.Sorteren)
-            {
-                case SerieSorterenOp.Naam:
-                default:
-                    model.Series.Sort((f1, f2) => f1.Naam.CompareTo(f2.Naam));
-                    break;
-                case SerieSorterenOp.Aantal_Afleveringen:
-                    model.Series.Sort((f1, f2) => f1.Afleveringen.Count.CompareTo(f2.Afleveringen.Count));
-                    break;
-                case SerieSorterenOp.Aantal_Afleveringen_Desc:
-                    model.Series.Sort((f1, f2) => f2.Afleveringen.Count.CompareTo(f1.Afleveringen.Count));
-                    break;
-            }
-            
-            model.Series = model.Series.Where(f => count++ < (int)model.MaxFilms).ToList();
+            model.Series = SerieMng.ReadSeries(predicate, model.Sorteren, (int)model.MaxFilms);
 
             return View(model);
         }
@@ -90,12 +70,12 @@ namespace Trakt.Controllers
 
         public ActionResult Lijst(int id)
         {
-            var series = SerieMng.ReadSeries().Where(f => f.Acteurs.FirstOrDefault(a => a.ActeurID == id) != null).OrderBy(f => f.Naam).ToList();
+            var series = SerieMng.ReadSeries(f => f.Acteurs.FirstOrDefault(a => a.ActeurID == id) != null, SerieSortEnum.Naam, (int)DEFAULT_MAX);
 
             SerieViewModel model = new SerieViewModel()
             {
                 Series = series,
-                Sorteren = SerieSorterenOp.Naam,
+                Sorteren = SerieSortEnum.Naam,
                 MaxFilms = DEFAULT_MAX
             };
 

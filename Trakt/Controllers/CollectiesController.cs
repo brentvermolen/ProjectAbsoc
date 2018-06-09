@@ -28,14 +28,12 @@ namespace Trakt.Controllers
         // GET: Films
         public ActionResult Index()
         {
-            int count = 0;
-
-            var collecties = CollectieMng.ReadCollecties().OrderBy(f => f.Naam).Where(f => count++ < (int)DEFAULT_MAX).ToList();
+            var collecties = CollectieMng.ReadCollecties(CollectieSortEnum.Naam, (int)DEFAULT_MAX);
 
             CollectieViewModel model = new CollectieViewModel()
             {
                 Collecties = collecties,
-                Sorteren = CollectieSorterenOp.Naam,
+                Sorteren = CollectieSortEnum.Naam,
                 MaxFilms = DEFAULT_MAX
             };
 
@@ -50,30 +48,17 @@ namespace Trakt.Controllers
             {
                 filter = model.Filter;
             }
-
-            var count = 0;
-            List<Collectie> collecties = new List<Collectie>();
-
+            
+            Func<Collectie, bool> predicate;
             switch (model.FilterOp)
             {
                 case CollectieFilterOp.Naam:
                 default:
-                    collecties = CollectieMng.ReadCollecties().Where(f => f.Naam.ToLower().Contains(filter.ToLower())).ToList();
+                    predicate = f => f.Naam.ToLower().Contains(filter.ToLower());
                     break;
             }
 
-            model.Collecties = collecties;
-
-            switch (model.Sorteren)
-            {
-                case CollectieSorterenOp.Naam:
-                default:
-                    model.Collecties.Sort((f1, f2) => f1.Naam.CompareTo(f2.Naam));
-                    break;
-            }
-
-
-            model.Collecties = model.Collecties.Where(f => count++ < (int)model.MaxFilms).ToList();
+            model.Collecties = CollectieMng.ReadCollecties(predicate, model.Sorteren, (int)model.MaxFilms);
 
             return View(model);
         }

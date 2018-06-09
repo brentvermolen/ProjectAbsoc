@@ -14,6 +14,10 @@
 
    <title>Admin</title>
 
+   @Scripts.Render("~/bundles/jquery")
+   @Scripts.Render("~/bundles/bootstrap")
+   @Styles.Render("~/Content/css")
+
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
    <link rel="stylesheet" href="~/Content/Config.css">
    <script src="~/Scripts/jquery-3.0.0.min.js"></script>
@@ -28,7 +32,7 @@
       });
    </script>
 </head>
-<body>
+<body style="padding-top:0">
    <div class="wrapper">
       <nav id="sidebar">
          <a href="@Url.Action("Index", "Home")">

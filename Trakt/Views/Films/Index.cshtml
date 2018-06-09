@@ -1,5 +1,4 @@
 ﻿@model Trakt.Models.FilmViewModel
-
 @{
    ViewBag.Title = "Films";
 }
@@ -52,23 +51,23 @@
             <div class="overlayPoster">
                <div class="posterOverlayContent">
                   @film.Naam
-                  @if (Model.Sorteren != Trakt.Models.FilmSorterenOp.Naam)
+                  @if (Model.Sorteren != BL.Domain.FilmSortEnum.Naam)
                   {
                      <br />
                      switch (Model.Sorteren)
                      {
-                        case Trakt.Models.FilmSorterenOp.Release:
-                        case Trakt.Models.FilmSorterenOp.Release_Desc:
+                        case BL.Domain.FilmSortEnum.Release:
+                        case BL.Domain.FilmSortEnum.Release_Desc:
                            <text>
                               @film.ReleaseDate
                            </text>
                            break;
-                        case Trakt.Models.FilmSorterenOp.Toegevoegd_Op:
+                        case BL.Domain.FilmSortEnum.Toegevoegd:
                            <text>
-                              @film.Toegevoegd.Value.ToShortDateString()
+                              @film.Toegevoegd.Value.ToString("dd-MM-yyyy")
                            </text>
                            break;
-                        case Trakt.Models.FilmSorterenOp.Collectie:
+                        case BL.Domain.FilmSortEnum.Collectie:
                            <text>
                               @film.Collectie.Naam
                            </text>

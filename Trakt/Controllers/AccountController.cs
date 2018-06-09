@@ -112,6 +112,10 @@ namespace Absoc.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    if (user.Id != 1)
+                    {
+                        gebruikerMng.AddLogin(user.Id);
+                    }
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");

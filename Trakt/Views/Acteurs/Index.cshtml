@@ -66,13 +66,13 @@
                   @acteur.Naam
 
 
-                  @if (Model.Sorteren != Trakt.Models.ActeurSorterenOp.Naam)
+                  @if (Model.Sorteren != BL.Domain.ActeurSortEnum.Naam)
                   {
                      <br />
                      switch (Model.Sorteren)
                      {
-                        case Trakt.Models.ActeurSorterenOp.Aantal_Vermeldingen:
-                        case Trakt.Models.ActeurSorterenOp.Aantal_Vermeldingen_Desc:
+                        case BL.Domain.ActeurSortEnum.Aantal_Vermeldingen:
+                        case BL.Domain.ActeurSortEnum.Aantal_Vermeldingen_Desc:
                            var vermeldingen = acteur.Films.Count + acteur.Series.Count;
 
                            <text>@vermeldingen Vermeldingen</text>

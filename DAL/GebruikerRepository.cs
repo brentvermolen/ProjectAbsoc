@@ -1,4 +1,5 @@
 ﻿using BL.Domain;
+using BL.Domain.IdentityKlassen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,27 @@ namespace DAL
         {
             ctx.Gebruikers.Remove(gebruiker);
             ctx.SaveChanges();
+        }
+
+        public Archief ReadArchief(int iD)
+        {
+            return ctx.Archieven.Find(iD);
+        }
+
+        public void CreateLogin(int user)
+        {
+            var gebruiker = ReadGebruiker(user);
+
+            GebruikerLogin login = new GebruikerLogin()
+            {
+                LoginProvider = "Website",
+                ProviderKey = DateTime.Now.ToString("dd-MM-yyyy hh:mm"),
+                Gebruiker = gebruiker,
+                UserId = user
+            };
+
+            gebruiker.GebruikerLogins.Add(login);
+            UpdateGebruiker(gebruiker);
         }
     }
 }
