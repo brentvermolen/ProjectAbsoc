@@ -251,7 +251,7 @@ namespace Absoc.Controllers
             }
         }
 
-        private async Task SendNewUserMailAsync(Gebruiker gebruiker)
+        private void SendNewUserMailAsync(Gebruiker gebruiker)
         {
             SmtpClient client = new SmtpClient("smtp.gmail.com", 587)
             {

@@ -151,13 +151,13 @@ namespace Trakt.Controllers
                         {
                             film.CollectieID = (int)obj.SelectToken("belongs_to_collection.id");
                         }
-                        catch (Exception e) { film.CollectieID = 0; }
+                        catch (Exception) { film.CollectieID = 0; }
 
                         try
                         {
                             film.TrailerId = (string)obj.SelectToken("videos.results[0].key");
                         }
-                        catch (Exception e) { }
+                        catch (Exception) { }
                         film.Toegevoegd = DateTime.Today;
 
                         request = string.Format("https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=nl-BE&append_to_response=videos",

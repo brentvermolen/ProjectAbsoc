@@ -41,7 +41,7 @@ namespace DAL
             switch (toegevoegd)
             {
                 default:
-                    return ctx.Afleveringen.OrderByDescending(a => a.Toegevoegd).Take(top).ToList();
+                    return ctx.Afleveringen.OrderByDescending(a => a.Toegevoegd).ThenBy(a => a.Nummer).Take(top).ToList();
             }
         }
 

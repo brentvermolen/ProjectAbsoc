@@ -20,7 +20,7 @@
             source += Model.PosterPath;
          }
       }
-      <img src="@source" class="image" alt="@Model.Naam" style="width:100%;" />
+      <img src="@source" class="image" onerror="this.src='/Content/Images/no_image.png'" alt="@Model.Naam" style="width:100%;" />
    </div>
    <div class="col-md-8" style="padding-left: 20px;">
       <h1>Film(s)</h1>
@@ -42,7 +42,7 @@
                       src += film.PosterPath;
                    }
                }
-               <img src="@src" class="image" alt="@film.Naam" style="max-width:100%; height:350px" />
+               <img src="@src" class="image" onerror="this.src='/Content/Images/no_image.png'" alt="@film.Naam" style="max-width:100%; height:350px" />
                <div class="overlayPoster">
                   <div class="posterOverlayContent">@film.Naam</div>
                </div>
