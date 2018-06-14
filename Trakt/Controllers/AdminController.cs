@@ -11,6 +11,7 @@ using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml;
 using Trakt.Models;
 
 namespace Trakt.Controllers
@@ -239,6 +240,76 @@ namespace Trakt.Controllers
         {
             [JsonProperty("cast")]
             public List<Acteur> Acteurs { get; set; }
+        }
+
+        private SerieManager SerieMng = new SerieManager();
+
+        public ActionResult ZoekSerie(string naamSerie)
+        {
+            ResultatenViewModel model = new ResultatenViewModel()
+            {
+                Series = new List<Serie>(),
+                Afleveringen = new List<Aflevering>()
+            };
+
+            string site = "http://thetvdb.com";
+            string request = site + "/api/GetSeries.php?seriesname=" + naamSerie;
+
+            using (WebClient client = new WebClient())
+            {
+                var xml = client.DownloadString(request);
+
+                xml.ToString();
+
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(xml);
+                string json = JsonConvert.SerializeXmlNode(doc);
+
+                JObject obj = JObject.Parse(json);
+                var series = obj.SelectToken("Data.Series");
+                series.ToString();
+
+                if (series.Type == JTokenType.Array)
+                {
+                    foreach (var serie in series)
+                    {
+                        Serie s = serie.ToObject<Serie>();
+                        s.BannerPath = site + "/banners/" + serie.SelectToken("banner");
+
+
+                        Serie sDb = SerieMng.ReadSerie(s.ID);
+                        if (sDb == null)
+                        {
+                            model.Series.Add(s);
+                        }
+                    }
+                }
+                else
+                {
+                    Serie s = series.ToObject<Serie>();
+                    s.BannerPath = site + "/banners/" + series.SelectToken("banner");
+
+
+                    Serie sDb = SerieMng.ReadSerie(s.ID);
+                    if (sDb == null)
+                    {
+                        model.Series.Add(s);
+                    }
+                }
+            }
+
+            return View("Resultaten", model);
+        }
+
+        public ActionResult SerieToevoegen(ResultatenViewModel model, string id)
+        {
+            if (int.TryParse(id, out int intId))
+            {
+
+            }
+
+            TempData["msg"] = "Serie toevoegen mislukt!";
+            return RedirectToAction("Index");
         }
     }
 }

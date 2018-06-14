@@ -1,7 +1,7 @@
 ﻿@model Trakt.Models.IndexViewModel
 
 @{
-   ViewBag.Title = "Home Page";
+   ViewBag.Title = "Dashboard";
 }
 
 <div class="jumbotron">
@@ -78,7 +78,7 @@
    {
       <div class="col-md-2 col-sm-6 col-xs-12 poster">
          <a href="@Url.Action("Details", "Aflevering", new { id = aflevering.ID })" title="@aflevering.Naam">
-            @{
+            @{ 
                var actSrc = "";
                var posterClass = "poster";
                var overlayClass = "overlayPoster";

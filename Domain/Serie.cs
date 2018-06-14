@@ -1,4 +1,5 @@
 ﻿using BL.Domain.ActeurKlassen;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,12 +14,17 @@ namespace BL.Domain
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [JsonProperty("seriesid")]
         public int ID { get; set; }
+        [JsonProperty("SeriesName")]
         public string Naam { get; set; }
+        [JsonProperty("Overview")]
         public string Omschrijving { get; set; }
+        [JsonProperty("FirstAired")]
         public string AirDate { get; set; }
+        [JsonProperty("Network")]
         public string Netwerk { get; set; }
-
+        
         public string PosterPath { get; set; }
         public string BannerPath { get; set; }
         public string BannerLocation { get; set; }
