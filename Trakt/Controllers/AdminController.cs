@@ -248,7 +248,6 @@ namespace Trakt.Controllers
 
         public ActionResult ZoekSerie(string naamSerie)
         {
-
             ResultatenViewModel model = new ResultatenViewModel()
             {
                 Series = new List<Serie>(),
@@ -261,31 +260,35 @@ namespace Trakt.Controllers
             
             httpWebRequest.Accept = "application/json";
             httpWebRequest.Method = "GET";
-            httpWebRequest.Headers.Add("Accept-Language", "nl");
             httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
 
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            try
             {
-                var result = streamReader.ReadToEnd();
-                JObject json = JObject.Parse(result);
-
-                foreach(var res in json.SelectToken("data"))
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
-                    res.ToString();
+                    var result = streamReader.ReadToEnd();
+                    JObject json = JObject.Parse(result);
 
-                    Serie s = res.ToObject<Serie>();
-                    s.BannerPath = "https://thetvdb.com/banners/" + res.SelectToken("banner");
-
-                    Serie sDb = SerieMng.ReadSerie(s.ID);
-                    if (sDb != null)
+                    foreach (var res in json.SelectToken("data"))
                     {
-                        s.ID = 0;
+                        res.ToString();
+
+                        Serie s = res.ToObject<Serie>();
+                        s.BannerPath = "https://thetvdb.com/banners/" + res.SelectToken("banner");
+
+                        Serie sDb = SerieMng.ReadSerie(s.ID);
+                        if (sDb != null)
+                        {
+                            s.ID = -1;
+                        }
+                        model.Series.Add(s);
                     }
-                    model.Series.Add(s);
                 }
+                model.Series.Sort((s1, s2) => s2.AirDate.CompareTo(s1.AirDate));
             }
-            model.Series.Sort((s1, s2) => s2.AirDate.CompareTo(s1.AirDate));
+            catch (Exception) { }
+
             return View("Resultaten", model);
         }
 
@@ -293,7 +296,95 @@ namespace Trakt.Controllers
         {
             if (int.TryParse(id, out int intId))
             {
+                string token = getLoginTokenAsync().Result;
 
+                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.thetvdb.com/series/" + id);
+
+                httpWebRequest.Accept = "application/json";
+                httpWebRequest.Method = "GET";
+                httpWebRequest.Headers.Add("Accept-Language", "en");
+                httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
+
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                Serie serie = null;
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    JObject json = JObject.Parse(result);
+
+                    serie = json.SelectToken("data").ToObject<Serie>();
+                    serie.BannerPath = "https://thetvdb.com/banners/" + json.SelectToken("data.banner");
+                }
+
+                if (serie != null)
+                {
+                    httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.thetvdb.com/series/" + id);
+
+                    httpWebRequest.Accept = "application/json";
+                    httpWebRequest.Method = "GET";
+                    httpWebRequest.Headers.Add("Accept-Language", "nl");
+                    httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
+
+                    httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                        JObject json = JObject.Parse(result);
+
+                        string nlOmsch = (string)json.SelectToken("data.overview");
+
+                        if (nlOmsch != null)
+                        {
+                            serie.Omschrijving = nlOmsch;
+                        }
+                    }
+                }
+
+                httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.thetvdb.com/series/" + id + "/actors");
+
+                httpWebRequest.Accept = "application/json";
+                httpWebRequest.Method = "GET";
+                httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
+
+                httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    JObject json = JObject.Parse(result);
+
+                    serie.Acteurs = new List<ActeurSerie>();
+                    foreach (var acteur in json.SelectToken("data"))
+                    {
+                        int acteurId = (int)acteur.SelectToken("id");
+                        Acteur a = ActeurMng.ReadActeur(acteurId);
+
+                        if (a == null)
+                        {
+                            a = new Acteur
+                            {
+                                ID = acteurId,
+                                Naam = (string)acteur.SelectToken("name"),
+                                ImagePath = "https://thetvdb.com/banners/" + (string)acteur.SelectToken("image")
+                            };
+
+                            ActeurMng.AddActeur(a);
+                        }
+
+                        ActeurSerie acteurFilm = new ActeurSerie()
+                        {
+                            ActeurID = acteurId,
+                            SerieID = serie.ID,
+                            Sort = (int)acteur.SelectToken("sortOrder"),
+                            Karakter = (string)acteur.SelectToken("role")
+                        };
+
+                        serie.Acteurs.Add(acteurFilm);
+                    }
+                }
+
+                SerieMng.AddSerie(serie);
             }
 
             TempData["msg"] = "Serie toevoegen mislukt!";

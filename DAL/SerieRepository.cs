@@ -59,6 +59,12 @@ namespace DAL
             }
         }
 
+        public void CreateSerie(Serie serie)
+        {
+            ctx.Series.Add(serie);
+            ctx.SaveChanges();
+        }
+
         public List<Serie> GetSeries(SerieSortEnum sort, int top)
         {
             switch (sort)

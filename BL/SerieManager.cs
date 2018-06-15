@@ -46,5 +46,10 @@ namespace BL
         {
             return repo.GetSeries(wherePred, sort, maxFilms);
         }
+
+        public void AddSerie(Serie serie)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
