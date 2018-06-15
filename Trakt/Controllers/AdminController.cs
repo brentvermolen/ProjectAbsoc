@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml;
@@ -56,7 +57,8 @@ namespace Trakt.Controllers
             AdminViewModel model = new AdminViewModel()
             {
                 Gebruikers = gebruikers,
-                Archieven = archieven
+                Archieven = archieven,
+                BestaandeSeries = SerieMng.ReadSeries(SerieSortEnum.Naam, 999)
             };
 
             return View(model);
@@ -254,10 +256,10 @@ namespace Trakt.Controllers
                 Afleveringen = new List<Aflevering>()
             };
 
-            string token = getLoginTokenAsync().Result;
+            string token = GetLoginTokenAsync().Result;
 
             HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.thetvdb.com/search/series?name=" + naamSerie);
-            
+
             httpWebRequest.Accept = "application/json";
             httpWebRequest.Method = "GET";
             httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
@@ -296,7 +298,7 @@ namespace Trakt.Controllers
         {
             if (int.TryParse(id, out int intId))
             {
-                string token = getLoginTokenAsync().Result;
+                string token = GetLoginTokenAsync().Result;
 
                 HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.thetvdb.com/series/" + id);
 
@@ -387,11 +389,10 @@ namespace Trakt.Controllers
                 SerieMng.AddSerie(serie);
             }
 
-            TempData["msg"] = "Serie toevoegen mislukt!";
             return RedirectToAction("Index");
         }
 
-        public async System.Threading.Tasks.Task<string> getLoginTokenAsync()
+        public async Task<string> GetLoginTokenAsync()
         {
             HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.thetvdb.com/login");
 
@@ -416,6 +417,84 @@ namespace Trakt.Controllers
 
                 return (string)json.SelectToken("token");
             }
+        }
+
+        public ActionResult AfleveringToevoegen(string aflBegin, string aflEind, string seizoen, string serie)
+        {
+            if (SerieMng.ReadSerie(int.Parse(serie)) == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var token = GetLoginTokenAsync().Result;
+            HttpWebRequest httpWebRequest = null;
+
+            if (aflBegin != null && aflEind != null && seizoen != null)
+            {
+                httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.thetvdb.com/series/" + serie + "/episodes/query?airedSeason=" + seizoen);
+            }
+            else if (aflBegin != null && seizoen != null)
+            {
+                httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.thetvdb.com/series/" + serie + "/episodes/query?airedSeason=" + aflBegin + "&airedEpisode=" + seizoen);
+            }
+            else if (seizoen != null)
+            {
+                httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.thetvdb.com/series/" + serie + "/episodes/query?airedSeason=" + seizoen);
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+
+            httpWebRequest.Accept = "application/json";
+            httpWebRequest.Method = "GET";
+            httpWebRequest.Headers.Add("Accept-Language", "en");
+            httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+                JObject json = JObject.Parse(result);
+
+                foreach(var afl in json.SelectToken("data"))
+                {
+                    Aflevering aflevering = SerieMng.ReadAflevering((int)afl.SelectToken("id"));
+
+                    if (aflevering == null)
+                    {
+                        aflevering = afl.ToObject<Aflevering>();
+                        aflevering.Toegevoegd = DateTime.Today;
+                        aflevering.ImagePath = "http://www.thetvdb.com/banners/episodes/" + serie + "/" + aflevering.ID + ".jpg";
+                        aflevering.SerieID = int.Parse(serie);
+
+                        if (aflBegin != null && aflEind != null && seizoen != null)
+                        {
+                            if (aflevering.Nummer >= int.Parse(aflBegin) && aflevering.Nummer <= int.Parse(aflEind) && aflevering.Seizoen == int.Parse(seizoen))
+                            {
+                                SerieMng.AddAflevering(aflevering);
+                            }
+                        }
+                        else if (aflBegin != null && seizoen != null)
+                        {
+                            if (aflevering.Nummer == int.Parse(aflBegin) && aflevering.Seizoen == int.Parse(seizoen))
+                            {
+                                SerieMng.AddAflevering(aflevering);
+                            }
+                        }
+                        else if (seizoen != null)
+                        {
+                            if (aflevering.Seizoen == int.Parse(seizoen))
+                            {
+                                SerieMng.AddAflevering(aflevering);
+                            }
+                        }
+                    }                    
+                }
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

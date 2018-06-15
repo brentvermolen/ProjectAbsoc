@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,12 +13,19 @@ namespace BL.Domain
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [JsonProperty("id")]
         public int ID { get; set; }
+        [JsonProperty("episodeName")]
         public string Naam { get; set; }
+        [JsonProperty("airedEpisodeNumber")]
         public int Nummer { get; set; }
+        [JsonProperty("airedSeason")]
         public int Seizoen { get; set; }
+        [JsonProperty("firstAired")]
         public string AirDate { get; set; }
+        [JsonProperty("overview")]
         public string Omschrijving { get; set; }
+        [JsonProperty("absoluteNumber")]
         public int AfleveringNr { get; set; }
         public DateTime? Toegevoegd { get; set; }
         public string Path { get; set; }

@@ -49,7 +49,12 @@ namespace BL
 
         public void AddSerie(Serie serie)
         {
-            throw new NotImplementedException();
+            repo.CreateSerie(serie);
+        }
+
+        public void AddAflevering(Aflevering aflevering)
+        {
+            repo.CreateAflevering(aflevering);
         }
     }
 }

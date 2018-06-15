@@ -13,7 +13,7 @@
             <div class="row">
                @using (Html.BeginForm("ZoekSerie", "Admin", FormMethod.Get))
                {
-                  <input class="col-md-12" id="naamSerie" name="naamSerie" placeholder="Naam" />
+                  <input class="col-md-12" id="naamSerie" name="naamSerie" placeholder="Naam" required />
                   <button type="submit" class="btn btn-success" style="margin:5px">Zoek Series</button>
                }
             </div>
@@ -26,7 +26,43 @@
             <h3 class="panel-title">Aflevering Toevoegen</h3>
          </div>
          <div class="panel-body">
-
+            <div class="row">
+               <p>Kies Serie</p>
+               <select onchange="updateSerie(this.value);">
+                  @foreach (var serie in Model.BestaandeSeries)
+                  {
+                     <option value="@serie.ID">@serie.Naam</option>
+                  }
+               </select>
+            </div>
+            <div class="row">
+               <p>Per Aflevering</p>
+               @using (Html.BeginForm("AfleveringToevoegen", "Admin", FormMethod.Get))
+               {
+                  <input type="hidden" class="serieId" value="" id="serie" name="serie" />
+                  <input type="number" min="1" class="col-md-3" id="aflBegin" name="aflBegin" placeholder="Aflevering" required />
+                  <input type="number" min="1" class="col-md-3" id="seizoen" name="seizoen" placeholder="Seizoen" required />
+                  <button type="submit" class="btn btn-success" style="margin:5px">Toevoegen</button>
+               }
+               <hr />
+               <p>Per Seizoen</p>
+               @using (Html.BeginForm("AfleveringToevoegen", "Admin", FormMethod.Get))
+               {
+                  <input type="hidden" class="serieId" value="" id="serie" name="serie" />
+                  <input type="number" min="1" class="col-md-5" id="seizoen" name="seizoen" placeholder="Seizoen" required />
+                  <button type="submit" class="btn btn-success" style="margin:5px">Toevoegen</button>
+               }
+               <hr />
+               <p>Per Reeks Afleveringen</p>
+               @using (Html.BeginForm("AfleveringToevoegen", "Admin", FormMethod.Get))
+               {
+                  <input type="hidden" class="serieId" value="" id="serie" name="serie" />
+                  <input type="number" min="1" class="col-md-3" id="aflBegin" name="aflBegin" placeholder="Afl. Begin" required />
+                  <input type="number" min="1" class="col-md-3" id="aflEind" name="aflEind" placeholder="Afl. Eind" required />
+                  <input type="number" min="1" class="col-md-3" id="seizoen" name="seizoen" placeholder="Seizoen" required />
+                  <button type="submit" class="btn btn-success" style="margin:5px">Toevoegen</button>
+               }
+            </div>
          </div>
       </div>
    </div>
@@ -45,3 +81,13 @@
 <div class="row" id="serieResultaten">
 
 </div>
+
+<script>
+   function updateSerie(value) {
+      var elems = document.getElementsByClassName("serieId");
+
+      for (var i = 0; i < elems.length; i++) {
+         elems[i].value = value;
+      }
+   }
+</script>

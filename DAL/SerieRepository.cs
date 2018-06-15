@@ -59,6 +59,12 @@ namespace DAL
             }
         }
 
+        public void CreateAflevering(Aflevering aflevering)
+        {
+            ctx.Afleveringen.Add(aflevering);
+            ctx.SaveChanges();
+        }
+
         public void CreateSerie(Serie serie)
         {
             ctx.Series.Add(serie);

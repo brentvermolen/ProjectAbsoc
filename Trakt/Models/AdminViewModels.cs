@@ -10,6 +10,7 @@ namespace Trakt.Models
     {
         public virtual List<Gebruiker> Gebruikers { get; set; }
         public virtual List<Archief> Archieven { get; set; }
+        public virtual List<Serie> BestaandeSeries { get; set; }
     }
 
     public class ResultatenViewModel
