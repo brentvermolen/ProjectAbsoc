@@ -14,15 +14,15 @@ namespace BL.Domain
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        [JsonProperty("seriesid")]
+        [JsonProperty("id")]
         public int ID { get; set; }
-        [JsonProperty("SeriesName")]
+        [JsonProperty("seriesName")]
         public string Naam { get; set; }
-        [JsonProperty("Overview")]
+        [JsonProperty("overview")]
         public string Omschrijving { get; set; }
-        [JsonProperty("FirstAired")]
+        [JsonProperty("firstAired")]
         public string AirDate { get; set; }
-        [JsonProperty("Network")]
+        [JsonProperty("network")]
         public string Netwerk { get; set; }
         
         public string PosterPath { get; set; }

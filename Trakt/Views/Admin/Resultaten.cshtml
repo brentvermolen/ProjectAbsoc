@@ -42,19 +42,12 @@
             </div>
          </a>
          <ul class="list-unstyled components">
-            <li class="active sidebar">
-               <a class="subpageRef" href="javascript:void(0)" data-id="series">
-                  <i class="glyphicon glyphicon-film"></i>
-                  @if (Model.Afleveringen.Count == 0)
-                  {
-                     <span>Series</span>
-                  }
-                  else
-                  {
-                     <span>Afleveringen</span>
-                  }
-               </a>
-            </li>
+               <li class="active sidebar">
+                  <a class="subpageRef" href="javascript:void(0)" data-id="series">
+                     <i class="glyphicon glyphicon-film"></i>
+                     <span>Resultaten</span>
+                  </a>
+               </li>
          </ul>
       </nav>
       <!-- Page Content Holder -->
@@ -80,22 +73,30 @@
          <div class="subpage" style="display:block">
             <div class="row">
                <h2>Resultaten</h2>
-               @if (Model.Afleveringen.Count == 0)
+               @if (Model.Afleveringen.Count != 0)
                {
 
                }
-               else
+
+               @if (Model.Series.Count != 0)
                {
                   <ul class="list-group" style="margin:5px;">
                      @foreach (var serie in Model.Series)
                      {
-                        <li class="list-group-item col-xs-12">
-                           <img class="col-xs-12" style="height:auto" src="@serie.BannerPath" alt="poster154" />
-                           <p class='col-xs-2'>@serie.Naam</p>
-                           <p class='col-xs-2'>@serie.AirDate</p>
-                           <p class='col-xs-10'>@serie.Omschrijving</p>
-                           <form action='Admin/SerieToevoegen/' method='POST'><input type='hidden' name='id' value='@serie.ID' /><button type='submit' class='col-xs-2 btn btn-success'>Toevoegen</button></form>
-                        </li>
+                     <li class="list-group-item col-xs-12">
+                        <img class="col-xs-12" style="height:auto" src="@serie.BannerPath" alt="banner" />
+                        <p class='col-xs-2' style="font-weight:bold; font-size:larger">@serie.Naam</p>
+                        <p class='col-xs-2'>@serie.AirDate</p>
+                        <p class='col-xs-10'>@serie.Omschrijving</p>
+                        @if (serie.ID == -1)
+                        {
+                           <button type='submit' class='col-xs-2 btn btn-success' disabled>Al in DB</button>
+                        }
+                        else
+                        {
+                           <form action='@Url.Action("SerieToevoegen","Admin")' method='POST'><input type='hidden' name='id' value='@serie.ID' /><button type='submit' class='col-xs-2 btn btn-success'>Toevoegen</button></form>
+                        }
+                     </li>
                      }
                   </ul>
                }

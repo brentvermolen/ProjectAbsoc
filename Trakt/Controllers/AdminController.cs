@@ -6,8 +6,10 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -97,14 +99,14 @@ namespace Trakt.Controllers
         [HttpPost]
         public ActionResult UpdateGebruikerArchief(AdminViewModel model)
         {
-            foreach(Archief archief in model.Archieven)
+            foreach (Archief archief in model.Archieven)
             {
                 Archief aDb = GebruikerMng.GetArchief(archief.ID);
 
-                foreach(Gebruiker gebruiker in archief.Gebruikers)
+                foreach (Gebruiker gebruiker in archief.Gebruikers)
                 {
                     List<int> ids = new List<int>();
-                    foreach(Gebruiker archiefGebruiker in aDb.Gebruikers)
+                    foreach (Gebruiker archiefGebruiker in aDb.Gebruikers)
                     {
                         ids.Add(archiefGebruiker.ID);
                     }
@@ -117,7 +119,7 @@ namespace Trakt.Controllers
                         GebruikerMng.ChangeGebruiker(gDb);
                         ids.Add(gebruiker.ID);
                     }
-                }                
+                }
             }
 
             return RedirectToAction("Index");
@@ -246,58 +248,44 @@ namespace Trakt.Controllers
 
         public ActionResult ZoekSerie(string naamSerie)
         {
+
             ResultatenViewModel model = new ResultatenViewModel()
             {
                 Series = new List<Serie>(),
                 Afleveringen = new List<Aflevering>()
             };
 
-            string site = "http://thetvdb.com";
-            string request = site + "/api/GetSeries.php?seriesname=" + naamSerie;
+            string token = getLoginTokenAsync().Result;
 
-            using (WebClient client = new WebClient())
+            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.thetvdb.com/search/series?name=" + naamSerie);
+            
+            httpWebRequest.Accept = "application/json";
+            httpWebRequest.Method = "GET";
+            httpWebRequest.Headers.Add("Accept-Language", "nl");
+            httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
-                var xml = client.DownloadString(request);
+                var result = streamReader.ReadToEnd();
+                JObject json = JObject.Parse(result);
 
-                xml.ToString();
-
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(xml);
-                string json = JsonConvert.SerializeXmlNode(doc);
-
-                JObject obj = JObject.Parse(json);
-                var series = obj.SelectToken("Data.Series");
-                series.ToString();
-
-                if (series.Type == JTokenType.Array)
+                foreach(var res in json.SelectToken("data"))
                 {
-                    foreach (var serie in series)
-                    {
-                        Serie s = serie.ToObject<Serie>();
-                        s.BannerPath = site + "/banners/" + serie.SelectToken("banner");
+                    res.ToString();
 
-
-                        Serie sDb = SerieMng.ReadSerie(s.ID);
-                        if (sDb == null)
-                        {
-                            model.Series.Add(s);
-                        }
-                    }
-                }
-                else
-                {
-                    Serie s = series.ToObject<Serie>();
-                    s.BannerPath = site + "/banners/" + series.SelectToken("banner");
-
+                    Serie s = res.ToObject<Serie>();
+                    s.BannerPath = "https://thetvdb.com/banners/" + res.SelectToken("banner");
 
                     Serie sDb = SerieMng.ReadSerie(s.ID);
-                    if (sDb == null)
+                    if (sDb != null)
                     {
-                        model.Series.Add(s);
+                        s.ID = 0;
                     }
+                    model.Series.Add(s);
                 }
             }
-
+            model.Series.Sort((s1, s2) => s2.AirDate.CompareTo(s1.AirDate));
             return View("Resultaten", model);
         }
 
@@ -310,6 +298,33 @@ namespace Trakt.Controllers
 
             TempData["msg"] = "Serie toevoegen mislukt!";
             return RedirectToAction("Index");
+        }
+
+        public async System.Threading.Tasks.Task<string> getLoginTokenAsync()
+        {
+            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.thetvdb.com/login");
+
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Accept = "application/json";
+            httpWebRequest.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string json = "{\"apikey\":\"U5YZ7ESIBVSADAZ0\"}";
+
+                streamWriter.Write(json);
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+                JObject json = JObject.Parse(result);
+
+                return (string)json.SelectToken("token");
+            }
         }
     }
 }
