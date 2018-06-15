@@ -435,7 +435,7 @@ namespace Trakt.Controllers
             }
             else if (aflBegin != null && seizoen != null)
             {
-                httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.thetvdb.com/series/" + serie + "/episodes/query?airedSeason=" + aflBegin + "&airedEpisode=" + seizoen);
+                httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.thetvdb.com/series/" + serie + "/episodes/query?airedSeason=" + seizoen + "&airedEpisode=" + aflBegin);
             }
             else if (seizoen != null)
             {
