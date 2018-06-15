@@ -215,6 +215,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AfleveringController.cs" />
     <Compile Include="Controllers\api\AdminController.cs" />
+    <Compile Include="Controllers\api\ArchiefController.cs" />
     <Compile Include="Controllers\api\FilmsController.cs" />
     <Compile Include="Controllers\api\SeriesController.cs" />
     <Compile Include="Controllers\ArchievenController.cs" />
@@ -354,6 +355,7 @@
     <Content Include="Views\Admin\_Series.cshtml" />
     <Content Include="Views\Archieven\Index.cshtml" />
     <Content Include="Views\Admin\Resultaten.cshtml" />
+    <Content Include="Views\Admin\Archief.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

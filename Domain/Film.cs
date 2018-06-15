@@ -59,5 +59,10 @@ namespace BL.Domain
         {
             return Naam + " " + ReleaseDate;
         }
+
+        public override int GetHashCode()
+        {
+            return ID;
+        }
     }
 }

@@ -25,7 +25,7 @@
             <div class="col-md-3">
                <div class="panel panel-primary">
                   <div class="panel-heading">
-                     <h3 class="panel-title">@Html.HiddenFor(m => m.Archieven[i].ID)@Html.HiddenFor(m => m.Archieven[i].Naam)@Model.Archieven[i].Naam</h3>
+                     <h3 class="panel-title">@Html.HiddenFor(m => m.Archieven[i].ID)@Html.HiddenFor(m => m.Archieven[i].Naam)<a href="@Url.Action("WijzigArchief", "Admin", new { archief = Model.Archieven[i].ID })">@Model.Archieven[i].Naam</a></h3>
                   </div>
                   <div class="panel-body" id="@i" style="min-height:350px" ondrop="drop(event, this.id, @Model.Archieven[i].ID)" ondragover="allowDrop(event)">
                      @for (var j = 0; j < Model.Archieven[i].Gebruikers.Count; j++)

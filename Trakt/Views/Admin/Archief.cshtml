@@ -1,0 +1,185 @@
+﻿@model Trakt.Models.WijzigArchiefModel
+
+@{
+   Layout = "";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+   <title>Admin</title>
+
+   @Scripts.Render("~/bundles/jquery")
+   @Scripts.Render("~/bundles/bootstrap")
+   @Styles.Render("~/Content/css")
+
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+   <link rel="stylesheet" href="~/Content/Config.css">
+   <script src="~/Scripts/jquery-3.0.0.min.js"></script>
+   <script>
+      $(document).ready(function () {
+         var subpage = window.location.href.split('#')[1].replace("%20", " ");
+         if (subpage != undefined) {
+            showPage(subpage);
+         }
+         filterPersoon(document.getElementById("filterPersoon").value);
+         filterGebruiker(document.getElementById("filterGebruiker").value);
+      });
+   </script>
+</head>
+<body style="padding-top:0">
+   <div class="wrapper">
+      <nav id="sidebar">
+         <a href="@Url.Action("Index", "Home")">
+            <div class="sidebar-header">
+               <h3>Admin</h3>
+               <strong>Ad</strong>
+            </div>
+         </a>
+         <ul class="list-unstyled components">
+            <li class="active sidebar">
+               <a class="subpageRef" href="javascript:void(0)" data-id="series">
+                  <i class="glyphicon glyphicon-film"></i>
+                  <span>Archief '@Model.Archief.Naam'</span>
+               </a>
+            </li>
+         </ul>
+      </nav>
+      <!-- Page Content Holder -->
+      <div id="content">
+         <nav class="navbar navbar-default">
+            <div class="container-fluid">
+
+               <div class="navbar-header">
+                  <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                     <i class="glyphicon glyphicon-align-left"></i>
+                     <span>Toggle Sidebar</span>
+                  </button>
+               </div>
+
+               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                  <ul class="nav navbar-nav navbar-right">
+                     <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                  </ul>
+               </div>
+            </div>
+         </nav>
+
+         <div class="subpage" style="display:block">
+            <div class="row">
+               <h2>@Model.Archief.Naam</h2>
+
+               <div class="row">
+                  <div class="col-md-12">
+                     <div class="panel-group" id="archiefSeries">
+                        @foreach (var serie in Model.Series.OrderBy(s => s.Serie.Naam))
+                        {
+                           <div class="panel panel-default">
+                              <div class="panel-heading">
+                                 <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#archiefSeries" href="#@serie.Serie.ID">
+                                       <span class="badge" style="background-color:green; float:left">#@serie.SeizoenenArchief.Count</span>
+                                       <span class="badge" style="background-color:red; float:left; margin-right:10px">#@serie.SeizoenenAndere.Count</span>
+                                       @serie.Serie.Naam
+                                    </a>
+                                 </h4>
+                              </div>
+                              <div id="@serie.Serie.ID" class="panel-collapse collapse">
+                                 <div class="panel-body">
+                                    <div class="col-md-5">
+                                       <h3>Andere</h3>
+                                       <ul class="list-group @serie.Serie.ID-andere">
+                                          @foreach (var seizoenAndere in serie.SeizoenenAndere.OrderBy(s => s))
+                                          {
+                                             <li class="list-group-item" onclick="this.classList.toggle('active')" data-id="@seizoenAndere">Seizoen @seizoenAndere</li>
+                                          }
+                                       </ul>
+                                    </div>
+                                    <div class="col-md-2" style="left:3%">
+                                       <input class="btns" type="submit" name="addToArchief" value=">" onclick="naarArchief(@Model.Archief.ID, @serie.Serie.ID)" />
+                                       <input class="btns" type="submit" name="addToAndere" value="<" onclick="naarAndere(@Model.Archief.ID, @serie.Serie.ID)"/>
+                                    </div>
+                                    <div class="col-md-5">
+                                       <h3>Archief</h3>
+                                       <ul class="list-group @serie.Serie.ID-archief">
+                                          @foreach (var seizoenArchief in serie.SeizoenenArchief.OrderBy(s => s))
+                                          {
+                                             <li class="list-group-item" onclick="this.classList.toggle('active')" data-id="@seizoenArchief">Seizoen @seizoenArchief</li>
+                                          }
+                                       </ul>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        }
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- jQuery CDN -->
+   <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+   <!-- Bootstrap Js CDN -->
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+   <script type="text/javascript">
+      $(document).ready(function () {
+         $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+         });
+         $('#sidebarCollapse').click();
+      });
+
+      function showPage(subpage) {
+         var lis = document.getElementsByClassName("sidebar");
+         for (var i = 0; i < lis.length; i++) {
+            lis[i].className = lis[i].className.replace("active", "");
+         }
+         var refs = document.getElementsByClassName("subpageRef");
+         for (var i = 0; i < refs.length; i++) {
+            var dataId = $(refs[i]).attr("data-id");
+            if (dataId == subpage) {
+               refs[i].className = refs[i].className + " active";
+            }
+         }
+
+         var id = subpage;
+         var divs = document.getElementsByClassName("subpage");
+
+         for (var i = 0; i < divs.length; i++) {
+            var div = divs[i];
+
+            div.style.display = "none";
+
+            if (div.id == id) {
+               div.style.display = "block";
+            }
+         }
+      }
+   </script>
+   <style>
+      a[aria-expanded="false"]::before {
+         content: none;
+      }
+
+      a[aria-expanded="true"]::before {
+         content: none;
+      }
+
+      .btns {
+         width:50%;
+         height:50px;
+         font-size:xx-large;
+         font-weight:bold;
+      }
+   </style>
+</body>
+</html>

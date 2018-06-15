@@ -458,7 +458,7 @@ namespace Trakt.Controllers
                 var result = streamReader.ReadToEnd();
                 JObject json = JObject.Parse(result);
 
-                foreach(var afl in json.SelectToken("data"))
+                foreach (var afl in json.SelectToken("data"))
                 {
                     Aflevering aflevering = SerieMng.ReadAflevering((int)afl.SelectToken("id"));
 
@@ -490,11 +490,137 @@ namespace Trakt.Controllers
                                 SerieMng.AddAflevering(aflevering);
                             }
                         }
-                    }                    
+                    }
                 }
             }
 
             return RedirectToAction("Index");
+        }
+
+        //public ActionResult WijzigArchief(string archief)
+        //{
+        //    Archief a = ArchiefMng.GetArchief(int.Parse(archief));
+
+        //    List<Aflevering> andereAfleveringen = SerieMng.ReadAfleveringen();
+        //    List<Film> andereFilms = FilmMng.ReadFilms();
+
+        //    Dictionary<string, List<int>> andereSeries = new Dictionary<string, List<int>>();
+        //    Dictionary<string, List<int>> archiefSeries = new Dictionary<string, List<int>>();
+
+        //    for (int i = 0; i < andereAfleveringen.Count; i++)
+        //    {
+        //        var aflevering = andereAfleveringen[i];
+        //        if (a.Afleveringen.Find(afl => afl.ID == aflevering.ID) != null)
+        //        {
+        //            if (archiefSeries.ContainsKey(aflevering.Serie.Naam))
+        //            {
+        //                if (!archiefSeries[aflevering.Serie.Naam].Contains(aflevering.Seizoen))
+        //                {
+        //                    archiefSeries[aflevering.Serie.Naam].Add(aflevering.Seizoen);
+        //                }
+        //            }
+        //            else
+        //            {
+        //                archiefSeries.Add(aflevering.Serie.Naam, new List<int>());
+        //                archiefSeries[aflevering.Serie.Naam].Add(aflevering.Seizoen);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (andereSeries.ContainsKey(aflevering.Serie.Naam))
+        //            {
+        //                if (!andereSeries[aflevering.Serie.Naam].Contains(aflevering.Seizoen))
+        //                {
+        //                    andereSeries[aflevering.Serie.Naam].Add(aflevering.Seizoen);
+        //                }
+        //            }
+        //            else
+        //            {
+        //                andereSeries.Add(aflevering.Serie.Naam, new List<int>());
+        //                andereSeries[aflevering.Serie.Naam].Add(aflevering.Seizoen);
+        //            }
+        //        }
+        //    }
+
+        //    for (int i = 0; i < andereFilms.Count; i++)
+        //    {
+        //        var film = andereFilms[i];
+
+        //        if (a.Films.Contains(film))
+        //        {
+        //            andereFilms.Remove(film);
+        //            i--;
+        //        }
+        //    }
+
+        //    WijzigArchiefModel model = new WijzigArchiefModel()
+        //    {
+        //        Archief = a,
+        //        AndereFilms = andereFilms,
+        //        AndereSeries = andereSeries,
+        //        ArchiefFilms = a.Films,
+        //        ArchiefSeries = archiefSeries
+        //    };
+
+        //    return View("Archief", model);
+        //}
+
+        public ActionResult WijzigArchief(string archief)
+        {
+            Archief a = ArchiefMng.GetArchief(int.Parse(archief));
+
+            List<Aflevering> andereAfleveringen = SerieMng.ReadAfleveringen();
+            List<Film> andereFilms = FilmMng.ReadFilms();
+
+            List<Series> series = new List<Series>();
+
+            foreach(var aflevering in andereAfleveringen)
+            {
+                Series s = series.Find(se => se.Serie.ID == aflevering.SerieID);
+
+                if (s == null)
+                {
+                    s = new Series() { Serie = aflevering.Serie, SeizoenenAndere = new List<int>(), SeizoenenArchief = new List<int>() };
+
+                    series.Add(s);
+                }
+
+                if (a.Afleveringen.Find(afl => afl.ID == aflevering.ID) != null)
+                {
+                    if (!s.SeizoenenArchief.Contains(aflevering.Seizoen))
+                    {
+                        s.SeizoenenArchief.Add(aflevering.Seizoen);
+                    }
+                }
+                else
+                {
+                    if (!s.SeizoenenAndere.Contains(aflevering.Seizoen))
+                    {
+                        s.SeizoenenAndere.Add(aflevering.Seizoen);
+                    }
+                }
+            }
+
+            for (int i = 0; i < andereFilms.Count; i++)
+            {
+                var film = andereFilms[i];
+
+                if (a.Films.Contains(film))
+                {
+                    andereFilms.Remove(film);
+                    i--;
+                }
+            }
+
+            WijzigArchiefModel model = new WijzigArchiefModel()
+            {
+                Archief = a,
+                AndereFilms = andereFilms,
+                ArchiefFilms = a.Films,
+                Series = series
+            };
+
+            return View("Archief", model);
         }
     }
 }

@@ -104,5 +104,10 @@ namespace BL.Domain
         {
             return ID + "_" + Naam;
         }
+
+        public override int GetHashCode()
+        {
+            return ID;
+        }
     }
 }

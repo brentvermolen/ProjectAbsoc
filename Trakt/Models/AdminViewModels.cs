@@ -18,4 +18,28 @@ namespace Trakt.Models
         public List<Serie> Series { get; set; }
         public List<Aflevering> Afleveringen { get; set; }
     }
+
+    //public class WijzigArchiefModel
+    //{
+    //    public Archief Archief { get; set; }
+    //    public List<Film> ArchiefFilms { get; set; }
+    //    public Dictionary<string, List<int>> ArchiefSeries { get; set; }
+    //    public List<Film> AndereFilms { get; set; }
+    //    public Dictionary<string, List<int>> AndereSeries { get; set; }
+    //}
+
+    public class WijzigArchiefModel
+    {
+        public Archief Archief { get; set; }
+        public List<Film> ArchiefFilms { get; set; }
+        public List<Film> AndereFilms { get; set; }
+        public List<Series> Series { get; set; }
+    }
+
+    public class Series
+    {
+        public Serie Serie { get; set; }
+        public List<int> SeizoenenArchief { get; set; }
+        public List<int> SeizoenenAndere { get; set; }
+    }
 }

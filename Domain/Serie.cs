@@ -52,5 +52,10 @@ namespace BL.Domain
         {
             return Naam + " " + AirDate;
         }
+
+        public override int GetHashCode()
+        {
+            return ID;
+        }
     }
 }
