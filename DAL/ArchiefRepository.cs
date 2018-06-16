@@ -34,6 +34,17 @@ namespace DAL
             return retArchiefs;
         }
 
+        public void UpdateArchief(Archief archief)
+        {
+            ctx.Entry(archief).State = System.Data.Entity.EntityState.Modified;
+            ctx.SaveChanges();
+        }
+
+        public List<Aflevering> ReadAfleveringen(Func<Aflevering, bool> predicate)
+        {
+            return ctx.Afleveringen.Where(predicate).ToList();
+        }
+
         public Archief ReadArchief(int iD)
         {
             return ctx.Archieven.Find(iD);

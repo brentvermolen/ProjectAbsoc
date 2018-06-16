@@ -26,5 +26,15 @@ namespace BL
         {
             return repo.ReadArchief(iD);
         }
+
+        public List<Aflevering> GetAfleveringen(Func<Aflevering, bool> predicate)
+        {
+            return repo.ReadAfleveringen(predicate);
+        }
+
+        public void ChangeArchief(Archief archief)
+        {
+            return repo.UpdateArchief(archief);
+        }
     }
 }

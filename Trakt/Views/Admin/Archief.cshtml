@@ -18,9 +18,7 @@
    @Scripts.Render("~/bundles/bootstrap")
    @Styles.Render("~/Content/css")
 
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
    <link rel="stylesheet" href="~/Content/Config.css">
-   <script src="~/Scripts/jquery-3.0.0.min.js"></script>
    <script>
       $(document).ready(function () {
          var subpage = window.location.href.split('#')[1].replace("%20", " ");
@@ -83,8 +81,8 @@
                               <div class="panel-heading">
                                  <h4 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#archiefSeries" href="#@serie.Serie.ID">
-                                       <span class="badge" style="background-color:green; float:left">#@serie.SeizoenenArchief.Count</span>
-                                       <span class="badge" style="background-color:red; float:left; margin-right:10px">#@serie.SeizoenenAndere.Count</span>
+                                       <span class="badge" id="@serie.Serie.ID-badge-archief" style="background-color:green; float:left">#@serie.SeizoenenArchief.Count</span>
+                                       <span class="badge" id="@serie.Serie.ID-badge-andere" style="background-color:red; float:left; margin-right:10px">#@serie.SeizoenenAndere.Count</span>
                                        @serie.Serie.Naam
                                     </a>
                                  </h4>
@@ -93,7 +91,7 @@
                                  <div class="panel-body">
                                     <div class="col-md-5">
                                        <h3>Andere</h3>
-                                       <ul class="list-group @serie.Serie.ID-andere">
+                                       <ul class="list-group" id="@serie.Serie.ID-andere">
                                           @foreach (var seizoenAndere in serie.SeizoenenAndere.OrderBy(s => s))
                                           {
                                              <li class="list-group-item" onclick="this.classList.toggle('active')" data-id="@seizoenAndere">Seizoen @seizoenAndere</li>
@@ -106,7 +104,7 @@
                                     </div>
                                     <div class="col-md-5">
                                        <h3>Archief</h3>
-                                       <ul class="list-group @serie.Serie.ID-archief">
+                                       <ul class="list-group" id="@serie.Serie.ID-archief">
                                           @foreach (var seizoenArchief in serie.SeizoenenArchief.OrderBy(s => s))
                                           {
                                              <li class="list-group-item" onclick="this.classList.toggle('active')" data-id="@seizoenArchief">Seizoen @seizoenArchief</li>
@@ -124,13 +122,95 @@
          </div>
       </div>
    </div>
-
-   <!-- jQuery CDN -->
-   <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-   <!-- Bootstrap Js CDN -->
-   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   
 
    <script type="text/javascript">
+      function naarArchief(archief, serie) {
+         var sourceList = document.getElementById(serie + "-andere");
+         var targetList = document.getElementById(serie + "-archief");
+
+         for (var i = 0; i < sourceList.children.length; i++) {
+            var sourceItem = sourceList.children[i];
+            var seizoen = $(sourceItem).attr("data-id");
+
+            if (sourceItem.className.includes("active")) {
+               $.ajax("/api/Archief/NaarArchief/" + archief + "/" + serie + "/" + seizoen, {
+                  type: 'GET',
+                  dataType: 'json'
+               });
+               
+               sourceItem.classList.toggle("active");
+               moveToTarget(sourceItem, targetList);
+               i--;
+            }
+         }
+
+         var badgeSource = document.getElementById(serie + "-badge-andere");
+         var badgeTarget = document.getElementById(serie + "-badge-archief");
+
+         badgeSource.innerHTML = "#" + sourceList.children.length;
+         badgeTarget.innerHTML = "#" + targetList.children.length;
+      }
+
+      function moveToTarget(elem, target) {
+         var seizoen = $(elem).attr("data-id");
+         var added = false;
+         var inner = "";
+
+         for (var i = 0; i < target.children.length; i++) {
+            var targetItem = target.children[i];
+
+            var targetSeizoen = $(targetItem).attr("data-id");
+
+            if (targetSeizoen < seizoen) {
+               inner += targetItem.outerHTML;
+            } else {
+               if (added == false) {
+                  inner += elem.outerHTML;
+                  added = true;
+               }
+               inner += targetItem.outerHTML;
+            }
+         }
+
+         if (added == false) {
+            inner += elem.outerHTML;
+            added = true;
+         }
+
+         elem.outerHTML = "";
+
+         target.innerHTML = inner;
+      }
+
+
+      function naarAndere(archief, serie) {
+         var sourceList = document.getElementById(serie + "-archief");
+         var targetList = document.getElementById(serie + "-andere");
+
+         for (var i = 0; i < sourceList.children.length; i++) {
+            var sourceItem = sourceList.children[i];
+            var seizoen = $(sourceItem).attr("data-id");
+
+            if (sourceItem.className.includes("active")) {
+               $.ajax("/api/Archief/NaarAndere/" + archief + "/" + serie + "/" + seizoen, {
+                  type: 'GET',
+                  dataType: 'json'
+               });
+
+               sourceItem.classList.toggle("active");
+               moveToTarget(sourceItem, targetList);
+               i--;
+            }
+         }
+
+         var badgeSource = document.getElementById(serie + "-badge-andere");
+         var badgeTarget = document.getElementById(serie + "-badge-archief");
+
+         badgeSource.innerHTML = "#" + sourceList.children.length;
+         badgeTarget.innerHTML = "#" + targetList.children.length;
+      }
+
       $(document).ready(function () {
          $('#sidebarCollapse').on('click', function () {
             $('#sidebar').toggleClass('active');
