@@ -34,7 +34,7 @@ namespace BL
 
         public void ChangeArchief(Archief archief)
         {
-            return repo.UpdateArchief(archief);
+            repo.UpdateArchief(archief);
         }
     }
 }

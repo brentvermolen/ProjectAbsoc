@@ -18,11 +18,11 @@ namespace Trakt.Controllers.api
         public IHttpActionResult GetNaarArchief(string archief, string serie, string seizoen)
         {
             Archief a = ArchiefMng.GetArchief(int.Parse(archief));
-            List<Aflevering> afleveringen = ArchiefMng.GetAfleveringen(ar => ar.Seizoen == int.Parse(seizoen));
+            List<Aflevering> afleveringen = ArchiefMng.GetAfleveringen(ar => ar.Seizoen == int.Parse(seizoen) && ar.SerieID == int.Parse(serie));
 
             foreach(var aflevering in afleveringen)
             {
-                if (a.Afleveringen.Find(afl => afl.ID == aflevering.ID) != null)
+                if (a.Afleveringen.Find(afl => afl.ID == aflevering.ID) == null)
                 {
                     a.Afleveringen.Add(aflevering);
                 }
@@ -37,6 +37,19 @@ namespace Trakt.Controllers.api
         [Route("~/api/Archief/NaarAndere/{archief}/{serie}/{seizoen}")]
         public IHttpActionResult GetNaarAndere(string archief, string serie, string seizoen)
         {
+            Archief a = ArchiefMng.GetArchief(int.Parse(archief));
+            List<Aflevering> afleveringen = ArchiefMng.GetAfleveringen(ar => ar.Seizoen == int.Parse(seizoen) && ar.SerieID == int.Parse(serie));
+
+            foreach (var aflevering in afleveringen)
+            {
+                if (a.Afleveringen.Find(afl => afl.ID == aflevering.ID) != null)
+                {
+                    a.Afleveringen.RemoveAll(afl => afl.ID == aflevering.ID);
+                }
+            }
+
+            ArchiefMng.ChangeArchief(a);
+
             return Ok(true);
         }
     }
