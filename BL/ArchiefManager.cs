@@ -36,5 +36,10 @@ namespace BL
         {
             repo.UpdateArchief(archief);
         }
+
+        public Film GetFilm(int film)
+        {
+            return repo.ReadFilm(film);
+        }
     }
 }

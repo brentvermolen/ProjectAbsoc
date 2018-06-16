@@ -601,22 +601,26 @@ namespace Trakt.Controllers
                 }
             }
 
+            List<Films> films = new List<Films>();
+
             for (int i = 0; i < andereFilms.Count; i++)
             {
                 var film = andereFilms[i];
 
                 if (a.Films.Contains(film))
                 {
-                    andereFilms.Remove(film);
-                    i--;
+                    films.Add(new Films() { Film = film, StaatOpArchief = true });
+                }
+                else
+                {
+                    films.Add(new Films() { Film = film, StaatOpArchief = false });
                 }
             }
 
             WijzigArchiefModel model = new WijzigArchiefModel()
             {
                 Archief = a,
-                AndereFilms = andereFilms,
-                ArchiefFilms = a.Films,
+                Films = films,
                 Series = series
             };
 

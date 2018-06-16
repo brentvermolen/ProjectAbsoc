@@ -41,9 +41,15 @@
          </a>
          <ul class="list-unstyled components">
             <li class="active sidebar">
-               <a class="subpageRef" href="javascript:void(0)" data-id="series">
+               <a class="subpageRef" href="javascript:void(0)" data-id="series" onclick="showPage('series')">
                   <i class="glyphicon glyphicon-film"></i>
-                  <span>Archief '@Model.Archief.Naam'</span>
+                  <span>Series '@Model.Archief.Naam'</span>
+               </a>
+            </li>
+            <li class="sidebar">
+               <a class="subpageRef" href="javascript:void(0)" data-id="films" onclick="showPage('films');">
+                  <i class="glyphicon glyphicon-facetime-video"></i>
+                  <span>Films '@Model.Archief.Naam'</span>
                </a>
             </li>
          </ul>
@@ -68,7 +74,7 @@
             </div>
          </nav>
 
-         <div class="subpage" style="display:block">
+         <div id="series" class="subpage" style="display:block">
             <div class="row">
                <h2>@Model.Archief.Naam</h2>
 
@@ -100,7 +106,7 @@
                                     </div>
                                     <div class="col-md-2" style="left:3%">
                                        <input class="btns" type="submit" name="addToArchief" value=">" onclick="naarArchief(@Model.Archief.ID, @serie.Serie.ID)" />
-                                       <input class="btns" type="submit" name="addToAndere" value="<" onclick="naarAndere(@Model.Archief.ID, @serie.Serie.ID)"/>
+                                       <input class="btns" type="submit" name="addToAndere" value="<" onclick="naarAndere(@Model.Archief.ID, @serie.Serie.ID)" />
                                     </div>
                                     <div class="col-md-5">
                                        <h3>Archief</h3>
@@ -120,11 +126,73 @@
                </div>
             </div>
          </div>
+
+         <div id="films" class="subpage" style="display:none">
+            <div class="row">
+               <h2>@Model.Archief.Naam</h2>
+
+               <div class="col-md-6">
+                  <input type="text" placeholder="Filter" onchange="filterFilms(this.value)" style="margin: 1%;" />
+                  <ul class="list-group" style="margin-left: 1%;width: 98%;">
+                     @foreach (var film in Model.Films.OrderBy(f => f.Film.Naam))
+                     {
+                     <li class="list-group-item archief-films" style="height:55px">
+                        @film.Film.Naam
+
+                        @if (film.StaatOpArchief == true)
+                        {
+                           <input type="button" style="float:right" class="btn btn-danger" onclick="filmNaarAndere(@Model.Archief.ID, @film.Film.ID, this)" value="Verwijder van archief" />
+                        }
+                        else
+                        {
+                           <input type="button" style="float:right" class="btn btn-success" onclick="filmNaarArchief(@Model.Archief.ID, @film.Film.ID, this)" value="Plaats op archief" />
+                        }
+                     </li>
+                     }
+                  </ul>
+               </div>
+            </div>
+         </div>
       </div>
    </div>
-   
+
 
    <script type="text/javascript">
+      function filmNaarAndere(archief, film, elem) {
+         $.ajax("/api/Archief/FilmNaarAndere/" + archief + "/" + film, {
+            type: 'GET',
+            dataType: 'json'
+         }).done(function () {
+            var newBtn = '<input type="button" style="float:right" class="btn btn-success" onclick="filmNaarArchief(' + archief + ', ' + film + ', this)" value="Plaats op archief" />';
+            elem.outerHTML = newBtn;
+         });
+
+      }
+
+      function filmNaarArchief(archief, film, elem) {
+         $.ajax("/api/Archief/FilmNaarArchief/" + archief + "/" + film, {
+            type: 'GET',
+            dataType: 'json'
+         }).done(function () {
+            var newBtn = '<input type="button" style="float:right" class="btn btn-danger" onclick="filmNaarAndere(' + archief + ', ' + film + ', this)" value="Verwijder van archief" />';
+            elem.outerHTML = newBtn;
+         });
+      }
+
+      function filterFilms(filter) {
+         var elems = document.getElementsByClassName("archief-films");
+
+         for (var i = 0; i < elems.length; i++) {
+            var naam = elems[i].innerHTML;
+
+            if (naam.toLowerCase().includes(filter.toLowerCase())) {
+               elems[i].style.display = "block";
+            } else {
+               elems[i].style.display = "none";
+            }
+         }
+      }
+
       function naarArchief(archief, serie) {
          var sourceList = document.getElementById(serie + "-andere");
          var targetList = document.getElementById(serie + "-archief");
@@ -138,7 +206,7 @@
                   type: 'GET',
                   dataType: 'json'
                });
-               
+
                sourceItem.classList.toggle("active");
                moveToTarget(sourceItem, targetList);
                i--;
@@ -255,10 +323,10 @@
       }
 
       .btns {
-         width:50%;
-         height:50px;
-         font-size:xx-large;
-         font-weight:bold;
+         width: 50%;
+         height: 50px;
+         font-size: xx-large;
+         font-weight: bold;
       }
    </style>
 </body>

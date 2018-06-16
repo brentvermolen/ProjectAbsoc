@@ -40,6 +40,11 @@ namespace DAL
             ctx.SaveChanges();
         }
 
+        public Film ReadFilm(int film)
+        {
+            return ctx.Films.Find(film);
+        }
+
         public List<Aflevering> ReadAfleveringen(Func<Aflevering, bool> predicate)
         {
             return ctx.Afleveringen.Where(predicate).ToList();

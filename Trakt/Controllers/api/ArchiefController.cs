@@ -42,13 +42,45 @@ namespace Trakt.Controllers.api
 
             foreach (var aflevering in afleveringen)
             {
-                if (a.Afleveringen.Find(afl => afl.ID == aflevering.ID) != null)
-                {
-                    a.Afleveringen.RemoveAll(afl => afl.ID == aflevering.ID);
-                }
+                a.Afleveringen.RemoveAll(afl => afl.ID == aflevering.ID);
             }
 
             ArchiefMng.ChangeArchief(a);
+
+            return Ok(true);
+        }
+
+        [HttpGet]
+        [Route("~/api/Archief/FilmNaarArchief/{archief}/{film}")]
+        public IHttpActionResult GetFilmNaarArchief(string archief, string film)
+        {
+            Archief a = ArchiefMng.GetArchief(int.Parse(archief));
+            Film f = ArchiefMng.GetFilm(int.Parse(film));
+
+            if (f != null)
+            {
+                if (a.Films.FirstOrDefault(flm => flm.ID == f.ID) == null)
+                {
+                    a.Films.Add(f);
+                    ArchiefMng.ChangeArchief(a);
+                }
+            }
+
+            return Ok(true);
+        }
+
+        [HttpGet]
+        [Route("~/api/Archief/FilmNaarAndere/{archief}/{film}")]
+        public IHttpActionResult GetFilmNaarAndere(string archief, string film)
+        {
+            Archief a = ArchiefMng.GetArchief(int.Parse(archief));
+            Film f = ArchiefMng.GetFilm(int.Parse(film));
+
+            if (f != null)
+            {
+                a.Films.RemoveAll(flm => flm.ID == f.ID);
+                ArchiefMng.ChangeArchief(a);
+            }
 
             return Ok(true);
         }

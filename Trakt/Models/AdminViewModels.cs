@@ -31,9 +31,14 @@ namespace Trakt.Models
     public class WijzigArchiefModel
     {
         public Archief Archief { get; set; }
-        public List<Film> ArchiefFilms { get; set; }
-        public List<Film> AndereFilms { get; set; }
+        public List<Films> Films { get; set; }
         public List<Series> Series { get; set; }
+    }
+
+    public class Films
+    {
+        public Film Film { get; set; }
+        public bool StaatOpArchief { get; set; }
     }
 
     public class Series
