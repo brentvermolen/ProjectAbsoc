@@ -28,8 +28,8 @@ namespace Absoc.Controllers
         {
             IndexViewModel model = new IndexViewModel()
             {
-                LaatsteFilms = FilmMng.ReadFilms(FilmSortEnum.Toegevoegd, 8),
-                NieuwsteFilms = FilmMng.ReadFilms(FilmSortEnum.Release_Desc, 8),
+                LaatsteFilms = FilmMng.ReadFilms(FilmSortEnum.Toegevoegd, 12),
+                NieuwsteFilms = FilmMng.ReadFilms(FilmSortEnum.Release_Desc, 12),
                 Afleveringen = SerieMng.ReadAfleveringen(AfleveringSortEnum.Toegevoegd, 6)
             };
 

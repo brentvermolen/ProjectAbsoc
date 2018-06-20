@@ -199,10 +199,10 @@
          var inner = "";
 
          inner += '<img class="col-xs-12 poster154" src = "' + data["PosterPath"] + '" alt = "poster" />';
-         inner += "<h4 class='col-xs-6'><a href='/Series/Details/" + id + "'>" + data["Naam"] + "</a></h4>";
-         inner += "<p class='col-xs-6'>" + data["AirDate"] + "</p>";
-         inner += "<p class='col-xs-6'>" + data["Netwerk"] + "</p>";
-         inner += "<p class='col-xs-12'>" + data["Omschrijving"] + "</p>";
+         inner += "<h4 class='col-xs-6'><a href='/Series/Details/" + id + "'>" + data["seriesName"] + "</a></h4>";
+         inner += "<p class='col-xs-6'>" + data["firstAired"] + "</p>";
+         inner += "<p class='col-xs-6'>" + data["network"] + "</p>";
+         inner += "<p class='col-xs-12'>" + data["overview"] + "</p>";
          inner += '<img class="col-xs-12 poster154" src = "' + data["BannerPath"] + '" alt = "banner" style="width:100%;height:auto;margin-bottom:10px;" />';
 
          res.innerHTML = inner;

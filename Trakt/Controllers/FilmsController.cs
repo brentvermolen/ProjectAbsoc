@@ -1,5 +1,6 @@
 ﻿using BL;
 using BL.Domain;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,8 +81,25 @@ namespace Trakt.Controllers
             return View(model);
         }
 
+        private ArchiefManager ArchiefMng = new ArchiefManager();
+        private GebruikerManager GebruikerMng = new GebruikerManager();
+
         public ActionResult Details(int id)
         {
+            Gebruiker gebruiker = GebruikerMng.GetGebruiker(int.Parse(User.Identity.GetUserId()));
+            ViewBag.Archieven = new List<string>();
+
+            foreach(Archief archief in gebruiker.Archief)
+            {
+                if (archief != null)
+                {
+                    if (archief.Films.FirstOrDefault(f => f.ID == id) != null)
+                    {
+                        ViewBag.Archieven.Add(archief.Naam);
+                    }
+                }
+            }
+
             return View(FilmMng.ReadFilm(id));
         }
 
