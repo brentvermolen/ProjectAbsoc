@@ -31,8 +31,15 @@
       }
    }
    else
-   {
-      <button class="btn btn-danger col-xs-4" disabled>Niet beschikbaar</button>
+   {  
+      if (ViewBag.Aangevraagd == true)
+      {
+         <button class="btn btn-success col-xs-4" disabled>Film aangevraagd</button>
+      }
+      else
+      {
+         <button class="btn btn-info col-xs-4" onclick="vraagFilmAan(@ViewBag.FilmID, this)">Film aanvragen</button>
+      }
    }
    <h3 class="col-xs-12">@Model.Film.Tagline</h3>
 </div>
@@ -168,3 +175,14 @@
       }
    </div>
 </div>
+
+<script>
+   function vraagFilmAan(film, elem) {
+      $.ajax("/api/Films/GetFilmAanvraag/" + film, {
+         type: 'GET',
+         dataType: "json"
+      }).done(function () {
+         elem.outerHTML = '<button class="btn btn-success col-xs-4" disabled>Film aangevraagd</button>';
+      });
+   }
+</script>

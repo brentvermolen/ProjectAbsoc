@@ -1,5 +1,6 @@
 ﻿using BL;
 using BL.Domain;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,22 @@ namespace Trakt.Controllers.api
                 };
 
                 return Ok(retFilm);
+            }
+
+            return NotFound();
+        }
+
+        [Route("~/api/Films/GetFilmAanvraag/{id}")]
+        public IHttpActionResult GetFilmAanvraag(string id)
+        {
+            if (int.TryParse(id, out int intId))
+            {
+                if (!FilmMng.IsAangevraagd(intId))
+                {
+                    FilmMng.VraagFilmAan(intId, int.Parse(User.Identity.GetUserId()));
+                }
+
+                return Ok(true);
             }
 
             return NotFound();

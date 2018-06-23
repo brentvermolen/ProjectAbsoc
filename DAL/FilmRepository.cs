@@ -57,6 +57,28 @@ namespace DAL
             }
         }
 
+        public void VraagFilmAan(int intId, int gebruiker)
+        {
+            ctx.Aanvragen.Add(new Aanvraag()
+            {
+                GebruikerId = gebruiker,
+                AangevraagOp = DateTime.Today,
+                FilmId = intId
+            });
+
+            ctx.SaveChanges();
+        }
+
+        public bool IsAangevraagd(int intId)
+        {
+            if (ctx.Aanvragen.Find(intId) == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public List<Film> GetFilms(Func<Film, bool> predicate, FilmSortEnum sort, int top)
         {
             switch (sort)

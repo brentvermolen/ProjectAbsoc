@@ -94,6 +94,11 @@ namespace DAL
                 .HasRequired(a => a.Acteur)
                 .WithMany(a => a.Series)
                 .HasForeignKey(a => a.ActeurID);
+
+            modelBuilder.Entity<Aanvraag>()
+                .HasRequired(a => a.AangevraagdDoor)
+                .WithMany(g => g.Aanvragen)
+                .HasForeignKey(a => a.GebruikerId);
         }
 
         public DbSet<Gebruiker> Gebruikers { get; set; }
@@ -105,5 +110,7 @@ namespace DAL
         public DbSet<Acteur> Acteurs { get; set; }
         public DbSet<Archief> Archieven { get; set; }
         public DbSet<Collectie> Collecties { get; set; }
+
+        public DbSet<Aanvraag> Aanvragen { get; set; }
     }
 }

@@ -52,5 +52,15 @@ namespace BL
         {
             return repo.GetFilms(predicate, sort, top);
         }
+
+        public bool IsAangevraagd(int intId)
+        {
+            return repo.IsAangevraagd(intId);
+        }
+
+        public void VraagFilmAan(int intId, int gebruiker)
+        {
+            repo.VraagFilmAan(intId, gebruiker);
+        }
     }
 }

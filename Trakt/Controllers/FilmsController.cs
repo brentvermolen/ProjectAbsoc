@@ -145,7 +145,7 @@ namespace Trakt.Controllers
             using (WebClient client = new WebClient())
             {
                 client.Encoding = Encoding.UTF8;
-                var json = client.DownloadString("https://api.themoviedb.org/3/movie/" + id + "/similar?api_key=" + ApiKey.MovieDB);
+                var json = client.DownloadString(string.Format("https://api.themoviedb.org/3/movie/{0}/similar?api_key={1}", id, ApiKey.MovieDB));
                 JObject obj = JObject.Parse(json);
 
                 gelijkaardige = obj.SelectToken("results").ToObject<List<Film>>();
@@ -159,8 +159,7 @@ namespace Trakt.Controllers
                 }
             }
 
-            string request = string.Format("https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=en-EN&append_to_response=videos",
-                            id, ApiKey.MovieDB);
+            string request = string.Format("https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=en-EN&append_to_response=videos", id, ApiKey.MovieDB);
 
             Film film;
             using (WebClient client = new WebClient())
@@ -191,8 +190,7 @@ namespace Trakt.Controllers
                 catch (Exception) { }
                 film.Toegevoegd = DateTime.Today;
 
-                request = string.Format("https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=nl-BE&append_to_response=videos",
-                   id, ApiKey.MovieDB);
+                request = string.Format("https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=nl-BE&append_to_response=videos", id, ApiKey.MovieDB);
 
                 json = client.DownloadString(request);
                 obj = JObject.Parse(json);
@@ -217,7 +215,7 @@ namespace Trakt.Controllers
                 }
                 if (nlTrailer != null)
                 {
-                    if (nlTrailer != null || !nlTrailer.Equals(""))
+                    if (!nlTrailer.Equals(""))
                     {
                         film.TrailerId = nlTrailer;
                     }
@@ -260,6 +258,18 @@ namespace Trakt.Controllers
                         }
                     }
                 }
+            }
+
+            ViewBag.FilmID = film.ID;
+
+            //Check aanvraag
+            if (FilmMng.IsAangevraagd(film.ID))
+            {
+                ViewBag.Aangevraagd = true;
+            }
+            else
+            {
+                ViewBag.Aangevraagd = false;
             }
 
             film.ID = -1;

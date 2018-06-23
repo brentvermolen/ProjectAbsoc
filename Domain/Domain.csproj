@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aanvraag.cs" />
     <Compile Include="Acteur.cs" />
     <Compile Include="ActeurKlassen\ActeurSerie.cs" />
     <Compile Include="Aflevering.cs" />

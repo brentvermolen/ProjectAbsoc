@@ -39,6 +39,8 @@ namespace BL.Domain
         public string UserName { get; set; }
 
         public bool IsAdmin { get; set; }
+
+        public virtual List<Aanvraag> Aanvragen { get; set; }
         
 
         public virtual ICollection<GebruikerLogin> GebruikerLogins { get; set; }
