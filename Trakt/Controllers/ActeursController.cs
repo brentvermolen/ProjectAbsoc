@@ -77,44 +77,62 @@ namespace Trakt.Controllers
         {
             ActeurDetailsViewModel model = new ActeurDetailsViewModel()
             {
-                Acteur = ActeurMng.ReadActeur(id)
+                Acteur = ActeurMng.ReadActeur(id),
+                Films = new List<Film>()
             };
 
-            using (WebClient client = new WebClient())
+            if (model.Acteur.Films.Count != 0)
             {
-                client.Encoding = Encoding.UTF8;
-                var json = client.DownloadString(string.Format("https://api.themoviedb.org/3/person/{0}?api_key={1}&append_to_response=movie_credits", id, ApiKey.MovieDB));
-                JObject obj = JObject.Parse(json);
-
-                model.Geboortedatum = (DateTime)obj.SelectToken("birthday");
-                try
+                using (WebClient client = new WebClient())
                 {
-                    model.Sterftedatum = obj.SelectToken("deathday").ToObject<DateTime>();
-                }
-                catch (Exception) { model.Sterftedatum = null; }
-                model.Omschrijving = (string)obj.SelectToken("biography");
-                model.Geboorteplaats = (string)obj.SelectToken("place_of_birth");
-                model.Films = new List<Film>();
+                    client.Encoding = Encoding.UTF8;
+                    var json = client.DownloadString(string.Format("https://api.themoviedb.org/3/person/{0}?api_key={1}&append_to_response=movie_credits", id, ApiKey.MovieDB));
+                    JObject obj = JObject.Parse(json);
 
-                foreach (var film in obj.SelectToken("movie_credits.cast"))
-                {
-                    if ((int)film.SelectToken("vote_average") > 5)
+                    model.Geboortedatum = (DateTime)obj.SelectToken("birthday");
+                    try
                     {
-                        Film f = film.ToObject<Film>();
+                        model.Sterftedatum = obj.SelectToken("deathday").ToObject<DateTime>();
+                    }
+                    catch (Exception) { model.Sterftedatum = null; }
+                    model.Omschrijving = (string)obj.SelectToken("biography");
+                    model.Geboorteplaats = (string)obj.SelectToken("place_of_birth");
 
-
-                        if (FilmMng.ReadFilm(f.ID) == null)
+                    foreach (var film in obj.SelectToken("movie_credits.cast"))
+                    {
+                        if ((int)film.SelectToken("vote_average") > 5)
                         {
-                            f.Duur = -1;
-                        }
+                            Film f = film.ToObject<Film>();
 
-                        model.Films.Add(f);
+
+                            if (FilmMng.ReadFilm(f.ID) == null)
+                            {
+                                f.Duur = -1;
+
+                                model.Films.Add(f);
+                            }
+                        }
                     }
                 }
 
-
-                json = client.DownloadString(string.Format("https://api.themoviedb.org/3/person/{0}?api_key={1}&language=nl-BE", id, ApiKey.MovieDB));
-                obj = JObject.Parse(json);
+                foreach (var film in model.Acteur.Films)
+                {
+                    if (model.Films.FirstOrDefault(f => f.ID == film.FilmID) == null)
+                    {
+                        model.Films.Add(film.Film);
+                    }
+                }
+            }
+            else if (model.Acteur.Series.Count != 0)
+            {
+                model.Geboortedatum = DateTime.Today;
+                try
+                {
+                    model.Sterftedatum = DateTime.Today;
+                }
+                catch (Exception) { model.Sterftedatum = null; }
+                model.Omschrijving = "";
+                model.Geboorteplaats = "";
             }
 
             return View(model);
