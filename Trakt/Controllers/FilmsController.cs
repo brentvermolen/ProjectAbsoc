@@ -201,17 +201,26 @@ namespace Trakt.Controllers
                 string nlTagline = (string)obj.SelectToken("tagline");
                 string nlTrailer = (string)obj.SelectToken("videos.results[0].key");
 
-                if (!nlOmsch.Equals(""))
+                if (nlOmsch != null)
                 {
-                    film.Omschrijving = nlOmsch;
+                    if (!nlOmsch.Equals(""))
+                    {
+                        film.Omschrijving = nlOmsch;
+                    }
                 }
-                if (!nlTagline.Equals(""))
+                if (nlTagline != null)
                 {
-                    film.Tagline = nlTagline;
+                    if (!nlTagline.Equals(""))
+                    {
+                        film.Tagline = nlTagline;
+                    }
                 }
-                if (!nlTrailer.Equals(""))
+                if (nlTrailer != null)
                 {
-                    film.TrailerId = nlTrailer;
+                    if (nlTrailer != null || !nlTrailer.Equals(""))
+                    {
+                        film.TrailerId = nlTrailer;
+                    }
                 }
 
                 using (WebClient clientActeurs = new WebClient())
