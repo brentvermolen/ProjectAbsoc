@@ -249,7 +249,9 @@ namespace Trakt.Controllers
                             ActeurFilm acteurFilm = new ActeurFilm()
                             {
                                 Acteur = a,
+                                ActeurID = a.ID,
                                 Film = film,
+                                FilmID = film.ID,
                                 Sort = (int)acteur.SelectToken("order"),
                                 Karakter = (string)acteur.SelectToken("character")
                             };
@@ -263,14 +265,7 @@ namespace Trakt.Controllers
             ViewBag.FilmID = film.ID;
 
             //Check aanvraag
-            if (FilmMng.IsAangevraagd(film.ID))
-            {
-                ViewBag.Aangevraagd = true;
-            }
-            else
-            {
-                ViewBag.Aangevraagd = false;
-            }
+            ViewBag.Aangevraagd = FilmMng.IsAangevraagd(film.ID);            
 
             film.ID = -1;
 

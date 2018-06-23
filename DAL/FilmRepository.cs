@@ -62,7 +62,7 @@ namespace DAL
             ctx.Aanvragen.Add(new Aanvraag()
             {
                 GebruikerId = gebruiker,
-                AangevraagOp = DateTime.Today,
+                AangevraagOp = DateTime.Now,
                 FilmId = intId
             });
 
@@ -97,7 +97,13 @@ namespace DAL
 
         public void CreateFilm(Film film)
         {
+            if (IsAangevraagd(film.ID))
+            {
+                ctx.Aanvragen.Remove(ctx.Aanvragen.Find(film.ID));
+            }
+
             ctx.Films.Add(film);
+
             ctx.SaveChanges();
         }
 
