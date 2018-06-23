@@ -144,7 +144,7 @@ namespace Trakt.Controllers
                 else
                 {
                     string request = string.Format("https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=en-EN&append_to_response=videos",
-                            intId, "2719fd17f1c54d219dedc3aa9309a1e2");
+                            intId, ApiKey.MovieDB);
 
                     using (WebClient client = new WebClient())
                     {
@@ -166,7 +166,7 @@ namespace Trakt.Controllers
                         film.Toegevoegd = DateTime.Today;
 
                         request = string.Format("https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=nl-BE&append_to_response=videos",
-                           intId, "2719fd17f1c54d219dedc3aa9309a1e2");
+                           intId, ApiKey.MovieDB);
 
                         json = client.DownloadString(request);
                         obj = JObject.Parse(json);
@@ -192,7 +192,7 @@ namespace Trakt.Controllers
 
                         using (WebClient clientActeurs = new WebClient())
                         {
-                            request = string.Format("https://api.themoviedb.org/3/movie/{0}/credits?api_key={1}", film.ID, "2719fd17f1c54d219dedc3aa9309a1e2");
+                            request = string.Format("https://api.themoviedb.org/3/movie/{0}/credits?api_key={1}", film.ID, ApiKey.MovieDB);
                             clientActeurs.Encoding = Encoding.UTF8;
                             json = client.DownloadString(request);
 
@@ -402,7 +402,7 @@ namespace Trakt.Controllers
 
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
-                string json = "{\"apikey\":\"U5YZ7ESIBVSADAZ0\"}";
+                string json = "{\"apikey\":\"" + ApiKey.TvDB + "\"}";
 
                 streamWriter.Write(json);
                 streamWriter.Flush();

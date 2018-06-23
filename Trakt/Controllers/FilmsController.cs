@@ -1,9 +1,13 @@
 ﻿using BL;
 using BL.Domain;
+using BL.Domain.ActeurKlassen;
 using Microsoft.AspNet.Identity;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Trakt.Models;
@@ -61,10 +65,10 @@ namespace Trakt.Controllers
                     break;
                 case FilmFilterOp.Jaar:
                     if (int.TryParse(model.Filter, out int jaartal) == false)
-                    { 
+                    {
                         model.Filter = DateTime.Today.Year.ToString();
                     }
-                    
+
                     predicate = f => f.ReleaseDate.StartsWith(filter.ToLower());
                     break;
                 case FilmFilterOp.Naam:
@@ -89,7 +93,7 @@ namespace Trakt.Controllers
             Gebruiker gebruiker = GebruikerMng.GetGebruiker(int.Parse(User.Identity.GetUserId()));
             ViewBag.Archieven = new List<string>();
 
-            foreach(Archief archief in gebruiker.Archief)
+            foreach (Archief archief in gebruiker.Archief)
             {
                 if (archief != null)
                 {
@@ -100,7 +104,164 @@ namespace Trakt.Controllers
                 }
             }
 
-            return View(FilmMng.ReadFilm(id));
+            List<Film> gelijkaardige = new List<Film>();
+
+            using (WebClient client = new WebClient())
+            {
+                client.Encoding = Encoding.UTF8;
+                var json = client.DownloadString("https://api.themoviedb.org/3/movie/" + id + "/similar?api_key=" + ApiKey.MovieDB);
+                JObject obj = JObject.Parse(json);
+
+                gelijkaardige = obj.SelectToken("results").ToObject<List<Film>>();
+            }
+
+            foreach (Film film in gelijkaardige)
+            {
+                if (FilmMng.ReadFilm(film.ID) == null)
+                {
+                    film.Duur = -1;
+                }
+            }
+
+            FilmDetailsViewModel model = new FilmDetailsViewModel()
+            {
+                Film = FilmMng.ReadFilm(id),
+                GelijkaardigeFilms = gelijkaardige.OrderByDescending(g => g.ReleaseDate).Take(10).ToList()
+            };
+
+            return View(model);
+        }
+
+        private ActeurManager ActeurMng = new ActeurManager();
+        private CollectieManager CollectieMng = new CollectieManager();
+
+        public ActionResult DetailsAndere(int id)
+        {
+            Gebruiker gebruiker = GebruikerMng.GetGebruiker(int.Parse(User.Identity.GetUserId()));
+            ViewBag.Archieven = new List<string>();
+
+            List<Film> gelijkaardige = new List<Film>();
+
+            using (WebClient client = new WebClient())
+            {
+                client.Encoding = Encoding.UTF8;
+                var json = client.DownloadString("https://api.themoviedb.org/3/movie/" + id + "/similar?api_key=" + ApiKey.MovieDB);
+                JObject obj = JObject.Parse(json);
+
+                gelijkaardige = obj.SelectToken("results").ToObject<List<Film>>();
+            }
+
+            foreach (Film f in gelijkaardige)
+            {
+                if (FilmMng.ReadFilm(f.ID) == null)
+                {
+                    f.Duur = -1;
+                }
+            }
+
+            string request = string.Format("https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=en-EN&append_to_response=videos",
+                            id, ApiKey.MovieDB);
+
+            Film film;
+            using (WebClient client = new WebClient())
+            {
+                client.Encoding = Encoding.UTF8;
+                var json = client.DownloadString(request);
+                JObject obj = JObject.Parse(json);
+                film = obj.ToObject<Film>(new Newtonsoft.Json.JsonSerializer() { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
+                try
+                {
+                    film.CollectieID = (int)obj.SelectToken("belongs_to_collection.id");
+                    var collectie = CollectieMng.ReadCollectie(film.CollectieID);
+                    if (collectie == null)
+                    {
+                        film.CollectieID = 0;
+                    }
+                    else
+                    {
+                        film.Collectie = collectie;
+                    }
+                }
+                catch (Exception) { film.CollectieID = 0; }
+
+                try
+                {
+                    film.TrailerId = (string)obj.SelectToken("videos.results[0].key");
+                }
+                catch (Exception) { }
+                film.Toegevoegd = DateTime.Today;
+
+                request = string.Format("https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=nl-BE&append_to_response=videos",
+                   id, ApiKey.MovieDB);
+
+                json = client.DownloadString(request);
+                obj = JObject.Parse(json);
+
+                string nlOmsch = (string)obj.SelectToken("overview");
+                string nlTagline = (string)obj.SelectToken("tagline");
+                string nlTrailer = (string)obj.SelectToken("videos.results[0].key");
+
+                if (!nlOmsch.Equals(""))
+                {
+                    film.Omschrijving = nlOmsch;
+                }
+                if (!nlTagline.Equals(""))
+                {
+                    film.Tagline = nlTagline;
+                }
+                if (!nlTrailer.Equals(""))
+                {
+                    film.TrailerId = nlTrailer;
+                }
+
+                using (WebClient clientActeurs = new WebClient())
+                {
+                    request = string.Format("https://api.themoviedb.org/3/movie/{0}/credits?api_key={1}", film.ID, ApiKey.MovieDB);
+                    clientActeurs.Encoding = Encoding.UTF8;
+                    json = client.DownloadString(request);
+
+                    obj = JObject.Parse(json);
+                    film.Acteurs = new List<ActeurFilm>();
+                    foreach (var acteur in obj.SelectToken("cast"))
+                    {
+                        if ((int)acteur.SelectToken("order") < 15)
+                        {
+                            int acteurId = (int)acteur.SelectToken("id");
+                            Acteur a = ActeurMng.ReadActeur(acteurId);
+
+                            if (a == null)
+                            {
+                                a = new Acteur
+                                {
+                                    ID = -1,
+                                    Naam = (string)acteur.SelectToken("name"),
+                                    ImagePath = (string)acteur.SelectToken("profile_path")
+                                };
+                            }
+
+                            ActeurFilm acteurFilm = new ActeurFilm()
+                            {
+                                Acteur = a,
+                                Film = film,
+                                Sort = (int)acteur.SelectToken("order"),
+                                Karakter = (string)acteur.SelectToken("character")
+                            };
+
+                            film.Acteurs.Add(acteurFilm);
+                        }
+                    }
+                }
+            }
+
+            film.ID = -1;
+
+            FilmDetailsViewModel model = new FilmDetailsViewModel()
+            {
+                Film = film,
+                GelijkaardigeFilms = gelijkaardige.OrderByDescending(g => g.ReleaseDate).Take(10).ToList()
+            };
+
+            return View("Details", model);
         }
 
         public ActionResult Lijst(int id)

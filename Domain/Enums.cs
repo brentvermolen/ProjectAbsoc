@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace BL.Domain
 {
+    public class ApiKey
+    {
+        public const string TvDB = "U5YZ7ESIBVSADAZ0";
+        public const string MovieDB = "2719fd17f1c54d219dedc3aa9309a1e2";
+    }
+
     public enum FilmSortEnum
     {
         Naam = 0,

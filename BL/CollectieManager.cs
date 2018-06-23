@@ -17,7 +17,7 @@ namespace BL
             return repo.GetCollecties().ToList();
         }
 
-        public object ReadCollectie(int id)
+        public Collectie ReadCollectie(int id)
         {
             return repo.GetCollectie(id);
         }

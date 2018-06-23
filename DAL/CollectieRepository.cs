@@ -16,7 +16,7 @@ namespace DAL
             return ctx.Collecties.ToList();
         }
 
-        public object GetCollectie(int id)
+        public Collectie GetCollectie(int id)
         {
             return ctx.Collecties.Find(id);
         }
