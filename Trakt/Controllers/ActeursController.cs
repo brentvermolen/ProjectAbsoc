@@ -1,8 +1,12 @@
 ﻿using BL;
 using BL.Domain;
+using BL.Domain.ActeurKlassen;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Trakt.Models;
@@ -67,9 +71,53 @@ namespace Trakt.Controllers
             return View(model);
         }
 
+        private FilmManager FilmMng = new FilmManager();
+
         public ActionResult Details(int id)
         {
-            return View(ActeurMng.ReadActeur(id));
+            ActeurDetailsViewModel model = new ActeurDetailsViewModel()
+            {
+                Acteur = ActeurMng.ReadActeur(id)
+            };
+
+            using (WebClient client = new WebClient())
+            {
+                client.Encoding = Encoding.UTF8;
+                var json = client.DownloadString(string.Format("https://api.themoviedb.org/3/person/{0}?api_key={1}&append_to_response=movie_credits", id, ApiKey.MovieDB));
+                JObject obj = JObject.Parse(json);
+
+                model.Geboortedatum = (DateTime)obj.SelectToken("birthday");
+                try
+                {
+                    model.Sterftedatum = obj.SelectToken("deathday").ToObject<DateTime>();
+                }
+                catch (Exception) { model.Sterftedatum = null; }
+                model.Omschrijving = (string)obj.SelectToken("biography");
+                model.Geboorteplaats = (string)obj.SelectToken("place_of_birth");
+                model.Films = new List<Film>();
+
+                foreach (var film in obj.SelectToken("movie_credits.cast"))
+                {
+                    if ((int)film.SelectToken("vote_average") > 5)
+                    {
+                        Film f = film.ToObject<Film>();
+
+
+                        if (FilmMng.ReadFilm(f.ID) == null)
+                        {
+                            f.Duur = -1;
+                        }
+
+                        model.Films.Add(f);
+                    }
+                }
+
+
+                json = client.DownloadString(string.Format("https://api.themoviedb.org/3/person/{0}?api_key={1}&language=nl-BE", id, ApiKey.MovieDB));
+                obj = JObject.Parse(json);
+            }
+
+            return View(model);
         }
     }
 }

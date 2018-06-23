@@ -1,6 +1,6 @@
-﻿@model BL.Domain.Acteur
+﻿@model Trakt.Models.ActeurDetailsViewModel
 @{
-    ViewBag.Title = Model.Naam;
+   ViewBag.Title = Model.Acteur.Naam;
 }
 
 <h2>@ViewBag.Title</h2>
@@ -8,44 +8,80 @@
 <div class="row">
    <div class="col-md-4" style="padding-right:20px; border-right: solid 1px">
       @{
-          var source = "";
+         var source = "";
 
-          if (Model.ImagePath == null)
-          {
-             source = "/Content/Images/no_image.png";
-          }
-          else
-          {
-             if (Model.ImagePath.StartsWith("http"))
-             {
-                source = Model.ImagePath;
-             }
-             else
-             {
-                source = "https://image.tmdb.org/t/p/w300/" + Model.ImagePath;
-             }
-          }
+         if (Model.Acteur.ImagePath == null)
+         {
+            source = "/Content/Images/no_image.png";
+         }
+         else
+         {
+            if (Model.Acteur.ImagePath.StartsWith("http"))
+            {
+               source = Model.Acteur.ImagePath;
+            }
+            else
+            {
+               source = "https://image.tmdb.org/t/p/w300/" + Model.Acteur.ImagePath;
+            }
+         }
       }
-      <img src="@source" class="image" alt="@Model.Naam" style="width:100%" />
+      <img src="@source" class="image" alt="@Model.Acteur.Naam" style="width:100%" />
    </div>
    <div class="col-md-8">
-      @if (Model.Films.Count == 0)
+      <p><strong>Omschrijving</strong></p>
+      <p>@Model.Omschrijving</p>
+      <br />
+      <p>Geboren te @Model.Geboorteplaats</p>
+      <br />
+      <p class="col-sm-6" style="text-align:center"><strong>&deg; @Model.Geboortedatum.Value.ToShortDateString()</strong></p>
+      @if (Model.Sterftedatum.HasValue)
       {
-         <p>Er zijn geen films voor deze acteur</p>
-         <p>Let op, sommige acteurs zitten meerdere keren in het systeem, probeer eens te zoeken op <a href="@Url.Action("Index", "Acteurs")">deze pagina</a> met als filter de acteur naam</p>
-      }
-      else
-      {
-         <p><strong>Aantal Films: </strong>@Model.Films.Count <a href="@Url.Action("Lijst", "Films", new { id = Model.ID })">Zie Lijst</a></p>
-      }
-      @if (Model.Series.Count == 0)
-      {
-         <p>Er zijn geen series voor deze acteur</p>
-         <p>Let op, sommige acteurs zitten meerdere keren in het systeem, probeer eens te zoeken op <a href="@Url.Action("Index", "Acteurs")">deze pagina</a> met als filter de acteur naam</p>
-      }
-      else
-      {
-         <p><strong>Aantal Series: </strong>@Model.Series.Count <a href="@Url.Action("Lijst", "Series", new { id = Model.ID })">Zie Lijst</a></p>
+         <p class="col-sm-6" style="text-align:center"><strong>&dagger; @Model.Sterftedatum.Value.ToShortDateString()</strong></p>
       }
    </div>
+</div>
+
+
+<div class="testimonial-group">
+   @if (Model.Films.Count != 0)
+   {
+      <h2>Films van deze acteur</h2>
+      <div class="row">
+         @foreach (var film in Model.Films.OrderByDescending(f => f.ReleaseDate))
+         {
+            <div class="col-md-3 col-sm-6 col-xs-12 poster">
+               @{
+                   var url = Url.Action("DetailsAndere", "Films", new { id = film.ID });
+                   if (film.Duur != -1)
+                   {
+                      url = Url.Action("Details", "Films", new { id = film.ID });
+                   }
+               }
+               <a href="@url" title="@film.Naam">
+                  @{
+
+                      source = "https://image.tmdb.org/t/p/w300/";
+                      if (film.PosterPath == null)
+                      {
+                         source = "/Content/Images/no_image.png";
+                      }
+                      else
+                      {
+                         source += film.PosterPath;
+                      }
+                  }
+                  <img src="@source" class="image" onerror="this.src='/Content/Images/no_image.png'" alt="@film.Naam" style="max-width:100%; height:400px" />
+                  <div class="overlayPoster">
+                     <div class="posterOverlayContent">@film.Naam<br />@film.ReleaseDate</div>
+                  </div>
+               </a>
+            </div>
+         }
+      </div>
+   }
+   else if (Model.Acteur.Series.Count != 0)
+   {
+      <p><strong>Aantal Series: </strong>@Model.Acteur.Series.Count <a href="@Url.Action("Lijst", "Series", new { id = Model.Acteur.ID })">Zie Lijst</a></p>
+   }
 </div>

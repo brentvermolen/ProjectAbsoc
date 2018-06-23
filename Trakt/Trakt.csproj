@@ -231,7 +231,7 @@
     <Compile Include="Models\AdminViewModels.cs" />
     <Compile Include="Models\ArchievenViewModels.cs" />
     <Compile Include="Models\BoekViewModels.cs" />
-    <Compile Include="Models\FilmViewModels.cs" />
+    <Compile Include="Models\DetailViewModels.cs" />
     <Compile Include="Models\FilterViewModels.cs" />
     <Compile Include="Models\HomeViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
