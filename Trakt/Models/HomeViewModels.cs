@@ -12,4 +12,11 @@ namespace Trakt.Models
         public List<Film> NieuwsteFilms { get; set; }
         public List<Aflevering> Afleveringen { get; set; }
     }
+
+    public class ZoekenViewModel
+    {
+        public List<Acteur> Acteurs { get; set; }
+        public List<Film> Films { get; set; }
+        public List<Serie> Series { get; set; }
+    }
 }

@@ -1,0 +1,56 @@
+﻿@model Trakt.Models.ZoekenViewModel
+@{
+    ViewBag.Title = "Zoeken";
+}
+
+<div id="0" class="tab-pane fade in active">
+   <h2>Resultaten</h2>
+   <div class="panel-group" id="0-panel">
+      <div class="panel panel-default">
+         <div class="panel-heading">
+            <h4 class="panel-title">
+               <a data-toggle="collapse" data-parent="#0-panel" href="#0-personen" class="collapsed" aria-expanded="false">
+                  Acteurs <span class="badge" style="float:right">#@Model.Acteurs.Count</span>
+               </a>
+            </h4>
+         </div>
+         <div id="0-personen" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+            <div class="panel-body">
+               <p>acteurs</p>
+            </div>
+         </div>
+      </div>
+      <div class="panel panel-default">
+         <div class="panel-heading">
+            <h4 class="panel-title">
+               <a data-toggle="collapse" data-parent="#0-panel" href="#0-films" class="" aria-expanded="true">
+                  Films <span class="badge" style="float:right">#@Model.Films.Count</span>
+               </a>
+            </h4>
+         </div>
+         <div id="0-films" class="panel-collapse collapse" aria-expanded="true" style="">
+            <div class="panel-body">
+               <div class="col-md-6">
+                  <p>films</p>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="panel panel-default">
+         <div class="panel-heading">
+            <h4 class="panel-title">
+               <a data-toggle="collapse" data-parent="#0-panel" href="#0-series" class="" aria-expanded="true">
+                  Series <span class="badge" style="float:right">#@Model.Series.Count</span>
+               </a>
+            </h4>
+         </div>
+         <div id="0-series" class="panel-collapse collapse" aria-expanded="true" style="">
+            <div class="panel-body">
+               <div class="col-md-6">
+                  <p>series</p>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

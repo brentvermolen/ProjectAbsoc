@@ -49,5 +49,14 @@ namespace Absoc.Controllers
 
             return View();
         }
+
+        public ActionResult Zoeken(string q)
+        {
+            ZoekenViewModel model = new ZoekenViewModel();
+
+
+
+            return View(model);
+        }
     }
 }
