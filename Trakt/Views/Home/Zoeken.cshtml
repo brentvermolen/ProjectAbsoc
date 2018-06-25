@@ -4,15 +4,15 @@
 }
 
 <div id="0" class="tab-pane fade in active">
-   <h2>Resultaten</h2>
+   <h1>Resultaten</h1>
    <div class="panel-group" id="0-panel">
       <div class="panel panel-default">
          <div class="panel-heading">
-            <h4 class="panel-title">
+            <h2>
                <a data-toggle="collapse" data-parent="#0-panel" href="#0-personen" class="collapsed" aria-expanded="false">
                   Acteurs <span class="badge" style="float:right">#@Model.Acteurs.Count</span>
                </a>
-            </h4>
+            </h2>
          </div>
          <div id="0-personen" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
             <div class="panel-body">
@@ -47,11 +47,11 @@
       </div>
       <div class="panel panel-default">
          <div class="panel-heading">
-            <h4 class="panel-title">
+            <h2>
                <a data-toggle="collapse" data-parent="#0-panel" href="#0-films" class="" aria-expanded="true">
                   Films <span class="badge" style="float:right">#@Model.Films.Count</span>
                </a>
-            </h4>
+            </h2>
          </div>
          <div id="0-films" class="panel-collapse collapse" aria-expanded="true" style="">
             <div class="panel-body">
@@ -93,11 +93,11 @@
       </div>
       <div class="panel panel-default">
          <div class="panel-heading">
-            <h4 class="panel-title">
+            <h2>
                <a data-toggle="collapse" data-parent="#0-panel" href="#0-series" class="" aria-expanded="true">
                   Series <span class="badge" style="float:right">#@Model.Series.Count</span>
                </a>
-            </h4>
+            </h2>
          </div>
          <div id="0-series" class="panel-collapse collapse" aria-expanded="true" style="">
             <div class="panel-body">
@@ -107,10 +107,10 @@
                      {
                         <div class="col-md-3 col-sm-6 col-xs-12 poster">
                            @{
-                              var url = Url.Action("DetailsAndere", "Series", new { id = serie.ID });
-                              if (!serie.Netwerk.Equals("-1"))
+                              var url = Url.Action("Details", "Series", new { id = serie.ID });
+                              if (serie.Netwerk.Equals("-1"))
                               {
-                                 url = Url.Action("Details", "Series", new { id = serie.ID });
+                                 url = Url.Action("DetailsAndere", "Series", new { id = serie.ID });
                               }
                            }
                            <a href="@url" title="@serie.Naam">
