@@ -137,5 +137,69 @@ namespace Trakt.Controllers
 
             return View(model);
         }
+
+        public ActionResult DetailsAndere(int id)//Id moet van MovieDb komen om te werken
+        {
+            //if (ActeurMng.ReadActeur(id) != null)
+            //{
+            //    return Details(id);
+            //}
+
+            ActeurDetailsViewModel model = new ActeurDetailsViewModel()
+            {
+                Films = new List<Film>()
+            };
+
+            using (WebClient client = new WebClient())
+            {
+                client.Encoding = Encoding.UTF8;
+                var json = client.DownloadString(string.Format("https://api.themoviedb.org/3/person/{0}?api_key={1}&append_to_response=movie_credits,tv_credits", id, ApiKey.MovieDB));
+                JObject obj = JObject.Parse(json);
+
+                model.Acteur = new Acteur()
+                {
+                    ID = (int)obj.SelectToken("id"),
+                    Naam = (string)obj.SelectToken("name"),
+                    ImagePath = (string)obj.SelectToken("profile_path")
+                };
+
+                model.Geboortedatum = (DateTime)obj.SelectToken("birthday");
+                try
+                {
+                    model.Sterftedatum = obj.SelectToken("deathday").ToObject<DateTime>();
+                }
+                catch (Exception) { model.Sterftedatum = null; }
+                model.Omschrijving = (string)obj.SelectToken("biography");
+                model.Geboorteplaats = (string)obj.SelectToken("place_of_birth");
+
+                foreach (var film in obj.SelectToken("movie_credits.cast"))
+                {
+                    if ((int)film.SelectToken("vote_average") > 5)
+                    {
+                        Film f = film.ToObject<Film>(new Newtonsoft.Json.JsonSerializer() { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
+                        
+                        if (FilmMng.ReadFilm(f.ID) == null)
+                        {
+                            f.Duur = -1;
+                        }
+
+                        model.Films.Add(f);
+                    }
+                }
+
+                foreach (var tvshow in obj.SelectToken("tv_credits.cast").OrderByDescending(t => t.SelectToken("episode_count")))
+                {
+                    Serie serie = new Serie()
+                    {
+                        ID = (int)tvshow.SelectToken("id"),
+                        AirDate = (string)tvshow.SelectToken("first_air_date"),
+                        Naam = (string)tvshow.SelectToken("original_name"),
+                        PosterPath = (string)tvshow.SelectToken("poster_path")
+                    };
+                }
+            }
+
+            return View("Details", model);
+        }
     }
 }
