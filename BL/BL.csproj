@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Jobs\CleanActors.cs" />
     <Compile Include="SerieManager.cs" />
     <Compile Include="FilmManager.cs" />
     <Compile Include="CollectieManager.cs" />

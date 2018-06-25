@@ -24,7 +24,7 @@ namespace Absoc
             var config = GlobalConfiguration.Configuration;
             config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling
                         = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-
+            
             //JobTrigger.StartAsync();
         }
     }

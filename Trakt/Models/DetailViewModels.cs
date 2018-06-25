@@ -21,4 +21,23 @@ namespace Trakt.Models
         public string Omschrijving { get; set; }
         public List<Film> Films { get; set; }
     }
+
+    public class SerieDetailsViewModel
+    {
+        public Serie Serie { get; set; }
+        public Dictionary<Acteur, bool> Acteurs { get; set; }
+
+        public bool IsActeurInDb(int id)
+        {
+            foreach (var acteur in Acteurs)
+            {
+                if (acteur.Key.ID == id)
+                {
+                    return acteur.Value;
+                }
+            }
+
+            return false;
+        }
+    }
 }

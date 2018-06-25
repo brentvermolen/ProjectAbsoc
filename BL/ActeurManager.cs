@@ -32,6 +32,11 @@ namespace BL
             return repo.GetActeurs(sorteren, top);
         }
 
+        public void RemoveActeur(int iD)
+        {
+            repo.DeleteActeur(iD);
+        }
+
         public List<Acteur> ReadActeurs(Func<Acteur, bool> predicate, ActeurSortEnum sorteren, int top)
         {
             return repo.GetActeurs(predicate, sorteren, top);

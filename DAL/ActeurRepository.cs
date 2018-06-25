@@ -41,6 +41,12 @@ namespace DAL
             }
         }
 
+        public void DeleteActeur(int iD)
+        {
+            ctx.Acteurs.Remove(GetActeur(iD));
+            ctx.SaveChanges();
+        }
+
         public List<Acteur> GetActeurs(Func<Acteur, bool> predicate, ActeurSortEnum sorteren, int top)
         {
             switch (sorteren)

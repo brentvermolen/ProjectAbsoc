@@ -343,6 +343,31 @@ namespace Trakt.Controllers
                     }
                 }
 
+                httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.thetvdb.com/series/" + serie.ID + "/images/query?keyType=poster");
+
+                httpWebRequest.Accept = "application/json";
+                httpWebRequest.Method = "GET";
+                httpWebRequest.Headers.Add("Accept-Language", "en");
+                httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
+                
+                try
+                {
+                    httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+                    using (var sr = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = sr.ReadToEnd();
+                        var json = JObject.Parse(result);
+
+                        try
+                        {
+                            serie.PosterPath = "https://thetvdb.com/banners/" + (string)json.SelectToken("data[0].fileName");
+                        }
+                        catch (Exception) { }
+                    }
+                }
+                catch (Exception) { serie.PosterPath = null; }
+
                 httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.thetvdb.com/series/" + id + "/actors");
 
                 httpWebRequest.Accept = "application/json";
