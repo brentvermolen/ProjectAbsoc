@@ -1,6 +1,6 @@
 ﻿@model Trakt.Models.ZoekenViewModel
 @{
-    ViewBag.Title = "Zoeken";
+   ViewBag.Title = "Zoeken";
 }
 
 <div id="0" class="tab-pane fade in active">
@@ -16,7 +16,32 @@
          </div>
          <div id="0-personen" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
             <div class="panel-body">
-               <p>acteurs</p>
+               <div class="testimonial-group">
+                  <div class="row">
+                     @foreach (var acteur in Model.Acteurs)
+                     {
+                        <div class="col-md-3 col-sm-6 col-xs-12 poster">
+                           <a href="@Url.Action("DetailsAndere", "Acteurs", new { id = acteur.ID })" title="@acteur.Naam">
+                              @{
+                                 var source = "https://image.tmdb.org/t/p/w300/";
+                                 if (acteur.ImagePath == null)
+                                 {
+                                    source = "/Content/Images/no_image.png";
+                                 }
+                                 else
+                                 {
+                                    source += acteur.ImagePath;
+                                 }
+                              }
+                              <img src="@source" class="image" alt="@acteur.Naam" style="max-width:100%; height:400px" />
+                              <div class="overlayPoster">
+                                 <div class="posterOverlayContent">@acteur.Naam</div>
+                              </div>
+                           </a>
+                        </div>
+                     }
+                  </div>
+               </div>
             </div>
          </div>
       </div>
@@ -30,8 +55,38 @@
          </div>
          <div id="0-films" class="panel-collapse collapse" aria-expanded="true" style="">
             <div class="panel-body">
-               <div class="col-md-6">
-                  <p>films</p>
+               <div class="testimonial-group">
+                  <div class="row">
+                     @foreach (var film in Model.Films.OrderByDescending(f => f.ReleaseDate))
+                     {
+                        <div class="col-md-3 col-sm-6 col-xs-12 poster">
+                           @{
+                              var url = Url.Action("DetailsAndere", "Films", new { id = film.ID });
+                              if (film.Duur != -1)
+                              {
+                                 url = Url.Action("Details", "Films", new { id = film.ID });
+                              }
+                           }
+                           <a href="@url" title="@film.Naam">
+                              @{
+                                 var source = "https://image.tmdb.org/t/p/w300/";
+                                 if (film.PosterPath == null)
+                                 {
+                                    source = "/Content/Images/no_image.png";
+                                 }
+                                 else
+                                 {
+                                    source += film.PosterPath;
+                                 }
+                              }
+                              <img src="@source" class="image" alt="@film.Naam" style="max-width:100%; height:400px" />
+                              <div class="overlayPoster">
+                                 <div class="posterOverlayContent">@film.Naam<br />@film.ReleaseDate</div>
+                              </div>
+                           </a>
+                        </div>
+                     }
+                  </div>
                </div>
             </div>
          </div>
@@ -46,8 +101,38 @@
          </div>
          <div id="0-series" class="panel-collapse collapse" aria-expanded="true" style="">
             <div class="panel-body">
-               <div class="col-md-6">
-                  <p>series</p>
+               <div class="testimonial-group">
+                  <div class="row">
+                     @foreach (var serie in Model.Series.OrderByDescending(s => s.AirDate))
+                     {
+                        <div class="col-md-3 col-sm-6 col-xs-12 poster">
+                           @{
+                              var url = Url.Action("DetailsAndere", "Series", new { id = serie.ID });
+                              if (!serie.Netwerk.Equals("-1"))
+                              {
+                                 url = Url.Action("Details", "Series", new { id = serie.ID });
+                              }
+                           }
+                           <a href="@url" title="@serie.Naam">
+                              @{
+                                 var source = "";
+                                 if (serie.PosterPath == null)
+                                 {
+                                    source = "/Content/Images/no_image.png";
+                                 }
+                                 else
+                                 {
+                                    source += serie.PosterPath;
+                                 }
+                              }
+                              <img src="@source" class="image" alt="@serie.Naam" style="max-width:100%; height:400px" />
+                              <div class="overlayPoster">
+                                 <div class="posterOverlayContent">@serie.Naam<br />@serie.AirDate</div>
+                              </div>
+                           </a>
+                        </div>
+                     }
+                  </div>
                </div>
             </div>
          </div>
