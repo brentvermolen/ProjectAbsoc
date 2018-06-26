@@ -132,11 +132,6 @@ namespace Trakt.Controllers
             return View(model);
         }
 
-        public ActionResult Details(FilmDetailsViewModel model)
-        {
-            return View(model);
-        }
-
         private ActeurManager ActeurMng = new ActeurManager();
         private CollectieManager CollectieMng = new CollectieManager();
 

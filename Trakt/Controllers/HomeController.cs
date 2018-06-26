@@ -142,48 +142,32 @@ namespace Absoc.Controllers
 
             string token = GetLoginTokenAsync().Result;
 
-            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format("https://api.thetvdb.com/search/series?name={0}", q));
-
-            httpWebRequest.Accept = "application/json";
-            httpWebRequest.Method = "GET";
-            httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
-
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            try
             {
-                var result = streamReader.ReadToEnd();
-                JObject json = JObject.Parse(result);
+                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format("https://api.thetvdb.com/search/series?name={0}", q));
 
-                foreach(var serie in json.SelectToken("data"))
+                httpWebRequest.Accept = "application/json";
+                httpWebRequest.Method = "GET";
+                httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
+
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
-                    Serie s = serie.ToObject<Serie>();
+                    var result = streamReader.ReadToEnd();
+                    JObject json = JObject.Parse(result);
 
-                    httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.thetvdb.com/series/" + s.ID);
-
-                    httpWebRequest.Accept = "application/json";
-                    httpWebRequest.Method = "GET";
-                    httpWebRequest.Headers.Add("Accept-Language", "en");
-                    httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
-
-                    httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-
-                    using (var sr = new StreamReader(httpResponse.GetResponseStream()))
+                    foreach (var serie in json.SelectToken("data"))
                     {
-                        result = sr.ReadToEnd();
-                        json = JObject.Parse(result);
+                        Serie s = serie.ToObject<Serie>();
 
-                        s = json.SelectToken("data").ToObject<Serie>();
-                    }
+                        httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.thetvdb.com/series/" + s.ID);
 
-                    httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.thetvdb.com/series/" + s.ID + "/images/query?keyType=poster");
+                        httpWebRequest.Accept = "application/json";
+                        httpWebRequest.Method = "GET";
+                        httpWebRequest.Headers.Add("Accept-Language", "en");
+                        httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
 
-                    httpWebRequest.Accept = "application/json";
-                    httpWebRequest.Method = "GET";
-                    httpWebRequest.Headers.Add("Accept-Language", "en");
-                    httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
-
-                    try
-                    {
                         httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
 
                         using (var sr = new StreamReader(httpResponse.GetResponseStream()))
@@ -191,23 +175,44 @@ namespace Absoc.Controllers
                             result = sr.ReadToEnd();
                             json = JObject.Parse(result);
 
-                            try
-                            {
-                                s.PosterPath = "https://thetvdb.com/banners/" + (string)json.SelectToken("data[0].fileName");
-                            }
-                            catch (Exception) { }
+                            s = json.SelectToken("data").ToObject<Serie>();
                         }
-                    }
-                    catch (Exception) { s.PosterPath = null; }
-                    
-                    if (SerieMng.ReadSerie(s.ID) == null)
-                    {
-                        s.Netwerk = "-1";
-                    }
 
-                    series.Add(s);
+                        httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.thetvdb.com/series/" + s.ID + "/images/query?keyType=poster");
+
+                        httpWebRequest.Accept = "application/json";
+                        httpWebRequest.Method = "GET";
+                        httpWebRequest.Headers.Add("Accept-Language", "en");
+                        httpWebRequest.Headers.Add("Authorization", "Bearer " + token);
+
+                        try
+                        {
+                            httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+                            using (var sr = new StreamReader(httpResponse.GetResponseStream()))
+                            {
+                                result = sr.ReadToEnd();
+                                json = JObject.Parse(result);
+
+                                try
+                                {
+                                    s.PosterPath = "https://thetvdb.com/banners/" + (string)json.SelectToken("data[0].fileName");
+                                }
+                                catch (Exception) { }
+                            }
+                        }
+                        catch (Exception) { s.PosterPath = null; }
+
+                        if (SerieMng.ReadSerie(s.ID) == null)
+                        {
+                            s.Netwerk = "-1";
+                        }
+
+                        series.Add(s);
+                    }
                 }
-            }   
+            }
+            catch (Exception) { }
 
             return series;
         }

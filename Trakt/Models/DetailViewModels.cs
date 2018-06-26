@@ -41,4 +41,10 @@ namespace Trakt.Models
             return false;
         }
     }
+
+    public class CollectieDetailsViewModel
+    {
+        public Collectie Collectie { get; set; }
+        public List<Film> Films { get; set; }
+    }
 }

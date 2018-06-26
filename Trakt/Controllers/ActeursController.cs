@@ -84,56 +84,30 @@ namespace Trakt.Controllers
 
             if (model.Acteur.Films.Count != 0)
             {
-                using (WebClient client = new WebClient())
-                {
-                    client.Encoding = Encoding.UTF8;
-                    var json = client.DownloadString(string.Format("https://api.themoviedb.org/3/person/{0}?api_key={1}&append_to_response=movie_credits", id, ApiKey.MovieDB));
-                    JObject obj = JObject.Parse(json);
-
-                    model.Geboortedatum = (DateTime)obj.SelectToken("birthday");
-                    try
-                    {
-                        model.Sterftedatum = obj.SelectToken("deathday").ToObject<DateTime>();
-                    }
-                    catch (Exception) { model.Sterftedatum = null; }
-                    model.Omschrijving = (string)obj.SelectToken("biography");
-                    model.Geboorteplaats = (string)obj.SelectToken("place_of_birth");
-
-                    foreach (var film in obj.SelectToken("movie_credits.cast"))
-                    {
-                        if ((int)film.SelectToken("vote_average") > 5)
-                        {
-                            Film f = film.ToObject<Film>();
-
-
-                            if (FilmMng.ReadFilm(f.ID) == null)
-                            {
-                                f.Duur = -1;
-
-                                model.Films.Add(f);
-                            }
-                        }
-                    }
-                }
-
-                foreach (var film in model.Acteur.Films)
-                {
-                    if (model.Films.FirstOrDefault(f => f.ID == film.FilmID) == null)
-                    {
-                        model.Films.Add(film.Film);
-                    }
-                }
+                return RedirectToAction("DetailsAndere", new { id });
             }
             else if (model.Acteur.Series.Count != 0)
             {
-                model.Geboortedatum = DateTime.Today;
-                try
+                //model.Geboortedatum = DateTime.Today;
+                //try
+                //{
+                //    model.Sterftedatum = null;
+                //}
+                //catch (Exception) { model.Sterftedatum = null; }
+                //model.Omschrijving = "";
+                //model.Geboorteplaats = "";
+                using (WebClient client = new WebClient())
                 {
-                    model.Sterftedatum = DateTime.Today;
+                    client.Encoding = Encoding.UTF8;
+                    var json = client.DownloadString(string.Format("https://api.themoviedb.org/3/search/person?api_key={0}&query={1}", ApiKey.MovieDB, model.Acteur.Naam));
+                    var obj = JObject.Parse(json);
+
+                    if ((int)obj.SelectToken("total_results") == 1)
+                    {
+                        return RedirectToAction("DetailsAndere", new { id = (int)obj.SelectToken("results[0].id") });
+                    }
+
                 }
-                catch (Exception) { model.Sterftedatum = null; }
-                model.Omschrijving = "";
-                model.Geboorteplaats = "";
             }
 
             return View(model);
@@ -143,11 +117,6 @@ namespace Trakt.Controllers
 
         public ActionResult DetailsAndere(int id)//Id moet van MovieDb komen om te werken
         {
-            //if (ActeurMng.ReadActeur(id) != null)
-            //{
-            //    return Details(id);
-            //}
-
             ActeurDetailsViewModel model = new ActeurDetailsViewModel()
             {
                 Films = new List<Film>()
@@ -180,7 +149,7 @@ namespace Trakt.Controllers
                     if ((int)film.SelectToken("vote_average") > 5)
                     {
                         Film f = FilmMng.ReadFilm((int)film.SelectToken("id"));
-                        
+
                         if (f == null)
                         {
                             f = film.ToObject<Film>(new Newtonsoft.Json.JsonSerializer() { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });

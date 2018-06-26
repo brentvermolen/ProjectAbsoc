@@ -1,8 +1,11 @@
 ﻿using BL;
 using BL.Domain;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Trakt.Models;
@@ -63,9 +66,45 @@ namespace Trakt.Controllers
             return View(model);
         }
 
+        private FilmManager FilmMng = new FilmManager();
+
         public ActionResult Details(int id)
         {
-            return View(CollectieMng.ReadCollectie(id));
+            CollectieDetailsViewModel model = new CollectieDetailsViewModel()
+            {
+                Collectie = CollectieMng.ReadCollectie(id),
+                Films = new List<Film>()
+            };
+
+            using (WebClient client = new WebClient())
+            {
+                client.Encoding = Encoding.UTF8;
+                var json = client.DownloadString(string.Format("https://api.themoviedb.org/3/collection/{0}?api_key={1}", id, ApiKey.MovieDB));
+                var obj = JObject.Parse(json);
+
+                foreach(var film in obj.SelectToken("parts"))
+                {
+                    Film f = FilmMng.ReadFilm((int)film.SelectToken("id"));
+
+                    if (f == null)
+                    {
+                        f = film.ToObject<Film>(new Newtonsoft.Json.JsonSerializer() { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
+                        f.Duur = -1;
+                    }
+                    else
+                    {
+                        if (f.CollectieID == 0)
+                        {
+                            f.CollectieID = id;
+                            FilmMng.ChangeFilm(f);
+                        }
+                    }
+
+                    model.Films.Add(f);
+                }
+            }
+
+            return View(model);
         }
     }
 }
