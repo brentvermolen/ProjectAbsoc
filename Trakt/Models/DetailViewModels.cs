@@ -10,6 +10,21 @@ namespace Trakt.Models
     {
         public Film Film { get; set; }
         public List<Film> GelijkaardigeFilms { get; set; }
+
+        public Dictionary<Acteur, bool> Acteurs { get; set; }
+
+        public bool IsActeurInDb(int id)
+        {
+            foreach (var acteur in Acteurs)
+            {
+                if (acteur.Key.ID == id)
+                {
+                    return acteur.Value;
+                }
+            }
+
+            return false;
+        }
     }
 
     public class ActeurDetailsViewModel

@@ -31,7 +31,7 @@
       }
    }
    else
-   {  
+   {
       if (ViewBag.Aangevraagd == true)
       {
          <button class="btn btn-success col-xs-4" disabled>Film aangevraagd</button>
@@ -101,8 +101,8 @@
       {
          <div class="col-md-3 col-sm-6 col-xs-12 poster">
             @{
-               var url = "javascript:void(0);";
-               if (acteur.ActeurID != -1)
+               var url = Url.Action("DetailsAndere", "Acteurs", new { id = acteur.ActeurID });
+               if (Model.IsActeurInDb(acteur.ActeurID))
                {
                   url = Url.Action("Details", "Acteurs", new { id = acteur.ActeurID });
                }

@@ -141,6 +141,7 @@ namespace Trakt.Controllers
             ViewBag.Archieven = new List<string>();
 
             List<Film> gelijkaardige = new List<Film>();
+            var acteurs = new Dictionary<Acteur, bool>();
 
             using (WebClient client = new WebClient())
             {
@@ -235,16 +236,21 @@ namespace Trakt.Controllers
                         {
                             int acteurId = (int)acteur.SelectToken("id");
                             Acteur a = ActeurMng.ReadActeur(acteurId);
+                            bool inDb = true;
 
                             if (a == null)
                             {
+                                inDb = false;
+
                                 a = new Acteur
                                 {
-                                    ID = -1,
+                                    ID = acteurId,
                                     Naam = (string)acteur.SelectToken("name"),
                                     ImagePath = (string)acteur.SelectToken("profile_path")
                                 };
                             }
+
+                            acteurs.Add(a, inDb);
 
                             ActeurFilm acteurFilm = new ActeurFilm()
                             {
@@ -265,14 +271,15 @@ namespace Trakt.Controllers
             ViewBag.FilmID = film.ID;
 
             //Check aanvraag
-            ViewBag.Aangevraagd = FilmMng.IsAangevraagd(film.ID);            
+            ViewBag.Aangevraagd = FilmMng.IsAangevraagd(film.ID);
 
             film.ID = -1;
 
             FilmDetailsViewModel model = new FilmDetailsViewModel()
             {
                 Film = film,
-                GelijkaardigeFilms = gelijkaardige.OrderByDescending(g => g.ReleaseDate).Take(10).ToList()
+                GelijkaardigeFilms = gelijkaardige.OrderByDescending(g => g.ReleaseDate).Take(10).ToList(),
+                Acteurs = acteurs
             };
 
             return View("Details", model);

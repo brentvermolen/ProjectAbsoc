@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -170,6 +171,20 @@ namespace Trakt.Controllers
                             Naam = (string)acteur.SelectToken("name"),
                             ImagePath = "https://thetvdb.com/banners/" + (string)acteur.SelectToken("image")
                         };
+                    }
+
+                    using (WebClient client = new WebClient())
+                    {
+                        client.Encoding = Encoding.UTF8;
+                        var act = client.DownloadString(string.Format("https://api.themoviedb.org/3/search/person?api_key={0}&query={1}", ApiKey.MovieDB, a.Naam));
+                        var obj = JObject.Parse(act);
+
+                        if ((int)obj.SelectToken("total_results") == 1)
+                        {
+                            a.ID = (int)obj.SelectToken("results[0].id");
+                            acteurId = a.ID;
+                        }
+
                     }
 
                     model.Acteurs.Add(a, (a == null ? true : false));
