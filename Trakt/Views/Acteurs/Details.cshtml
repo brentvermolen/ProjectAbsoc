@@ -34,7 +34,10 @@
       <br />
       <p>Geboren te @Model.Geboorteplaats</p>
       <br />
-      <p class="col-sm-6" style="text-align:center"><strong>&deg; @Model.Geboortedatum.Value.ToShortDateString()</strong></p>
+      @if (Model.Geboortedatum.HasValue)
+      {
+         <p class="col-sm-6" style="text-align:center"><strong>&deg; @Model.Geboortedatum.Value.ToShortDateString()</strong></p>
+      }
       @if (Model.Sterftedatum.HasValue)
       {
          <p class="col-sm-6" style="text-align:center"><strong>&dagger; @Model.Sterftedatum.Value.ToShortDateString()</strong></p>

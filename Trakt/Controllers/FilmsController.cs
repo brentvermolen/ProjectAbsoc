@@ -126,8 +126,14 @@ namespace Trakt.Controllers
             FilmDetailsViewModel model = new FilmDetailsViewModel()
             {
                 Film = FilmMng.ReadFilm(id),
-                GelijkaardigeFilms = gelijkaardige.OrderByDescending(g => g.ReleaseDate).Take(10).ToList()
+                GelijkaardigeFilms = gelijkaardige.OrderByDescending(g => g.ReleaseDate).Take(10).ToList(),
+                Acteurs = new Dictionary<Acteur, bool>()
             };
+
+            foreach (var acteur in model.Film.Acteurs)
+            {
+                model.Acteurs.Add(acteur.Acteur, true);
+            }
 
             return View(model);
         }

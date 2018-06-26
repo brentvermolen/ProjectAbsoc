@@ -135,7 +135,12 @@ namespace Trakt.Controllers
                     ImagePath = (string)obj.SelectToken("profile_path")
                 };
 
-                model.Geboortedatum = (DateTime)obj.SelectToken("birthday");
+                try
+                {
+                    model.Geboortedatum = (DateTime)obj.SelectToken("birthday");
+                }
+                catch (Exception) { model.Geboortedatum = null; }
+
                 try
                 {
                     model.Sterftedatum = obj.SelectToken("deathday").ToObject<DateTime>();
