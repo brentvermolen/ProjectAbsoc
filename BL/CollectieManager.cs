@@ -31,5 +31,10 @@ namespace BL
         {
             return repo.GetCollecties(predicate, sorteren, maxFilms);
         }
+
+        public void AddCollectie(Collectie collectie)
+        {
+            repo.CreateCollectie(collectie);
+        }
     }
 }

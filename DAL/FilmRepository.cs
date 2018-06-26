@@ -57,6 +57,11 @@ namespace DAL
             }
         }
 
+        public List<Aanvraag> GetAanvragen()
+        {
+            return ctx.Aanvragen.OrderByDescending(a => a.AangevraagOp).ToList();
+        }
+
         public void VraagFilmAan(int intId, int gebruiker)
         {
             ctx.Aanvragen.Add(new Aanvraag()

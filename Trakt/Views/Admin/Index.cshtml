@@ -66,6 +66,12 @@
                   Archieven
                </a>
             </li>
+            <li class="sidebar">
+               <a class="subpageRef" href="javascript:void(0)" data-id="aanvragen" onclick="showPage('aanvragen')">
+                  <i class="glyphicon glyphicon-cloud-download" aria-hidden="true"></i>
+                  Aanvragen
+               </a>
+            </li>
          </ul>
       </nav>
       <!-- Page Content Holder -->
@@ -102,6 +108,10 @@
 
          <div id="archieven" class="subpage" style="display:none">
             @Html.Partial("_Archieven", Model)
+         </div>
+
+         <div id="aanvragen" class="subpage" style="display:none">
+            @Html.Partial("_Aanvragen", Model)
          </div>
       </div>
    </div>

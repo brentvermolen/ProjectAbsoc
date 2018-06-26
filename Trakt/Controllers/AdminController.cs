@@ -58,8 +58,21 @@ namespace Trakt.Controllers
             {
                 Gebruikers = gebruikers,
                 Archieven = archieven,
-                BestaandeSeries = SerieMng.ReadSeries(SerieSortEnum.Naam, 999)
+                BestaandeSeries = SerieMng.ReadSeries(SerieSortEnum.Naam, 999),
+                Aanvragen = new Dictionary<Aanvraag, Film>()
             };
+
+            foreach(var aanvraag in FilmMng.ReadAanvragen())
+            {
+                using (WebClient client = new WebClient())
+                {
+                    client.Encoding = Encoding.UTF8;
+                    var json = client.DownloadString(string.Format("https://api.themoviedb.org/3/movie/{0}?api_key={1}", aanvraag.FilmId, ApiKey.MovieDB));
+                    var obj = JObject.Parse(json);
+
+                    model.Aanvragen.Add(aanvraag, obj.ToObject<Film>(new JsonSerializer() { NullValueHandling = NullValueHandling.Ignore }));
+                }
+            }
 
             return View(model);
         }
@@ -129,6 +142,7 @@ namespace Trakt.Controllers
 
         private readonly FilmManager FilmMng = new FilmManager();
         private readonly ActeurManager ActeurMng = new ActeurManager();
+        private readonly CollectieManager CollectieMng = new CollectieManager();
 
         [HttpPost]
         public ActionResult FilmToevoegen(AdminViewModel model, string id)
@@ -158,6 +172,26 @@ namespace Trakt.Controllers
                         }
                         catch (Exception) { film.CollectieID = 0; }
 
+                        if (CollectieMng.ReadCollectie(film.CollectieID) == null)
+                        {
+                            json = client.DownloadString(string.Format("https://api.themoviedb.org/3/collection/{0}?api_key={1}", film.CollectieID, ApiKey.MovieDB));
+                            obj = JObject.Parse(json);
+
+                            Collectie collectie = obj.ToObject<Collectie>(new JsonSerializer() { NullValueHandling = NullValueHandling.Ignore });
+                            CollectieMng.AddCollectie(collectie);
+
+                            foreach(var f in obj.SelectToken("parts"))
+                            {
+                                Film filmDb = FilmMng.ReadFilm((int)f.SelectToken("id"));
+
+                                if (filmDb != null)
+                                {
+                                    filmDb.CollectieID = film.CollectieID;
+                                    FilmMng.ChangeFilm(filmDb);
+                                }
+                            }
+                        }
+
                         try
                         {
                             film.TrailerId = (string)obj.SelectToken("videos.results[0].key");
@@ -175,17 +209,26 @@ namespace Trakt.Controllers
                         string nlTagline = (string)obj.SelectToken("tagline");
                         string nlTrailer = (string)obj.SelectToken("videos.results[0].key");
 
-                        if (!nlOmsch.Equals(""))
+                        if (nlOmsch != null)
                         {
-                            film.Omschrijving = nlOmsch;
+                            if (!nlOmsch.Equals(""))
+                            {
+                                film.Omschrijving = nlOmsch;
+                            }
                         }
-                        if (!nlTagline.Equals(""))
+                        if (nlTagline != null)
                         {
-                            film.Tagline = nlTagline;
+                            if (!nlTagline.Equals(""))
+                            {
+                                film.Tagline = nlTagline;
+                            }
                         }
-                        if (!nlTrailer.Equals(""))
+                        if (nlTrailer != null)
                         {
-                            film.TrailerId = nlTrailer;
+                            if (!nlTrailer.Equals(""))
+                            {
+                                film.TrailerId = nlTrailer;
+                            }
                         }
 
                         FilmMng.AddFilm(film);

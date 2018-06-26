@@ -62,5 +62,10 @@ namespace BL
         {
             repo.VraagFilmAan(intId, gebruiker);
         }
+
+        public List<Aanvraag> ReadAanvragen()
+        {
+            return repo.GetAanvragen();
+        }
     }
 }

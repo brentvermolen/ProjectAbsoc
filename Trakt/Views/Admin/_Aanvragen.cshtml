@@ -1,0 +1,13 @@
+﻿@model Trakt.Models.AdminViewModel
+
+<h2>Aanvragen</h2>
+
+<ul class="list-group">
+   @foreach (var aanvraag in Model.Aanvragen)
+   {
+      <li class="list-group-item">
+         <p>@aanvraag.Value.Naam (@aanvraag.Value.ReleaseDate)</p>
+         <p>Door @aanvraag.Key.AangevraagdDoor.UserName Op @aanvraag.Key.AangevraagOp.Value.ToShortDateString()</p>
+      </li>
+   }
+</ul>

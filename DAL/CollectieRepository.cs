@@ -40,5 +40,11 @@ namespace DAL
                     return ctx.Collecties.Where(predicate).OrderBy(c => c.Naam).Take(maxFilms).ToList();
             }
         }
+
+        public void CreateCollectie(Collectie collectie)
+        {
+            ctx.Collecties.Add(collectie);
+            ctx.SaveChanges();
+        }
     }
 }

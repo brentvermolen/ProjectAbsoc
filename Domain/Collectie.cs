@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,8 +13,11 @@ namespace BL.Domain
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [JsonProperty("id")]
         public int ID { get; set; }
+        [JsonProperty("name")]
         public string Naam { get; set; }
+        [JsonProperty("poster_path")]
         public string PosterPath { get; set; }
 
         public virtual List<Film> Films { get; set; }
