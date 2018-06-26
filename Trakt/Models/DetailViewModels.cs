@@ -20,6 +20,7 @@ namespace Trakt.Models
         public DateTime? Sterftedatum { get; set; }
         public string Omschrijving { get; set; }
         public List<Film> Films { get; set; }
+        public List<Serie> Series { get; set; }
     }
 
     public class SerieDetailsViewModel

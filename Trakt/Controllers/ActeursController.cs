@@ -78,7 +78,8 @@ namespace Trakt.Controllers
             ActeurDetailsViewModel model = new ActeurDetailsViewModel()
             {
                 Acteur = ActeurMng.ReadActeur(id),
-                Films = new List<Film>()
+                Films = new List<Film>(),
+                Series = new List<Serie>()
             };
 
             if (model.Acteur.Films.Count != 0)
@@ -138,6 +139,8 @@ namespace Trakt.Controllers
             return View(model);
         }
 
+        private SerieManager SerieMng = new SerieManager();
+
         public ActionResult DetailsAndere(int id)//Id moet van MovieDb komen om te werken
         {
             //if (ActeurMng.ReadActeur(id) != null)
@@ -176,16 +179,19 @@ namespace Trakt.Controllers
                 {
                     if ((int)film.SelectToken("vote_average") > 5)
                     {
-                        Film f = film.ToObject<Film>(new Newtonsoft.Json.JsonSerializer() { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
+                        Film f = FilmMng.ReadFilm((int)film.SelectToken("id"));
                         
-                        if (FilmMng.ReadFilm(f.ID) == null)
+                        if (f == null)
                         {
+                            f = film.ToObject<Film>(new Newtonsoft.Json.JsonSerializer() { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
                             f.Duur = -1;
                         }
 
                         model.Films.Add(f);
                     }
                 }
+
+                model.Series = new List<Serie>();
 
                 foreach (var tvshow in obj.SelectToken("tv_credits.cast").OrderByDescending(t => t.SelectToken("episode_count")))
                 {
@@ -194,8 +200,27 @@ namespace Trakt.Controllers
                         ID = (int)tvshow.SelectToken("id"),
                         AirDate = (string)tvshow.SelectToken("first_air_date"),
                         Naam = (string)tvshow.SelectToken("original_name"),
-                        PosterPath = (string)tvshow.SelectToken("poster_path")
+                        PosterPath = (string)tvshow.SelectToken("poster_path"),
+                        Netwerk = "0"
                     };
+
+                    json = client.DownloadString(string.Format("https://api.themoviedb.org/3/tv/{0}/external_ids?api_key={1}", serie.ID, ApiKey.MovieDB));
+                    var externalIds = JObject.Parse(json);
+
+                    var tvdbId = -1;
+                    try
+                    {
+                        tvdbId = (int)externalIds.SelectToken("tvdb_id");
+                        serie.ID = tvdbId;
+                    }
+                    catch (Exception) { serie.Netwerk = "-2"; }
+
+                    if (SerieMng.ReadSerie(tvdbId) == null)
+                    {
+                        serie.Netwerk = "-1";
+                    }
+
+                    model.Series.Add(serie);
                 }
             }
 
