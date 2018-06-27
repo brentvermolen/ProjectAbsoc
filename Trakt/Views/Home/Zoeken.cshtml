@@ -94,6 +94,45 @@
       <div class="panel panel-default">
          <div class="panel-heading">
             <h2>
+               <a data-toggle="collapse" data-parent="#0-panel" href="#0-collecties" class="" aria-expanded="true">
+                  Collecties <span class="badge" style="float:right">#@Model.Collecties.Count</span>
+               </a>
+            </h2>
+         </div>
+         <div id="0-collecties" class="panel-collapse collapse" aria-expanded="true" style="">
+            <div class="panel-body">
+               <div class="testimonial-group">
+                  <div class="row">
+                     @foreach (var collectie in Model.Collecties)
+                     {
+                        <div class="col-md-3 col-sm-6 col-xs-12 poster">
+                           <a href="@Url.Action("Details", "Collecties", new { id = collectie.ID })" title="@collectie.Naam">
+                              @{
+                                 var source = "https://image.tmdb.org/t/p/w300/";
+                                 if (collectie.PosterPath == null)
+                                 {
+                                    source = "/Content/Images/no_image.png";
+                                 }
+                                 else
+                                 {
+                                    source += collectie.PosterPath;
+                                 }
+                              }
+                              <img src="@source" class="image" alt="@collectie" style="max-width:100%; height:400px" />
+                              <div class="overlayPoster">
+                                 <div class="posterOverlayContent">@collectie.Naam</div>
+                              </div>
+                           </a>
+                        </div>
+                     }
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="panel panel-default">
+         <div class="panel-heading">
+            <h2>
                <a data-toggle="collapse" data-parent="#0-panel" href="#0-series" class="" aria-expanded="true">
                   Series <span class="badge" style="float:right">#@Model.Series.Count</span>
                </a>

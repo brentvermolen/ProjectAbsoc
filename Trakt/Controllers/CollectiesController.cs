@@ -70,9 +70,11 @@ namespace Trakt.Controllers
 
         public ActionResult Details(int id)
         {
+            Collectie c = CollectieMng.ReadCollectie(id);
+
             CollectieDetailsViewModel model = new CollectieDetailsViewModel()
             {
-                Collectie = CollectieMng.ReadCollectie(id),
+                Collectie = c,
                 Films = new List<Film>()
             };
 
@@ -81,6 +83,11 @@ namespace Trakt.Controllers
                 client.Encoding = Encoding.UTF8;
                 var json = client.DownloadString(string.Format("https://api.themoviedb.org/3/collection/{0}?api_key={1}", id, ApiKey.MovieDB));
                 var obj = JObject.Parse(json);
+
+                if (c == null)
+                {
+                    model.Collectie = obj.ToObject<Collectie>(new Newtonsoft.Json.JsonSerializer() { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
+                }
 
                 foreach(var film in obj.SelectToken("parts"))
                 {
@@ -93,7 +100,7 @@ namespace Trakt.Controllers
                     }
                     else
                     {
-                        if (f.CollectieID == 0)
+                        if (f.CollectieID == 0 && c != null)
                         {
                             f.CollectieID = id;
                             FilmMng.ChangeFilm(f);

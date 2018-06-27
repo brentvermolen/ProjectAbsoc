@@ -41,25 +41,26 @@ namespace Absoc.Controllers
             return View(model);
         }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
+        //public ActionResult About()
+        //{
+        //    ViewBag.Message = "Your application description page.";
 
-            return View();
-        }
+        //    return View();
+        //}
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
+        //public ActionResult Contact()
+        //{
+        //    ViewBag.Message = "Your contact page.";
 
-            return View();
-        }
+        //    return View();
+        //}
 
         public ActionResult Zoeken(string q)
         {
             ZoekenViewModel model = new ZoekenViewModel()
             {
                 Acteurs = ZoekActeurs(q),
+                Collecties = ZoekCollecties(q),
                 Films = ZoekFilms(q),
                 Series = ZoekSeries(q)
             };
@@ -99,6 +100,22 @@ namespace Absoc.Controllers
             }
 
             return acteurs;
+        }
+
+        private List<Collectie> ZoekCollecties(string q)
+        {
+            List<Collectie> collecties = new List<Collectie>();
+
+            using (WebClient client = new WebClient())
+            {
+                client.Encoding = Encoding.UTF8;
+                var json = client.DownloadString(string.Format("https://api.themoviedb.org/3/search/collection?api_key={0}&query={1}", ApiKey.MovieDB, q));
+                var obj = JObject.Parse(json);
+
+                collecties = obj.SelectToken("results").ToObject<List<Collectie>>(new Newtonsoft.Json.JsonSerializer() { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
+            }
+           
+            return collecties;
         }
 
         private List<Film> ZoekFilms(string q)

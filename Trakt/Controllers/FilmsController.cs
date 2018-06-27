@@ -90,6 +90,11 @@ namespace Trakt.Controllers
 
         public ActionResult Details(int id)
         {
+            if (FilmMng.ReadFilm(id) == null)
+            {
+                return RedirectToAction("DetailsAndere", new { id });
+            }
+
             Gebruiker gebruiker = GebruikerMng.GetGebruiker(int.Parse(User.Identity.GetUserId()));
             ViewBag.Archieven = new List<string>();
 
@@ -143,6 +148,11 @@ namespace Trakt.Controllers
 
         public ActionResult DetailsAndere(int id)
         {
+            if (FilmMng.ReadFilm(id) != null)
+            {
+                return RedirectToAction("Details", new { id });
+            }
+
             Gebruiker gebruiker = GebruikerMng.GetGebruiker(int.Parse(User.Identity.GetUserId()));
             ViewBag.Archieven = new List<string>();
 
@@ -178,15 +188,7 @@ namespace Trakt.Controllers
                 try
                 {
                     film.CollectieID = (int)obj.SelectToken("belongs_to_collection.id");
-                    var collectie = CollectieMng.ReadCollectie(film.CollectieID);
-                    if (collectie == null)
-                    {
-                        film.CollectieID = 0;
-                    }
-                    else
-                    {
-                        film.Collectie = collectie;
-                    }
+                    film.Collectie = obj.SelectToken("belongs_to_collection").ToObject<Collectie>(new Newtonsoft.Json.JsonSerializer() { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
                 }
                 catch (Exception) { film.CollectieID = 0; }
 

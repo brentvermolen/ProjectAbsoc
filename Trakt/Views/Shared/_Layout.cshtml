@@ -31,7 +31,8 @@
                <li><a href="@Url.Action("Index","Series")">Series</a></li>
                <li><a href="@Url.Action("Index","Acteurs")">Acteurs</a></li>
             </ul>
-            <div class="col-sm-2">
+            @Html.Partial("_LoginPartial")
+            <div class="col-sm-2 navbar-right">
                @using (Html.BeginForm("Zoeken", "Home", FormMethod.Get, new { @class = "navbar-form" }))
                {
                   <div class="input-group" role="search">
@@ -42,10 +43,9 @@
                   </div>
                }
             </div>
-            @Html.Partial("_LoginPartial")
             @*<form class="navbar-form navbar-right">
-                  <input class="form-control" placeholder="Zoek..." type="text">
-               </form>*@
+         <input class="form-control" placeholder="Zoek..." type="text">
+      </form>*@
          </div><!--/.nav-collapse -->
       </div>
    </nav>
