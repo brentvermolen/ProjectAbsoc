@@ -41,11 +41,11 @@ namespace Trakt.Models
 
     public enum FilterMax
     {
-        Twaalf = 12,
-        Twintig = 20,
+        Dertig = 30,
         Vijftig = 50,
         Honderd = 100,
-        Tweehonderd = 200
+        Tweehonderd = 200,
+        Duizend = 1000
     }
 
     public enum FilmFilterOp

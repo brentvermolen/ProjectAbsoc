@@ -19,7 +19,7 @@ namespace Trakt.Controllers
     {
         private readonly FilmManager FilmMng = new FilmManager();
 
-        private const FilterMax DEFAULT_MAX_FILMS = FilterMax.Twaalf;
+        private const FilterMax DEFAULT_MAX_FILMS = FilterMax.Dertig;
 
         protected override void OnAuthorization(AuthorizationContext filterContext)
         {
@@ -32,15 +32,10 @@ namespace Trakt.Controllers
 
         // GET: Films
         public ActionResult Index()
-        {
-            int count = 0;
-
-            var films = FilmMng.ReadFilms().OrderBy(f => f.Naam).Where(f => count++ < (int)DEFAULT_MAX_FILMS).ToList();
-            films = FilmMng.ReadFilms(FilmSortEnum.Naam, (int)DEFAULT_MAX_FILMS);
-
+        {         
             FilmViewModel model = new FilmViewModel()
             {
-                Films = films,
+                Films = FilmMng.ReadFilms(FilmSortEnum.Naam, (int)DEFAULT_MAX_FILMS),
                 Sorteren = FilmSortEnum.Naam,
                 MaxFilms = DEFAULT_MAX_FILMS
             };
@@ -67,6 +62,7 @@ namespace Trakt.Controllers
                     if (int.TryParse(model.Filter, out int jaartal) == false)
                     {
                         model.Filter = DateTime.Today.Year.ToString();
+                        filter = model.Filter;
                     }
 
                     predicate = f => f.ReleaseDate.StartsWith(filter.ToLower());
@@ -78,9 +74,6 @@ namespace Trakt.Controllers
             }
 
             model.Films = FilmMng.ReadFilms(predicate, model.Sorteren, (int)model.MaxFilms);
-
-            var count = 0;
-            model.Films = model.Films.Where(f => count++ < (int)model.MaxFilms).ToList();
 
             return View(model);
         }
@@ -293,15 +286,35 @@ namespace Trakt.Controllers
             return View("Details", model);
         }
 
-        public ActionResult Lijst(int id)
+        public ActionResult Lijst(int id) //Acteur id
         {
-            var films = FilmMng.ReadFilms().Where(f => f.Acteurs.FirstOrDefault(a => a.ActeurID == id) != null).OrderBy(f => f.Naam).ToList();
+            FilmViewModel model = new FilmViewModel()
+            {
+                Films = FilmMng.ReadFilms(f => f.Acteurs.FirstOrDefault(a => a.ActeurID == id) != null, FilmSortEnum.Naam, (int)FilterMax.Duizend),
+                Sorteren = FilmSortEnum.Naam,
+                MaxFilms = FilterMax.Duizend
+            };
+
+            return View("Index", model);
+        }
+
+        public ActionResult NietOpArchief()
+        {
+            var gebruiker = GebruikerMng.GetGebruiker(int.Parse(User.Identity.GetUserId()));
+            var films = FilmMng.ReadFilms();
+
+            foreach(var archief in gebruiker.Archief)
+            {
+                films.RemoveAll(f => archief.Films.FirstOrDefault(a => a.ID == f.ID) != null);
+            }
+
+            films.Sort((s1, s2) => s1.Naam.CompareTo(s2.Naam));
 
             FilmViewModel model = new FilmViewModel()
             {
                 Films = films,
                 Sorteren = FilmSortEnum.Naam,
-                MaxFilms = DEFAULT_MAX_FILMS
+                MaxFilms = FilterMax.Duizend
             };
 
             return View("Index", model);

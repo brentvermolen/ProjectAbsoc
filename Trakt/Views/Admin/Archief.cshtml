@@ -137,7 +137,7 @@
                      @foreach (var film in Model.Films.OrderBy(f => f.Film.Naam))
                      {
                      <li class="list-group-item archief-films" style="height:55px">
-                        @film.Film.Naam
+                        @film.Film.Naam (@film.Film.ReleaseDate.Substring(0, 4))
 
                         @if (film.StaatOpArchief == true)
                         {

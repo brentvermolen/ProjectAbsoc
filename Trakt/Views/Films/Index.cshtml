@@ -20,12 +20,12 @@
          @Html.TextBoxFor(model => model.Filter, new { /*@onblur = "javascript:document.getElementById('sorterenForm').submit()",*/ @placeholder = "Filter", @class = "form-control" })
       </div>
       <div class="col-md-2 col-sm-3" style="float:right">
-         @Html.LabelFor(model => model.MaxFilms, "Resultaten")
+         @Html.LabelFor(model => model.MaxFilms, "# Resultaten")
          @Html.EnumDropDownListFor(model => model.MaxFilms, null, new { @class = "form-control" })
       </div>
    </div>
    <div class="row">
-      <div class="col-md-12">
+      <div class="col-sm-12">
          <button type="submit" class="btn btn-success btnzoeken" style="width:100%">Zoeken</button>
       </div>
    </div>

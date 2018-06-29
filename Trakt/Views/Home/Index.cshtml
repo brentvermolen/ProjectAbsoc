@@ -15,7 +15,7 @@
    var model = new Trakt.Models.FilmViewModel()
    {
       Sorteren = BL.Domain.FilmSortEnum.Toegevoegd,
-      MaxFilms = Trakt.Models.FilterMax.Twintig
+      MaxFilms = Trakt.Models.FilterMax.Dertig
    };
    <h1><a href="javascript:void(0)" onclick="document.getElementById('laatstToegevoegd').submit();">Laatst toegevoegde films</a></h1>
    @Html.HiddenFor(m => model.Sorteren);
@@ -46,7 +46,7 @@
    var model = new Trakt.Models.FilmViewModel()
    {
       Sorteren = BL.Domain.FilmSortEnum.Release_Desc,
-      MaxFilms = Trakt.Models.FilterMax.Twintig
+      MaxFilms = Trakt.Models.FilterMax.Dertig
    };
    <h1><a href="javascript:void(0)" onclick="document.getElementById('nieuwsteFilms').submit();">Laatste nieuwe films</a></h1>
    @Html.HiddenFor(m => model.Sorteren);
