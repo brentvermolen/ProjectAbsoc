@@ -79,6 +79,22 @@ namespace Trakt.Controllers
                         model.Aflevering.SerieID = -1;
                     }
                 }
+                
+                json = client.DownloadString(string.Format("https://api.themoviedb.org/3/tv/1606/season/{0}/episode/{1}?api_key={2}", model.Aflevering.Seizoen, model.Aflevering.Nummer, ApiKey.MovieDB));
+                obj = JObject.Parse(json);
+                
+                foreacht(var guest in obj.SelectToken(""))
+                {
+                    var karakter = (string)guest.SelectToken("character");
+                    //if (!karakter.Equals(""))
+                    //{
+                        ActeurSerie acteurSerie = new ActeurSerie()
+                        {
+                            Karakter = karakter,
+                            Acteur = new Acteur() { Naam = (string)guest.SelectToken("name"), ImagePath = "https://image.tmdb.org/t/p/w300" + (string)guest.SelectToken("profile_path") }
+                        }
+                    //}
+                }
             }
             
             return View(model);
