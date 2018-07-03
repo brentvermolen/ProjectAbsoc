@@ -3,7 +3,7 @@
 @using Microsoft.AspNet.Identity
 
 @{
-   ViewBag.Title = Model.Film.Naam + "Film";
+   ViewBag.Title = Model.Film.Naam + " - Film";
    var mng = new GebruikerManager();
    var gebruiker = mng.GetGebruiker(int.Parse(User.Identity.GetUserId()));
 }
