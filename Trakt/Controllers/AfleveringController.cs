@@ -32,7 +32,7 @@ namespace Trakt.Controllers
         
             AfleveringDetailsViewModel model = new AfleveringDetailsViewModel()
             {
-                Aflevering = SerieMng.ReadAflevering(id)
+                Aflevering = aflevering
             };
             
             return View(model);
