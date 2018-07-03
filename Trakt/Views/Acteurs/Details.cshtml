@@ -1,9 +1,9 @@
 ﻿@model Trakt.Models.ActeurDetailsViewModel
 @{
-   ViewBag.Title = Model.Acteur.Naam;
+   ViewBag.Title = Model.Acteur.Naam + " - Acteur";
 }
 
-<h2>@ViewBag.Title</h2>
+<h2>@Model.Acteur.Naam</h2>
 
 <div class="row">
    <div class="col-md-4" style="padding-right:20px; border-right: solid 1px">
