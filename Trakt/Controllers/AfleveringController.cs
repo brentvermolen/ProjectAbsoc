@@ -29,7 +29,6 @@ namespace Trakt.Controllers
                        
             if (aflDb != null)
             {
-                aflDb.Path = "tvdb";
                 model.Aflevering = aflDb;
                 return View(model);
             }
@@ -50,8 +49,25 @@ namespace Trakt.Controllers
                     AirDate = (string)obj.SelectToken("air_date")
                 };
                 
-                model.Aflevering.SerieID = (int)obj.SelectToken("show_id");
-                model.Aflevering.Path = "moviedb";
+                json = client.DownloadString(string.Format("https://api.themoviedb.org/3/tv/{0}/external_ids?api_key={1}", (int)obj.SelectToken("show_id"), ApiKey.MovieDB)):
+                obj = JObject.Parse(json);
+                
+                int tvdb_id = (int)obj.SelectToken("tvdb_id");
+                
+                if (tvdb_id != 0)
+                {
+                    Serie serie = SerieMng.ReadSerie(tvdb_id);
+                    if (serie != null)
+                    {
+                        model.Aflevering.Serie = serie;
+                        model.Aflevering.SerieID = 0;
+                    }
+                    else
+                    {
+                        model.Aflevering.Serie = new Serie() { ID = tvdb_id };
+                        model.Aflevering.SerieID = -1;
+                    }
+                }
             }
             
             return View(model);
