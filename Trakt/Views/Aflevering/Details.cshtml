@@ -1,7 +1,7 @@
 ﻿@model Trakt.Models.AfleveringDetailsViewModel
 
 @{
-    ViewBag.Title = Model.Aflevering.Naam;
+    ViewBag.Title = Model.Aflevering.Naam + " - Aflevering";
 }
 @{
     var url = Url.Action("Details", "Series", new { id = Model.Aflevering.Serie.ID });
@@ -10,7 +10,7 @@
         url = Url.Action("DetailsAndere", "Series", new { id = Model.Aflevering.Serie.ID });
     }
 }
-<h2><a href="@url">@Model.Aflevering.Serie.Naam</a> - @ViewBag.Title</h2>
+<h2><a href="@url">@Model.Aflevering.Serie.Naam</a> - @Model.Aflevering.Naam</h2>
 <hr />
 <div class="row">
    <div class="col-md-4" style="padding-right: 20px;border-right:solid 1px">
