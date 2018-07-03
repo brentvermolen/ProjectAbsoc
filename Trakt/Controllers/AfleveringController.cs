@@ -22,31 +22,38 @@ namespace Trakt.Controllers
         }
 
         public ActionResult Details(int id)
-        {
-            Aflevering aflevering = SerieMng.ReadAflevering(id);
+        {        
+            AfleveringDetailsViewModel model = new AfleveringDetailsViewModel();
             
-            if (aflevering == null)
+            Aflevering aflDb = SerieMng.ReadAflevering(id);
+                       
+            if (aflDb != null)
             {
-                return RedirectToAction("DetailsAndere", new { id });
+                aflDb.Path = "tvdb";
+                model.Aflevering = aflDb;
+                return View(model);
             }
-        
-            AfleveringDetailsViewModel model = new AfleveringDetailsViewModel()
+                        
+            using(WebClient client = new WebClient())
             {
-                Aflevering = aflevering
-            };
+                client.Encoding = Encoding.UTF8;
+                var json = client.DownloadString(string.Format("https://api.themoviedb.org/3/find/{0}?api_key={1}&external_source=tvdb_id", id, ApiKey.MovieDB));
+                var obj = JObject.Parse(json).SelectToken("tv_episode_results");
+                
+                model.Aflevering = new Aflevering()
+                {
+                    Naam = (string)obj.SelectToken("name"),
+                    Omschrijving = (string)obj.SelectToken("overview"),
+                    ImagePath = (string)obj.SelectToken("still_path"),
+                    Seizoen = (int)obj.SelectToken("season_number"),
+                    Nummer = (int)obj.SelectToken("episode_number"),
+                    AirDate = (string)obj.SelectToken("air_date")
+                };
+                
+                model.Aflevering.SerieID = (int)obj.SelectToken("show_id");
+                model.Aflevering.Path = "moviedb";
+            }
             
-            return View(model);
-        }
-        
-        public ActionResult DetailsAndere(int id)
-        {
-            Aflevering aflevering = null;
-        
-            AfleveringDetailsViewModel model = new AfleveringDetailsViewModel()
-            {
-                Aflevering = aflevering
-            };
-        
             return View(model);
         }
     }
