@@ -62,4 +62,9 @@ namespace Trakt.Models
         public Collectie Collectie { get; set; }
         public List<Film> Films { get; set; }
     }
+    
+    public class AfleveringDetailsViewModel
+    {
+        public Aflevering Aflevering { get; set; }
+    }
 }
