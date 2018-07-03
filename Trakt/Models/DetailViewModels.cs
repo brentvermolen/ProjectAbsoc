@@ -66,5 +66,6 @@ namespace Trakt.Models
     public class AfleveringDetailsViewModel
     {
         public Aflevering Aflevering { get; set; }
+        public List<ActeurSerie> GastActeurs { get; set; }
     }
 }
