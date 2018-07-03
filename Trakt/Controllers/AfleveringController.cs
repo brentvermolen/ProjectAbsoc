@@ -49,22 +49,33 @@ namespace Trakt.Controllers
                     AirDate = (string)obj.SelectToken("air_date")
                 };
                 
-                json = client.DownloadString(string.Format("https://api.themoviedb.org/3/tv/{0}/external_ids?api_key={1}", (int)obj.SelectToken("show_id"), ApiKey.MovieDB)):
+                json = client.DownloadString(string.Format("https://api.themoviedb.org/3/tv/{0}?api_key={1}&append_to_response=external_ids", (int)obj.SelectToken("show_id"), ApiKey.MovieDB));
                 obj = JObject.Parse(json);
                 
-                int tvdb_id = (int)obj.SelectToken("tvdb_id");
+                int tvdb_id = (int)obj.SelectToken("external_ids.tvdb_id");
                 
                 if (tvdb_id != 0)
                 {
                     Serie serie = SerieMng.ReadSerie(tvdb_id);
                     if (serie != null)
                     {
-                        model.Aflevering.Serie = new Serie() { ID = serie.ID };
+                        model.Aflevering.Serie = new Serie() 
+                        { 
+                            ID = serie.ID, 
+                            Naam = serie.Naam,
+                            PosterPath = "https://image.tmdb.org/t/p/w300" + serie.PosterPath,
+                            BannerPath = "https://image.tmdb.org/t/p/w300" + serie.BannerPath
+                        };
                         model.Aflevering.SerieID = 0;
                     }
                     else
                     {
-                        model.Aflevering.Serie = new Serie() { ID = tvdb_id };
+                        model.Aflevering.Serie = new Serie() 
+                        { 
+                            ID = tvdb_id, 
+                            Naam = (string)obj.SelectToken("original_name"),
+                            PosterPath = "https://image.tmdb.org/t/p/w300" + (string)obj.SelectToken("poster_path")
+                        };
                         model.Aflevering.SerieID = -1;
                     }
                 }
