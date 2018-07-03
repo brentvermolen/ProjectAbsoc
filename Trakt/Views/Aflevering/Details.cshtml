@@ -41,6 +41,9 @@
       <p><strong>Seizoen @Model.Aflevering.Seizoen Aflevering @Model.Aflevering.Nummer</strong></p>
       <br />
       <p class="col-sm-4" style="text-align:center"><strong>@Model.Aflevering.AirDate</strong></p>
-      <p class="col-sm-4" style="text-align:center"><strong>Afl. @Model.Aflevering.AfleveringNr</strong></p>
+      @if(Model.Aflevering.AfleveringNr != 0)
+      {
+          <p class="col-sm-4" style="text-align:center"><strong>Afl. @Model.Aflevering.AfleveringNr</strong></p>
+      }
    </div>
 </div>
