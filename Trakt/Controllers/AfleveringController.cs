@@ -23,7 +23,31 @@ namespace Trakt.Controllers
 
         public ActionResult Details(int id)
         {
-            return View(SerieMng.ReadAflevering(id));
+            Aflevering aflevering = SerieMng.ReadAflevering(id);
+            
+            if (aflevering == null)
+            {
+                return RedirectToAction("DetailsAndere", new { id });
+            }
+        
+            AfleveringDetailsViewModel model = new AfleveringDetailsViewModel()
+            {
+                Aflevering = SerieMng.ReadAflevering(id)
+            };
+            
+            return View(model);
+        }
+        
+        public ActionResult DetailsAndere(int id)
+        {
+            Aflevering aflevering = null;
+        
+            AfleveringDetailsViewModel model = new AfleveringDetailsViewModel()
+            {
+                Aflevering = aflevering
+            };
+        
+            return View(model);
         }
     }
 }
