@@ -1,10 +1,10 @@
 ﻿@model Trakt.Models.SerieDetailsViewModel
 
 @{
-   ViewBag.Title = Model.Serie.Naam;
+   ViewBag.Title = Model.Serie.Naam + " - Serie";
 }
 
-<h2>@ViewBag.Title</h2>
+<h2>@Model.Serie.Naam</h2>
 <hr />
 
 @{
