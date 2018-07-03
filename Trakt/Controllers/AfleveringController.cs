@@ -23,7 +23,10 @@ namespace Trakt.Controllers
 
         public ActionResult Details(int id)
         {        
-            AfleveringDetailsViewModel model = new AfleveringDetailsViewModel();
+            AfleveringDetailsViewModel model = new AfleveringDetailsViewModel()
+            {
+                GastActeurs = new List<ActeurSerie>()
+            };
             
             Aflevering aflDb = SerieMng.ReadAflevering(id);
                        
@@ -88,11 +91,14 @@ namespace Trakt.Controllers
                     var karakter = (string)guest.SelectToken("character");
                     //if (!karakter.Equals(""))
                     //{
-                        ActeurSerie acteurSerie = new ActeurSerie()
+                        ActeurSerie acteur = new ActeurSerie()
                         {
                             Karakter = karakter,
                             Acteur = new Acteur() { Naam = (string)guest.SelectToken("name"), ImagePath = "https://image.tmdb.org/t/p/w300" + (string)guest.SelectToken("profile_path") }
+                            ActeurID = (int)guest.SelectToken("id")
                         }
+                        
+                        model.GastActeurs.Add(acteur);
                     //}
                 }
             }
