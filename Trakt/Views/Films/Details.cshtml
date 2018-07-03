@@ -3,13 +3,13 @@
 @using Microsoft.AspNet.Identity
 
 @{
-   ViewBag.Title = Model.Film.Naam;
+   ViewBag.Title = Model.Film.Naam + "Film";
    var mng = new GebruikerManager();
    var gebruiker = mng.GetGebruiker(int.Parse(User.Identity.GetUserId()));
 }
 
 <div>
-   <h1 class="col-xs-8" style="margin:0; padding:0">@ViewBag.Title</h1>
+   <h1 class="col-xs-8" style="margin:0; padding:0">@Model.Film.Naam</h1>
    @if (Model.Film.ID != -1)
    {
       if (gebruiker.IsAdmin)
