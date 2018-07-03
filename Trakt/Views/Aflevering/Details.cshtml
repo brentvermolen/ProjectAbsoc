@@ -3,8 +3,14 @@
 @{
     ViewBag.Title = Model.Aflevering.Naam;
 }
-
-<h2><a href="@Url.Action("Details", "Series", new { id = Model.Aflevering.SerieID })">@Model.Aflevering.Serie.Naam</a> - @ViewBag.Title</h2>
+@{
+    var url = Url.Action("Details", "Series", new { id = Model.Aflevering.Serie.ID });
+    if (Model.Aflevering.SerieID == -1)
+    {
+        url = Url.Action("DetailsAndere", "Series", new { id = Model.Aflevering.Serie.ID });
+    }
+}
+<h2><a href="@url">@Model.Aflevering.Serie.Naam</a> - @ViewBag.Title</h2>
 <hr />
 <div class="row">
    <div class="col-md-4" style="padding-right: 20px;border-right:solid 1px">
@@ -33,7 +39,7 @@
       <img src="@source" class="image" alt="@Model.Aflevering.Naam" style="width:100%;" />
    </div>
    <div class="col-md-8">
-      <img style="width:100%;" src="@Model.Aflevering.Serie.BannerPath" alt="Banner @Model.Aflevering.Serie.Naam" />
+      <img style="width:100%;" src="@Model.Aflevering.Serie.BannerPath" onerror="this.src='/Content/Images/no_image.png'" alt="Banner @Model.Aflevering.Serie.Naam" />
       <hr />
       <p><strong>Omschrijving</strong></p>
       <p>@Model.Aflevering.Omschrijving</p>
