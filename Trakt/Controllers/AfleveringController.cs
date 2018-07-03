@@ -59,7 +59,7 @@ namespace Trakt.Controllers
                     Serie serie = SerieMng.ReadSerie(tvdb_id);
                     if (serie != null)
                     {
-                        model.Aflevering.Serie = serie;
+                        model.Aflevering.Serie = new Serie() { ID = serie.ID };
                         model.Aflevering.SerieID = 0;
                     }
                     else
