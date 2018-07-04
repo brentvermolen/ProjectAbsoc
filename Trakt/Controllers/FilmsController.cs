@@ -113,6 +113,8 @@ namespace Trakt.Controllers
                 gelijkaardige = obj.SelectToken("results").ToObject<List<Film>>();
             }
 
+            gelijkaardige = gelijkaardige.OrderByDescending(g => g.ReleaseDate).Take(10).ToList();
+
             foreach (Film film in gelijkaardige)
             {
                 if (FilmMng.ReadFilm(film.ID) == null)
@@ -124,7 +126,7 @@ namespace Trakt.Controllers
             FilmDetailsViewModel model = new FilmDetailsViewModel()
             {
                 Film = FilmMng.ReadFilm(id),
-                GelijkaardigeFilms = gelijkaardige.OrderByDescending(g => g.ReleaseDate).Take(10).ToList(),
+                GelijkaardigeFilms = gelijkaardige,
                 Acteurs = new Dictionary<Acteur, bool>()
             };
 
