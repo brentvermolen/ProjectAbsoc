@@ -61,6 +61,12 @@ namespace DAL
         {
             return ctx.Aanvragen.OrderByDescending(a => a.AangevraagOp).ToList();
         }
+        
+        public void DeleteAanvraag(int id)
+        {
+            ctxd.Aanvraagen.Remove(ctx.Aanvragen.Find(id));
+            ctx.SaveChanges();
+        }
 
         public void VraagFilmAan(int intId, int gebruiker)
         {
