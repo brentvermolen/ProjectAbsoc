@@ -6,12 +6,12 @@
    @foreach (var aanvraag in Model.Aanvragen)
    {
       <li class="list-group-item">
-         <div class="col-sm-8">
+         <div class="col-sm-8 padding0">
             <p>@aanvraag.Value.Naam (@aanvraag.Value.ReleaseDate)</p>
             <p>Door @aanvraag.Key.AangevraagdDoor.UserName Op @aanvraag.Key.AangevraagOp.Value.ToShortDateString()</p>   
          </div>
             
-         <div class="col-sm-4">
+         <div class="col-sm-4 padding0">
             <button class="btn btn-danger" onclick="deleteAanvraag(@aanvraag.FilmID, this.parentNode.parentNode)">Verwijderen</button>
          </div>
       </li>
