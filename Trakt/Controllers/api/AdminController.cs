@@ -24,11 +24,14 @@ namespace Trakt.Controllers.api
         {
             if (int.TryParse(id, out int intId))
             {
-                FilmMng.RemoveAanvraag(intId);
-                return Ok(true);
+                if (FilmMng.ReadAanvragen().Find(intId) != null)
+                {
+                    FilmMng.RemoveAanvraag(intId);
+                    return Ok(true);
+                }
             }
         
-            return Ok(false);
+            return NotFound();
         }
     }
 }
