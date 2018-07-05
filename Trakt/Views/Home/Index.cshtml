@@ -95,7 +95,10 @@
             }
             <img src="@actSrc" class="image" onerror="this.src='/Content/Images/no_image.png'" alt="@aflevering.Naam" style="width:100%;max-height:140px" />
             <div class="overlayPoster" style="transition:none; opacity:1;">
-               <div class="posterOverlayContent">@aflevering.Serie.Naam<br /><span>S</span>@aflevering.Seizoen<span>E</span>@aflevering.Nummer</div>
+               <div class="posterOverlayContent">
+                  <span>S</span>@aflevering.Seizoen.ToString("00")<span>E</span>@aflevering.Nummer.ToString("00")</div>
+                  <br />
+                  <span style="font-size:small">@aflevering.Serie.Naam</span>
             </div>
          </a>
       </div>
