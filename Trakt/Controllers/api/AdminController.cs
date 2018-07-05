@@ -15,5 +15,20 @@ namespace Trakt.Controllers.api
         {
             return Ok(true);
         }
+        
+        private FilmManager FilmMng = new FilmManager();
+        
+        [Route("~/api/Admin/AanvraagVerwijderen/{id}")]
+        [HttpGet]
+        public IHttpActionResult AanvraagVerwijderen(string id)
+        {
+            if (int.TryParse(id, out int intId))
+            {
+                FilmMng.RemoveAanvraag(intId);
+                return Ok(true);
+            }
+        
+            return Ok(false);
+        }
     }
 }
