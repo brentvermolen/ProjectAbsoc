@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -24,7 +25,7 @@ namespace Trakt.Controllers.api
         {
             if (int.TryParse(id, out int intId))
             {
-                if (FilmMng.ReadAanvragen().Find(intId) != null)
+                if (FilmMng.ReadAanvragen().FirstOrDefault(f => f.FilmId == intId) != null)
                 {
                     FilmMng.RemoveAanvraag(intId);
                     return Ok(true);

@@ -1,4 +1,5 @@
 ﻿using BL.Domain;
+using BL.Domain.ActeurKlassen;
 using System;
 using System.Collections.Generic;
 using System.Linq;

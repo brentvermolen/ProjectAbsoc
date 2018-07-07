@@ -64,7 +64,7 @@ namespace DAL
         
         public void DeleteAanvraag(int id)
         {
-            ctxd.Aanvraagen.Remove(ctx.Aanvragen.Find(id));
+            ctx.Aanvragen.Remove(ctx.Aanvragen.Find(id));
             ctx.SaveChanges();
         }
 

@@ -68,7 +68,7 @@ namespace BL
             return repo.GetAanvragen();
         }
         
-        public void RemoveAanvraag(id)
+        public void RemoveAanvraag(int id)
         {
             repo.DeleteAanvraag(id);
         }
