@@ -48,6 +48,12 @@ namespace Trakt.Controllers
                 var json = client.DownloadString(string.Format("https://api.themoviedb.org/3/find/{0}?api_key={1}&external_source=tvdb_id", id, ApiKey.MovieDB));
                 var obj = JObject.Parse(json).SelectToken("tv_episode_results[0]");
 
+                if (obj == null && aflDb != null)
+                {
+                    model.Aflevering = aflDb;
+                    return View(model);
+                }
+
                 model.Aflevering = new Aflevering();
 
                 model.Aflevering.Naam = (string)obj.SelectToken("name");

@@ -1,14 +1,14 @@
 ﻿@model Trakt.Models.AfleveringDetailsViewModel
 
 @{
-    ViewBag.Title = Model.Aflevering.Naam + " - Aflevering";
+   ViewBag.Title = Model.Aflevering.Naam + " - Aflevering";
 }
 @{
-    var url = Url.Action("Details", "Series", new { id = Model.Aflevering.Serie.ID });
-    if (Model.Aflevering.SerieID == -1)
-    {
-        url = Url.Action("DetailsAndere", "Series", new { id = Model.Aflevering.Serie.ID });
-    }
+   var url = Url.Action("Details", "Series", new { id = Model.Aflevering.Serie.ID });
+   if (Model.Aflevering.SerieID == -1)
+   {
+      url = Url.Action("DetailsAndere", "Series", new { id = Model.Aflevering.Serie.ID });
+   }
 }
 <h2><a href="@url">@Model.Aflevering.Serie.Naam</a> - @Model.Aflevering.Naam</h2>
 <hr />
@@ -47,37 +47,40 @@
       <p><strong>Seizoen @Model.Aflevering.Seizoen Aflevering @Model.Aflevering.Nummer</strong></p>
       <br />
       <p class="col-sm-4" style="text-align:center"><strong>@Model.Aflevering.AirDate</strong></p>
-      @if(Model.Aflevering.AfleveringNr != 0)
+      @if (Model.Aflevering.AfleveringNr != 0)
       {
-          <p class="col-sm-4" style="text-align:center"><strong>Afl. @Model.Aflevering.AfleveringNr</strong></p>
+         <p class="col-sm-4" style="text-align:center"><strong>Afl. @Model.Aflevering.AfleveringNr</strong></p>
       }
    </div>
 </div>
 
-<div class="testimonial-group">
-   <h2>Gast Acteurs</h2>
-   <div class="row">
-      @foreach (var acteur in Model.GastActeurs)
-      {
-         <div class="col-md-3 col-sm-6 col-xs-12 poster">
-            <a href="@Url.Action("DetailsAndere", "Acteurs", new { id = acteur.ActeurID })" title="@acteur.Acteur.Naam">
-               @{
-                  source = "";
-                  if (acteur.Acteur.ImagePath == null)
-                  {
-                     source = "/Content/Images/no_image.png";
+@if (Model.GastActeurs.Count > 0)
+{
+   <div class="testimonial-group">
+      <h2>Gast Acteurs</h2>
+      <div class="row">
+         @foreach (var acteur in Model.GastActeurs)
+         {
+            <div class="col-md-3 col-sm-6 col-xs-12 poster">
+               <a href="@Url.Action("DetailsAndere", "Acteurs", new { id = acteur.ActeurID })" title="@acteur.Acteur.Naam">
+                  @{
+                     source = "";
+                     if (acteur.Acteur.ImagePath == null)
+                     {
+                        source = "/Content/Images/no_image.png";
+                     }
+                     else
+                     {
+                        source = acteur.Acteur.ImagePath;
+                     }
                   }
-                  else
-                  {
-                     source = acteur.Acteur.ImagePath;
-                  }
-               }
-               <img src="@source" class="image" alt="@acteur.Acteur.Naam" onerror="this.src='/Content/Images/no_image.png'" style="max-width:100%; height:400px" />
-               <div class="overlayPoster">
-                  <div class="posterOverlayContent">@acteur.Acteur.Naam<br />@acteur.Karakter</div>
-               </div>
-            </a>
-         </div>
-      }
+                  <img src="@source" class="image" alt="@acteur.Acteur.Naam" onerror="this.src='/Content/Images/no_image.png'" style="max-width:100%; height:400px" />
+                  <div class="overlayPoster">
+                     <div class="posterOverlayContent">@acteur.Acteur.Naam<br />@acteur.Karakter</div>
+                  </div>
+               </a>
+            </div>
+         }
+      </div>
    </div>
-</div>
+}
