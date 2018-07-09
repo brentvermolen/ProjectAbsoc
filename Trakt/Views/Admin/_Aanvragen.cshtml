@@ -5,7 +5,7 @@
 <ul class="list-group">
    @foreach (var aanvraag in Model.Aanvragen)
    {
-      <li class="list-group-item">
+      <li class="list-group-item" style="height:70px;">
          <p style="float:left;">@aanvraag.Value.Naam (@aanvraag.Value.ReleaseDate)<br />Door @aanvraag.Key.AangevraagdDoor.UserName Op @aanvraag.Key.AangevraagOp.Value.ToShortDateString()</p>
          <button class="btn btn-danger" style="margin-left:10%" onclick="deleteAanvraag(@aanvraag.Key.FilmId, this.parentNode.parentNode)">Verwijderen</button>
       </li>
