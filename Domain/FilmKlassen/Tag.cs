@@ -13,6 +13,11 @@ namespace BL.Domain.FilmKlassen
         public int ID { get; set; }
         public string Naam { get; set; }
 
-        public List<Film> Films { get; set; }
+        public virtual List<Film> Films { get; set; }
+
+        public override string ToString()
+        {
+            return Naam;
+        }
     }
 }

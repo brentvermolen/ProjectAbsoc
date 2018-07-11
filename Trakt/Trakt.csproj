@@ -359,6 +359,7 @@
     <Content Include="Views\Admin\Archief.cshtml" />
     <Content Include="Views\Home\Zoeken.cshtml" />
     <Content Include="Views\Admin\_Aanvragen.cshtml" />
+    <Content Include="Views\Films\Tag.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

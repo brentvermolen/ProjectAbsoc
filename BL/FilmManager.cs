@@ -1,4 +1,5 @@
 ﻿using BL.Domain;
+using BL.Domain.FilmKlassen;
 using DAL;
 using System;
 using System.Collections.Generic;
@@ -71,6 +72,11 @@ namespace BL
         public void RemoveAanvraag(int id)
         {
             repo.DeleteAanvraag(id);
+        }
+
+        public Tag ReadTag(int id)
+        {
+            return repo.GetTag(id);
         }
     }
 }

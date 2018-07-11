@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using BL.Domain;
+using BL.Domain.FilmKlassen;
 
 namespace DAL
 {
@@ -61,7 +62,12 @@ namespace DAL
         {
             return ctx.Aanvragen.OrderByDescending(a => a.AangevraagOp).ToList();
         }
-        
+
+        public Tag GetTag(int id)
+        {
+            return ctx.Tags.Find(id);
+        }
+
         public void DeleteAanvraag(int id)
         {
             ctx.Aanvragen.Remove(ctx.Aanvragen.Find(id));

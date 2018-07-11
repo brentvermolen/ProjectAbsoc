@@ -1,5 +1,6 @@
 ﻿using BL.Domain;
 using BL.Domain.ActeurKlassen;
+using BL.Domain.FilmKlassen;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -105,6 +106,7 @@ namespace DAL
         public DbSet<Gemeente> Gemeentes { get; set; }
 
         public DbSet<Film> Films { get; set; }
+        public DbSet<Tag> Tags { get; set; }
         public DbSet<Serie> Series { get; set; }
         public DbSet<Aflevering> Afleveringen { get; set; }
         public DbSet<Acteur> Acteurs { get; set; }

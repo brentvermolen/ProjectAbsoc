@@ -38,5 +38,21 @@ namespace BL.Domain
 
             return false;
         }
+
+        public string ContainsFilms()
+        {
+            if (Films == null)
+            {
+                return "";
+            }
+
+            List<string> films = new List<string>();
+            foreach(var film in Films.OrderBy(f => f.ReleaseDate))
+            {
+                films.Add(film.Naam);
+            }
+
+            return string.Join(", ", films);
+        }
     }
 }

@@ -15,15 +15,15 @@
 <div class="row">
    <div class="col-md-4" style="padding-right: 20px;border-right:solid 1px">
       @{
-         var source = "";
-         if (Model.Aflevering.ImagePath == null)
-         {
-            source = "/Content/Images/no_image.png";
-         }
-         else
-         {
-            source += Model.Aflevering.ImagePath;
-         }
+          var source = "";
+          if (Model.Aflevering.ImagePath == null)
+          {
+             source = "/Content/Images/no_image.png";
+          }
+          else
+          {
+             source += Model.Aflevering.ImagePath;
+          }
       }
       <img src="@source" class="image" alt="@Model.Aflevering.Serie.Naam" style="width:100%;margin-bottom:10px" />      @{
          source = "";

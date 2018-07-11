@@ -300,6 +300,13 @@ namespace Trakt.Controllers
             return View("Index", model);
         }
 
+        public ActionResult Tag(int id)
+        {
+            var tag = FilmMng.ReadTag(id);
+
+            return View(tag);
+        }
+
         public ActionResult NietOpArchief()
         {
             var gebruiker = GebruikerMng.GetGebruiker(int.Parse(User.Identity.GetUserId()));

@@ -1,0 +1,41 @@
+﻿@model BL.Domain.FilmKlassen.Tag
+
+@{
+    ViewBag.Title = Model.Naam + " - Tag";
+}
+
+<h1>@Model.Naam</h1>
+<h4>@Model.Films.Count Films</h4>
+<hr />
+<div class="row">
+      @foreach (var film in Model.Films.OrderBy(f => f.ReleaseDate))
+      {
+         <div class="col-sm-3 col-xs-6 poster">
+            @{ 
+                var url = Url.Action("DetailsAndere", "Films", new { id = film.ID });
+
+                if (film.Duur != -1)
+                {
+                   url = Url.Action("Details", "Films", new { id = film.ID });
+                }
+            }
+            <a href="@url" title="@film.Naam">
+               @{
+                   var src = "https://image.tmdb.org/t/p/w300/";
+                   if (film.PosterPath == null)
+                   {
+                      src = "/Content/Images/no_image.png";
+                   }
+                   else
+                   {
+                      src += film.PosterPath;
+                   }
+               }
+               <img src="@src" class="image" onerror="this.src='/Content/Images/no_image.png'" alt="@film.Naam" style="max-width:100%; height:350px" />
+               <div class="overlayPoster">
+                  <div class="posterOverlayContent">@film.Naam<br />@film.ReleaseDate</div>
+               </div>
+            </a>
+         </div>
+      }
+</div>
