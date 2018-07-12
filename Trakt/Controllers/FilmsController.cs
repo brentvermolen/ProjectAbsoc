@@ -1,6 +1,7 @@
 ﻿using BL;
 using BL.Domain;
 using BL.Domain.ActeurKlassen;
+using BL.Domain.FilmKlassen;
 using Microsoft.AspNet.Identity;
 using Newtonsoft.Json.Linq;
 using System;
@@ -335,6 +336,33 @@ namespace Trakt.Controllers
             FilmMng.RemoveFilm(model.ID);
 
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult VerwijderTag(int tag)
+        {
+            FilmMng.RemoveTag(tag);
+
+            return RedirectToAction("Index");
+        }
+        
+        [HttpPost]
+        public ActionResult TagToevoegen(string tag, int film)
+        {
+            Film f = FilmMng.ReadFilm(film);
+            
+            if (f == null)
+            {
+                return RedirectToAction("Details", "Films", new { id = film });
+            }
+        
+            Tag t = FilmMng.ReadTag(tag);
+            
+            f.Tags.Add(t);
+            
+            FilmMng.ChangeFilm(f);
+            
+            return RedirectToAction("Details", "Films", new { id = film });
         }
     }
 }

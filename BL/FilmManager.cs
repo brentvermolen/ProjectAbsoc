@@ -78,5 +78,15 @@ namespace BL
         {
             return repo.GetTag(id);
         }
+
+        public Tag ReadTag(string tag)
+        {
+            return repo.GetTag(tag);
+        }
+
+        public void RemoveTag(int tag)
+        {
+            repo.DeleteTag(tag);
+        }
     }
 }

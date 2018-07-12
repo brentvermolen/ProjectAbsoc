@@ -63,6 +63,36 @@ namespace DAL
             return ctx.Aanvragen.OrderByDescending(a => a.AangevraagOp).ToList();
         }
 
+        public Tag GetTag(string tag)
+        {
+            Tag t = ctx.Tags.FirstOrDefault(f => f.Naam.ToLower() == tag.ToLower());
+
+            if (t == null)
+            {
+                t = CreateTag(tag);
+            }
+
+            return t;
+        }
+
+        public Tag CreateTag(string tag)
+        {
+            Tag t = new Tag()
+            {
+                Naam = tag
+            };
+            
+            ctx.Tags.Add(t);
+            ctx.SaveChanges();
+
+            return t;
+        }
+
+        public void DeleteTag(int tag)
+        {
+            ctx.Tags.Remove(GetTag(tag));
+        }
+
         public Tag GetTag(int id)
         {
             return ctx.Tags.Find(id);

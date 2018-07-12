@@ -3,7 +3,11 @@
 @{
     ViewBag.Title = Model.Naam + " - Tag";
 }
-
+@using(Html.BeginForm("VerwijderTag", "Films", FormMethod.Post))
+{
+    <input type="hidden" value="@Model.ID" id="tag" name="tag" />
+    <input type="submit" class="btn btn-danger" value="Verwijder tag" style="position: absolute;right: 5%;">       
+}
 <h1>@Model.Naam</h1>
 <h4>@Model.Films.Count Films</h4>
 <hr />

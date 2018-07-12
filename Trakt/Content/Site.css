@@ -46,7 +46,8 @@ textarea {
 }
 
    .poster img {
-      margin: 1%;
+      /*margin: 1%;*/
+      margin-bottom:25px;
    }
 
    .poster a {
@@ -55,6 +56,14 @@ textarea {
 
    .poster h4 {
       text-align: center;
+   }
+
+   .poster .overlayPoster {
+      bottom: 10px;
+   }
+
+   .overlayZichtbaar {
+      opacity: 1!important;
    }
 
 .image {
@@ -70,12 +79,11 @@ textarea {
    transition: .5s ease;
    opacity: 0;
    position: absolute;
-   top: 80%;
-   left: 50%;
-   width: 80%;
-   transform: translate(-50%, -50%);
-   -ms-transform: translate(-50%, -50%);
+   bottom: -15px;
+   left: 0;
+   padding: 15px;
    text-align: center;
+   width: 100%
 }
 
 .posterhovered {
@@ -87,7 +95,7 @@ textarea {
 }
 
 .poster:hover .image {
-   opacity: 0.3;
+   /*opacity: 0.3;*/
 }
 
 .poster:hover .overlayPoster {
@@ -95,9 +103,10 @@ textarea {
 }
 
 .posterOverlayContent {
-   background-color: #4CAF50;
+   background-color: black;
+   opacity: .9;
    color: white;
-   font-size: 16px;
+   font-size: 20px;
    padding: 5px;
    white-space: normal;
 }
