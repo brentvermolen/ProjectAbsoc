@@ -100,6 +100,7 @@
                   @using(Html.BeginForm("TagToevoegen", "Films", FormMethod.Post))
                   {
                      <input type="text" placeholder="tag" name="tag" id="tag" style="padding: 3px;">
+                     <input type="hidden" name="film" id="film" value="@Model.Film.ID" />
                      <input type="submit" value="Tag toevoegen" class="btn btn-success" style="border-radius: 15px;">
                   }
                </div>
