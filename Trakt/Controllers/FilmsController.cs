@@ -336,6 +336,14 @@ namespace Trakt.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public ActionResult VerwijderTag(int tag)
+        {
+            FilmMng.RemoveTag(tag);
+
+            return RedirectToAction("Index");
+        }
         
         [HttpPost]
         public ActionResult TagToevoegen(string tag, int film)
