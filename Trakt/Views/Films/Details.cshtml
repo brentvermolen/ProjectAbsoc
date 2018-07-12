@@ -88,10 +88,16 @@
                </div>
             </a>
             <div class="col-md-5">
-               <h3>Tags</h3>
-               @foreach (var tag in Model.Film.Tags.OrderByDescending(t => t.Films.Count))
+               @if (Model.Film.Tags != null)
                {
-                  <h4><a href="@Url.Action("Tag", "Films", new { id = tag.ID })">@tag.Naam</a></h4>
+                  if (Model.Film.Tags.Count > 0)
+                  {
+                     <h3>Tags</h3>
+                     foreach (var tag in Model.Film.Tags.OrderByDescending(t => t.Films.Count))
+                     {
+                        <h4><a href="@Url.Action("Tag", "Films", new { id = tag.ID })">@tag.Naam</a></h4>
+                     }
+                  }
                }
             </div>
          </div>
