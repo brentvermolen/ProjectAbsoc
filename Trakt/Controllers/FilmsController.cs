@@ -344,7 +344,7 @@ namespace Trakt.Controllers
             
             if (f == null)
             {
-                return NotFound();
+                return RedirectToAction("Details", "Films", new { id = film });
             }
         
             Tag t = FilmMng.ReadTag(tag);
@@ -363,7 +363,7 @@ namespace Trakt.Controllers
             
             FilmMng.ChangeFilm(f);
             
-            return Ok();
+            return RedirectToAction("Details", "Films", new { id = film });
         }
     }
 }
