@@ -34,7 +34,7 @@
                                  }
                               }
                               <img src="@source" class="image" alt="@acteur.Naam" onerror="this.src='/Content/Images/no_image.png'" style="max-width:100%; height:400px" />
-                              <div class="overlayPoster">
+                              <div class="overlayPoster overlayZichtbaar">
                                  <div class="posterOverlayContent">@acteur.Naam</div>
                               </div>
                            </a>
@@ -81,7 +81,12 @@
                               }
                               <img src="@source" class="image" alt="@film.Naam" onerror="this.src='/Content/Images/no_image.png'" style="max-width:100%; height:400px" />
                               <div class="overlayPoster">
-                                 <div class="posterOverlayContent">@film.Naam<br />@film.ReleaseDate</div>
+                                 <div class="posterOverlayContent">
+                                 @if (source.StartsWith("/"))
+                                 {
+                                     @film.Naam<br />
+                                 }
+                                 @DateTime.Parse(film.ReleaseDate).ToShortDateString()</div>
                               </div>
                            </a>
                         </div>

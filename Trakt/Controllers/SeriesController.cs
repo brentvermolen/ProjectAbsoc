@@ -116,7 +116,7 @@ namespace Trakt.Controllers
                 var json = JObject.Parse(result);
 
                 model.Serie = json.SelectToken("data").ToObject<Serie>();
-                model.Serie.BannerPath = "https://thetvdb.com/banners" + (string)json.SelectToken("data.banner");
+                model.Serie.BannerPath = "https://thetvdb.com/banners/" + (string)json.SelectToken("data.banner");
             }
 
             httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.thetvdb.com/series/" + model.Serie.ID + "/images/query?keyType=poster");
@@ -137,7 +137,7 @@ namespace Trakt.Controllers
 
                     try
                     {
-                        model.Serie.PosterPath = "https://thetvdb.com/banners" + (string)json.SelectToken("data[0].fileName");
+                        model.Serie.PosterPath = "https://thetvdb.com/banners/" + (string)json.SelectToken("data[0].fileName");
                     }
                     catch (Exception) { }
                 }
@@ -169,7 +169,7 @@ namespace Trakt.Controllers
                         {
                             ID = acteurId,
                             Naam = (string)acteur.SelectToken("name"),
-                            ImagePath = "https://thetvdb.com/banners" + (string)acteur.SelectToken("image")
+                            ImagePath = "https://thetvdb.com/banners/" + (string)acteur.SelectToken("image")
                         };
                     }
 
