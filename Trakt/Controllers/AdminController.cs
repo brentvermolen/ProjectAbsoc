@@ -193,8 +193,19 @@ namespace Trakt.Controllers
                         }
 
                         try
-                        {
-                            film.TrailerId = (string)obj.SelectToken("videos.results[0].key");
+                        {                            
+                            foreach(var video in obj.SelectToken("videos.results"))
+                            {
+                                if ((string)video.SelectToken("site").Equals("YouTube"))
+                                {
+                                    film.TrailerId = (string)video.SelectToken("key");
+
+                                    if ((string)video.SelectToken("type").Equals("Trailer"))
+                                    {
+                                        break;
+                                    }
+                                }                                
+                            }
                         }
                         catch (Exception) { }
                         film.Toegevoegd = DateTime.Today;
@@ -204,10 +215,30 @@ namespace Trakt.Controllers
 
                         json = client.DownloadString(request);
                         obj = JObject.Parse(json);
+                        
+                        foreach(var genre in obj.SelectToken("genres"))
+                        {
+                            Tag tag = FilmMng.ReadTag((string)genre.SelectToken("name"));
+                            
+                            film.Tags.Add(tag);
+                        }
 
                         string nlOmsch = (string)obj.SelectToken("overview");
                         string nlTagline = (string)obj.SelectToken("tagline");
-                        string nlTrailer = (string)obj.SelectToken("videos.results[0].key");
+                        string nlTrailer = null;
+                                                                        
+                        foreach(var video in obj.SelectToken("videos.results"))
+                        {
+                            if ((string)video.SelectToken("site").Equals("YouTube"))
+                            {
+                                nlTrailer = (string)video.SelectToken("key");
+
+                                if ((string)video.SelectToken("type").Equals("Trailer"))
+                                {
+                                    break;
+                                }
+                            }                                
+                        }
 
                         if (nlOmsch != null)
                         {
