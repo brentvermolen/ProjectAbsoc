@@ -46,7 +46,7 @@ textarea {
 }
 
    .poster img {
-      margin: 1%;
+      /*margin: 1%;*/
    }
 
    .poster a {
@@ -70,11 +70,10 @@ textarea {
    transition: .5s ease;
    opacity: 0;
    position: absolute;
-   top: 80%;
-   left: 50%;
-   width: 80%;
-   transform: translate(-50%, -50%);
-   -ms-transform: translate(-50%, -50%);
+   bottom: 40px;
+   left: 0;
+   height: 40px;
+   padding: 15px;
    text-align: center;
 }
 
@@ -87,7 +86,7 @@ textarea {
 }
 
 .poster:hover .image {
-   opacity: 0.3;
+   /*opacity: 0.3;*/
 }
 
 .poster:hover .overlayPoster {
