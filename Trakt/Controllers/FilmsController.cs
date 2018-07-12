@@ -348,12 +348,6 @@ namespace Trakt.Controllers
             }
         
             Tag t = FilmMng.ReadTag(tag);
-            
-            if (t == null)
-            {
-                t = FilmMng.AddTag(tag);            
-                t.Films = new List<Film>();
-            }
 
             if (f.Tags == null)
             {
