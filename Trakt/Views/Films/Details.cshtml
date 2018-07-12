@@ -87,12 +87,20 @@
                   </div>
                </div>
             </a>
-            <div class="col-md-5">
+            <div class="col-md-5" style="height:175px; margin: 5px; border-radius:15px; border: solid 1px;">
                <h3>Tags</h3>
                @foreach (var tag in Model.Film.Tags.OrderByDescending(t => t.Films.Count))
                {
                   <h4><a href="@Url.Action("Tag", "Films", new { id = tag.ID })">@tag.Naam</a></h4>
                }
+      
+               <div style="position: absolute; bottom: 0; margin: 5px 0;">
+                  @using(Html.BeginForm("TagToevoegen", "Films", HttpForm.Post))
+                  {
+                     <input type="text" placeholder="tag" name="tag" id="tag" style="padding: 3px;">
+                     <input type="submit" value="Tag toevoegen" class="btn btn-success" style="border-radius: 15px;">
+                  }
+               </div>
             </div>
          </div>
       }
