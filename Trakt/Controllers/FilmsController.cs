@@ -336,5 +336,34 @@ namespace Trakt.Controllers
 
             return RedirectToAction("Index");
         }
+        
+        [HttpPost]
+        public ActionResult TagToevoegen(string tag, int film)
+        {
+            Film f = FilmMng.ReadFilm(film);
+            
+            if (f == null)
+            {
+                return NotFound();
+            }
+        
+            Tag t = FilmMng.ReadTag(tag);
+            
+            if (t == null)
+            {
+                t = FilmMng.AddTag(tag);            
+                t.Films = new List<Film>();
+            }
+
+            if (f.Tags == null)
+            {
+                f.Tags = new List<Tag>();
+            }
+            f.Tags.Add(t);
+            
+            FilmMng.ChangeFilm(f);
+            
+            return Ok();
+        }
     }
 }
