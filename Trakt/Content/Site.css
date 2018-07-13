@@ -3,6 +3,14 @@
    /*padding-bottom: 20px;*/
 }
 
+.acteurNaam {
+   font-weight: bold;
+}
+
+.acteurKarakter {
+   font-size: large;
+}
+
 .padding0 {
    padding: 0;
 }
