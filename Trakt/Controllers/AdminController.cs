@@ -564,7 +564,7 @@ namespace Trakt.Controllers
 
                     if (aflevering == null)
                     {
-                        aflevering = afl.ToObject<Aflevering>();
+                        aflevering = afl.ToObject<Aflevering>(new JsonSerializer() { NullValueHandling = NullValueHandling.Ignore });
                         aflevering.Toegevoegd = DateTime.Today;
                         aflevering.ImagePath = "http://www.thetvdb.com/banners/episodes/" + serie + "/" + aflevering.ID + ".jpg";
                         aflevering.SerieID = int.Parse(serie);
