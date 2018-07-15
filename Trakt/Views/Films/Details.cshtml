@@ -64,15 +64,19 @@
    <div class="col-md-8" style="padding-left: 20px;border-left:solid 1px">
       <p><strong>Omschrijving</strong></p>
       <p>@Model.Film.Omschrijving</p>
-      <p class="col-sm-6" style="text-align:center"><strong>@Model.Film.ReleaseDate</strong></p>
+      @try
+      {
+         <p class="col-sm-6" style="text-align:center"><strong>@DateTime.Parse(Model.Film.ReleaseDate).ToString("dd MMMM yyyy")</strong></p>
+      }
+      catch (Exception) { }
       <p class="col-sm-6" style="text-align:center"><strong>@Model.Film.Duur Min.</strong></p>
       <br />
-      <hr />   
+      <hr />
       <div class="row">
-      @if (Model.Film.CollectieID != 0)
-      {
+         @if (Model.Film.CollectieID != 0)
+         {
             source = "https://image.tmdb.org/t/p/w300" + Model.Film.Collectie.PosterPath;
-            
+
             <a href="@Url.Action("Details", "Collecties", new { id = Model.Film.CollectieID })">
                <div class="col-md-6" style="height: 175px;background-image: url('@source');background-size: cover;border-radius: 15px;margin: 5px;">
                   <div style="background-color: rgba(0,0,0,.6);color: white;position: absolute;height: 100%;width: 100%;left: 0;border-radius: 15px;padding: 25px;">
@@ -88,31 +92,31 @@
                      }
                   </div>
                </div>
-            </a>            
+            </a>
          }
          @if (Model.Film.Tags != null)
-         {  
+         {
             if (Model.Film.Tags.Count > 0)
             {
                <div class="col-md-5" style="height:175px; margin: 5px; border-radius:15px; border: solid 1px;">
                   <h3>Tags</h3>
                   @foreach (var tag in Model.Film.Tags.OrderByDescending(t => t.Films.Count))
                   {
-                     var rand = new Random(); 
-                     var font = rand.Next(16,24) + "px";
+                     var rand = new Random();
+                     var font = rand.Next(16, 24) + "px";
 
                      <span style="font-size:@font"><a href="@Url.Action("Tag", "Films", new { id = tag.ID })">@tag.Naam</a></span>
                   }
 
                   <div style="position: absolute; bottom: 0; margin: 5px 0;">
-                     @using(Html.BeginForm("TagToevoegen", "Films", FormMethod.Post))
+                     @using (Html.BeginForm("TagToevoegen", "Films", FormMethod.Post))
                      {
                         <input type="text" placeholder="tag" name="tag" id="tag" style="padding: 3px;">
                         <input type="hidden" name="film" id="film" value="@Model.Film.ID" />
                         <input type="submit" value="Tag toevoegen" class="btn btn-success" style="border-radius: 15px;">
                      }
                   </div>
-               </div>  
+               </div>
             }
          }
       </div>
@@ -219,7 +223,7 @@
                <div class="overlayPoster">
                   <div class="posterOverlayContent">
                   <i class="glyphicon glyphicon-calendar"></i>
-                  @DateTime.Parse(film.ReleaseDate).ToShortDateString()</div>
+                  @DateTime.Parse(film.ReleaseDate).ToString("dd/MM/yyyy")</div>
                </div>
             </a>
          </div>

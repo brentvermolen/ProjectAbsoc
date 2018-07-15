@@ -184,9 +184,19 @@ namespace Trakt.Controllers
                 try
                 {
                     film.CollectieID = (int)obj.SelectToken("belongs_to_collection.id");
-                    film.Collectie = obj.SelectToken("belongs_to_collection").ToObject<Collectie>(new Newtonsoft.Json.JsonSerializer() { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
                 }
                 catch (Exception) { film.CollectieID = 0; }
+                
+                var collectie = CollectieMng.ReadCollectie(film.CollectieID);
+                if (collectie == null)
+                {
+                    film.Collectie = obj.SelectToken("belongs_to_collection").ToObject<Collectie>(new Newtonsoft.Json.JsonSerializer() { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
+                    film.PosterPath = obj.SelectToken("belongs_to_collection.poster_path").ToObject<string>(new Newtonsoft.Json.JsonSerializer() { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
+                }
+                else
+                {
+                    film.Collectie = collectie;
+                }
 
                 try
                 {

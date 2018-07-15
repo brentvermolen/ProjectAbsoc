@@ -216,7 +216,9 @@ namespace Trakt.Controllers
 
                         json = client.DownloadString(request);
                         obj = JObject.Parse(json);
-                        
+
+                        film.Tags = new List<Tag>();
+
                         foreach(var genre in obj.SelectToken("genres"))
                         {
                             Tag tag = FilmMng.ReadTag((string)genre.SelectToken("name"));
