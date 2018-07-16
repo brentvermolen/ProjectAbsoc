@@ -7,7 +7,7 @@
    {
       <li class="list-group-item" style="height:70px;">
          <p style="float:left;">@aanvraag.Value.Naam (@aanvraag.Value.ReleaseDate)<br />Door @aanvraag.Key.AangevraagdDoor.UserName Op @aanvraag.Key.AangevraagOp.Value.ToShortDateString()</p>
-         <button class="btn btn-danger" style="margin-left:10%" onclick="deleteAanvraag(@aanvraag.Key.FilmId, this.parentNode.parentNode)">Verwijderen</button>
+         <button class="btn btn-danger" style="margin-left:10%" onclick="deleteAanvraag(@aanvraag.Key.FilmId, this.parentNode)">Verwijderen</button>
       </li>
    }
 </ul>
