@@ -191,7 +191,6 @@ namespace Trakt.Controllers
                 if (collectie == null)
                 {
                     film.Collectie = obj.SelectToken("belongs_to_collection").ToObject<Collectie>(new Newtonsoft.Json.JsonSerializer() { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
-                    film.PosterPath = obj.SelectToken("belongs_to_collection.poster_path").ToObject<string>(new Newtonsoft.Json.JsonSerializer() { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
                 }
                 else
                 {
