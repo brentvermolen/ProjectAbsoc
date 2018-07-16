@@ -196,14 +196,6 @@ namespace Trakt.Controllers
                 {
                     film.Collectie = collectie;
                 }
-                
-                film.Tags = new List<Tag>();
-                foreach(var genre in obj.SelectToken("genres"))
-                {
-                    Tag tag = FilmMng.ReadTag((string)genre.SelectToken("name"));
-                            
-                    film.Tags.Add(tag);
-                }
 
                 try
                 {
@@ -241,6 +233,14 @@ namespace Trakt.Controllers
                     {
                         film.TrailerId = nlTrailer;
                     }
+                }
+                
+                film.Tags = new List<Tag>();
+                foreach(var genre in obj.SelectToken("genres"))
+                {
+                    Tag tag = FilmMng.ReadTag((string)genre.SelectToken("name"));
+                            
+                    film.Tags.Add(tag);
                 }
 
                 using (WebClient clientActeurs = new WebClient())
