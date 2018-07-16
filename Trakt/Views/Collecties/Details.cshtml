@@ -58,7 +58,7 @@
                         DateTime result;
                         if (DateTime.TryParse(film.ReleaseDate, out result))
                         {
-                           <span>@result.ToShortDateString()</span>
+                           <span>@result.ToString("dd/MM/yyyy")</span>
                         }
                         else
                         {
