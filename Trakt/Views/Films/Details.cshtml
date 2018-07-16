@@ -104,7 +104,7 @@
                   <div style="max-width: 95%;max-height: 95%;overflow: overlay;">
                   @foreach (var tag in Model.Film.Tags.OrderByDescending(t => t.Films.Count))
                   {
-                     var font = rand.Next(16, 24) + "px";
+                     var font = rand.Next(16, 50) + "px";
 
                      <span style="font-size:@font"><a href="@Url.Action("Tag", "Films", new { id = tag.ID })"> @tag.Naam</a></span>
                   }
