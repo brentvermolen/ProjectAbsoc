@@ -96,20 +96,21 @@
          }
          @if (Model.Film.Tags != null)
          {
+            var rand = new Random();
+            
             if (Model.Film.Tags.Count > 0)
             {
                <div class="col-md-5" style="height:175px; margin: 5px; border-radius:15px; border: solid 1px;">
                   <div style="max-width: 95%;max-height: 95%;overflow: overlay;">
                   @foreach (var tag in Model.Film.Tags.OrderByDescending(t => t.Films.Count))
                   {
-                     var rand = new Random();
                      var font = rand.Next(16, 24) + "px";
 
                      <span style="font-size:@font"><a href="@Url.Action("Tag", "Films", new { id = tag.ID })"> @tag.Naam</a></span>
                   }
                   </div>
 
-                  <div style="position: absolute; padding: 5px; bottom: 0px; left: 0px; border-radius: 15px; width: 100%; background-color: rgba(0, 0, 0, 0.3); display:none;">
+                  <div id="tagToevoegen" style="position: absolute; padding: 5px; bottom: 0px; left: 0px; border-radius: 15px; width: 100%; background-color: rgba(0, 0, 0, 0.3); display:none;">
                      @using (Html.BeginForm("TagToevoegen", "Films", FormMethod.Post))
                      {
                         <input type="text" placeholder="tag" name="tag" id="tag" style="padding: 3px;">
@@ -117,7 +118,7 @@
                         <input type="submit" value="Tag toevoegen" class="btn btn-success" style="border-radius: 15px;">
                      }
                   </div>
-                     <button style="bottom:-25px; height: 25px; position: absolute; padding: 2px 8px; left: 50%;" onclick="$('#tagToevoegen').slideToggle();">+</button>
+                     <button class="btn btn-success" style="bottom:-25px; height: 25px; position: absolute; padding: 2px 8px; left: 50%;" onclick="$('#tagToevoegen').slideToggle();">+</button>
                </div>
             }
          }
