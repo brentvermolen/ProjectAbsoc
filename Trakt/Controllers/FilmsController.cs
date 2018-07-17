@@ -155,14 +155,14 @@ namespace Trakt.Controllers
             List<Film> gelijkaardige = new List<Film>();
             var acteurs = new Dictionary<Acteur, bool>();
 
-            using (WebClient client = new WebClient())
-            {
-                client.Encoding = Encoding.UTF8;
-                var json = client.DownloadString(string.Format("https://api.themoviedb.org/3/movie/{0}/similar?api_key={1}", id, ApiKey.MovieDB));
-                JObject obj = JObject.Parse(json);
+            //using (WebClient client = new WebClient())
+            //{
+            //    client.Encoding = Encoding.UTF8;
+            //    var json = client.DownloadString(string.Format("https://api.themoviedb.org/3/movie/{0}/similar?api_key={1}", id, ApiKey.MovieDB));
+            //    JObject obj = JObject.Parse(json);
 
-                gelijkaardige = obj.SelectToken("results").ToObject<List<Film>>();
-            }
+            //    gelijkaardige = obj.SelectToken("results").ToObject<List<Film>>();
+            //}
 
             foreach (Film f in gelijkaardige)
             {
@@ -172,7 +172,7 @@ namespace Trakt.Controllers
                 }
             }
 
-            string request = string.Format("https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=en-EN&append_to_response=videos", id, ApiKey.MovieDB);
+            string request = string.Format("https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=en-EN&append_to_response=videos,similar", id, ApiKey.MovieDB);
 
             Film film;
             using (WebClient client = new WebClient())
@@ -181,6 +181,9 @@ namespace Trakt.Controllers
                 var json = client.DownloadString(request);
                 JObject obj = JObject.Parse(json);
                 film = obj.ToObject<Film>(new Newtonsoft.Json.JsonSerializer() { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
+            
+                gelijkaardige = obj.SelectToken("similar.results").ToObject<List<Film>>(new Newtonsoft.Json.JsonSerializer() { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
+             
                 try
                 {
                     film.CollectieID = (int)obj.SelectToken("belongs_to_collection.id");
