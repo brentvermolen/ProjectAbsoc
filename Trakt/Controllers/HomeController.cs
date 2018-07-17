@@ -143,6 +143,15 @@ namespace Absoc.Controllers
                         if (FilmMng.ReadFilm(f.ID) == null)
                         {
                             f.Duur = -1;
+
+                            if (FilmMng.IsAangevraagd(f.ID))
+                            {
+                                f.Tagline = "Yes";
+                            }
+                            else
+                            {
+                                f.Tagline = "No";
+                            }
                         }
 
                         films.Add(f);

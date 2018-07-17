@@ -91,15 +91,26 @@
                                     }
                                     @if (DateTime.TryParse(film.ReleaseDate, out result))
                                     {
-                                        <i class="glyphicon glyphicon-calendar"></i>
+                                       <i class="glyphicon glyphicon-calendar"></i>
                                        <span>@result.ToShortDateString()</span>
+                                       if (film.Duur == -1)
+                                       {
+                                          if (film.Tagline.Equals("No")) 
+                                          {
+                                             <button style="float: right;padding: 3px 8px;" class="btn btn-info">+</button>
+                                          }
+                                          else if (film.Tagline.Equals("Yes"))
+                                          {
+                                             <button style="float: right;padding: 3px 8px;" class="btn btn-success" disabled="disabled">&#10004;</button>
+                                          }
+                                       }
                                     }
                                  </div>
                               </div>
                            </a>
                         </div>
-                              }
-                  /**/
+                     }
+                     /**/
                   </div>
                </div>
             </div>
