@@ -236,11 +236,15 @@
 
 <script>
    function vraagFilmAan(film, elem) {
+      $(elem).attr("disabled", "disabled");
+   
       $.ajax("/api/Films/GetFilmAanvraag/" + film, {
          type: 'GET',
          dataType: "json"
       }).done(function () {
          elem.outerHTML = '<button class="btn btn-success col-xs-4" disabled>Film aangevraagd</button>';
+      }).fail(function () {
+         $(elem).removeAttr("disabled");
       });
    }
 </script>
