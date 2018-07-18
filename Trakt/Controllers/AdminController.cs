@@ -209,7 +209,7 @@ namespace Trakt.Controllers
                             }
                         }
                         catch (Exception) { }
-                        film.Toegevoegd = DateTime.Today;
+                        film.Toegevoegd = DateTime.Now;
 
                         request = string.Format("https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=nl-BE&append_to_response=videos",
                            intId, ApiKey.MovieDB);
