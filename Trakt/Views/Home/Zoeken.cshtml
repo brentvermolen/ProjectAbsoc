@@ -92,7 +92,7 @@
                                     @if (DateTime.TryParse(film.ReleaseDate, out result))
                                     {
                                        <i class="glyphicon glyphicon-calendar"></i>
-                                       <span>@result.ToShortDateString()</span>
+                                       <span>@result.ToString("dd/MM/yyyy")</span>
                                        if (film.Duur == -1)
                                        {
                                           if (film.Tagline.Equals("No")) 
@@ -206,11 +206,15 @@
 
 <script>
    function vraagFilmAan(film, elem) {
+      $(elem).attr("disabled", "disabled");
+   
       $.ajax("/api/Films/GetFilmAanvraag/" + film, {
          type: 'GET',
          dataType: "json"
       }).done(function () {
          elem.outerHTML = '<button style="float: right;padding: 3px 8px;" class="btn btn-success" disabled="disabled">&#10004;</button>';
+      }).fail(function () {
+         $(elem).removeAttr("disabled");
       });
    }
 </script>
