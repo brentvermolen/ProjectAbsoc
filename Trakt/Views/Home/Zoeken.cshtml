@@ -97,7 +97,7 @@
                                        {
                                           if (film.Tagline.Equals("No")) 
                                           {
-                                             <button style="float: right;padding: 3px 8px;" class="btn btn-info">+</button>
+                                             <button style="float: right;padding: 3px 8px;" class="btn btn-info" onclick="vraagFilmAan(@film.ID, this)">+</button>
                                           }
                                           else if (film.Tagline.Equals("Yes"))
                                           {
@@ -203,3 +203,14 @@
       </div>
    </div>
 </div>
+
+<script>
+   function vraagFilmAan(film, elem) {
+      $.ajax("/api/Films/GetFilmAanvraag/" + film, {
+         type: 'GET',
+         dataType: "json"
+      }).done(function () {
+         elem.outerHTML = '<button style="float: right;padding: 3px 8px;" class="btn btn-success" disabled="disabled">&#10004;</button>';
+      });
+   }
+</script>
