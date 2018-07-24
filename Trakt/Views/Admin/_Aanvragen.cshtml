@@ -1,4 +1,4 @@
-﻿@model Trakt.Models.AdminViewModel
+@model Trakt.Models.AdminViewModel
 
 <h2>Aanvragen</h2>
 
@@ -6,7 +6,7 @@
    @foreach (var aanvraag in Model.Aanvragen)
    {
       <li class="list-group-item" style="height:70px;">
-         <p style="float:left;">@aanvraag.Value.Naam (@aanvraag.Value.ReleaseDate)<br />Door @aanvraag.Key.AangevraagdDoor.UserName Op @aanvraag.Key.AangevraagOp.Value.ToShortDateString()</p>
+         <p style="float:left;">@aanvraag.Value.Naam (@DateTime.Parse(aanvraag.Value.ReleaseDate).ToString("dd-MM-yyyy"))<br />Door @aanvraag.Key.AangevraagdDoor.UserName op @aanvraag.Key.AangevraagOp.Value.ToString("dd-MM-yyyy")</p>
          <button class="btn btn-danger" style="margin-left:10%" onclick="deleteAanvraag(@aanvraag.Key.FilmId, this.parentNode)">Verwijderen</button>
       </li>
    }
