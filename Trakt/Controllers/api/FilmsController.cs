@@ -51,5 +51,11 @@ namespace Trakt.Controllers.api
 
             return NotFound();
         }
+
+        [Route("~/api/Films/GetFilmAanvragen")]
+        public IHttpActionResult GetFilmAanvragen()
+        {
+            return(FilmMng.ReadAanvragen());
+        }
     }
 }
