@@ -1,6 +1,7 @@
 ﻿using BL;
 using BL.Domain;
 using Microsoft.AspNet.Identity;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +56,15 @@ namespace Trakt.Controllers.api
         [Route("~/api/Films/GetFilmAanvragen")]
         public IHttpActionResult GetFilmAanvragen()
         {
-            return(FilmMng.ReadAanvragen());
+            var aanvragen = FilmMng.ReadAanvragen().ToList();
+            var retList = new List<Aanvraag>();
+
+            foreach(var aanvraag in aanvragen)
+            {
+                retList.Add(new Aanvraag() { FilmId = aanvraag.FilmId, GebruikerId = aanvraag.GebruikerId, AangevraagOp = aanvraag.AangevraagOp });
+            }
+
+            return(Ok(retList));
         }
     }
 }

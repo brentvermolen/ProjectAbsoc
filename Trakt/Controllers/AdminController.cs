@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -68,10 +69,23 @@ namespace Trakt.Controllers
                 using (WebClient client = new WebClient())
                 {
                     client.Encoding = Encoding.UTF8;
-                    var json = client.DownloadString(string.Format("https://api.themoviedb.org/3/movie/{0}?api_key={1}", aanvraag.FilmId, ApiKey.MovieDB));
-                    var obj = JObject.Parse(json);
 
-                    model.Aanvragen.Add(aanvraag, obj.ToObject<Film>(new JsonSerializer() { NullValueHandling = NullValueHandling.Ignore }));
+                    var success = false;
+                    do
+                    {
+                        try
+                        {
+                            var json = client.DownloadString(string.Format("https://api.themoviedb.org/3/movie/{0}?api_key={1}", aanvraag.FilmId, ApiKey.MovieDB));
+                            var obj = JObject.Parse(json);
+
+                            model.Aanvragen.Add(aanvraag, obj.ToObject<Film>(new JsonSerializer() { NullValueHandling = NullValueHandling.Ignore }));
+                            success = true;
+                        }
+                        catch (Exception)
+                        {
+                            Thread.Sleep(1000);
+                        }
+                    } while (!success);
                 }
             }
 
