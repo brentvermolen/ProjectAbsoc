@@ -1,4 +1,4 @@
-﻿@model BL.Domain.FilmKlassen.Tag
+@model BL.Domain.FilmKlassen.Tag
 
 @{
     ViewBag.Title = Model.Naam + " - Tag";
@@ -12,7 +12,7 @@
 <h4>@Model.Films.Count Films</h4>
 <hr />
 <div class="row">
-      @foreach (var film in Model.Films.OrderBy(f => f.ReleaseDate))
+      @foreach (var film in Model.Films.OrderByDescending(f => f.ReleaseDate))
       {
          <div class="col-sm-3 col-xs-6 poster">
             @{ 
@@ -35,9 +35,9 @@
                       src += film.PosterPath;
                    }
                }
-               <img src="@src" class="image" onerror="this.src='/Content/Images/no_image.png'" alt="@film.Naam" style="max-width:100%; height:350px" />
+               <img src="@src" class="image" onerror="this.src='/Content/Images/no_image.png'" alt="@film.Naam" style="max-width:100%; height:400px" />
                <div class="overlayPoster">
-                  <div class="posterOverlayContent">@film.Naam<br />@film.ReleaseDate</div>
+                  <div class="posterOverlayContent">@film.ReleaseDate</div>
                </div>
             </a>
          </div>
