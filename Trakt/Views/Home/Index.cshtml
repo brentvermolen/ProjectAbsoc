@@ -9,7 +9,50 @@
    <p class="lead">Houd hier bij welke films en series er beschikbaar zijn voor op uw stick.</p>
    <p class="">U kan ook zien welke films en series er al op uw schijf staan in '@Html.ActionLink("Mijn Archieven", "Index", "Archieven")'<p>
 </div>
+<hr />
+<div class="row">
+   <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+     <!-- Indicators -->
+     <ol class="carousel-indicators">
+       @for(var i = 0; i < Model.Highlights.Count; i++)
+       {
+         var class = "";
+         if (i == 0)
+         {
+            class = "active";
+         }
+         <li data-target="#carousel-example-generic" data-slide-to="@i" class="@class"></li>
+       }
+     </ol>
 
+     <!-- Wrapper for slides -->
+     <div class="carousel-inner" role="listbox">
+     @foreach(var highlight in Model.Highlights)
+     {     
+         class = "";
+         if (i == 0)
+         {
+            class = "active";
+         }   
+         <div class="item @class">
+           <img src="@highlight.Banner" alt="@highlight.Naam">
+           <div class="carousel-caption">@highlight.Naam</div>
+         </div>
+      }
+     </div>
+
+     <!-- Controls -->
+     <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+       <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+       <span class="sr-only">Previous</span>
+     </a>
+     <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+       <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+       <span class="sr-only">Next</span>
+     </a>
+   </div>
+</div>
+<hr />
 @using (Html.BeginForm("Index", "Films", FormMethod.Post, new { @id = "laatstToegevoegd" }))
 {
    var model = new Trakt.Models.FilmViewModel()
