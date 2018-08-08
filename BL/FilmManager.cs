@@ -88,5 +88,10 @@ namespace BL
         {
             repo.DeleteTag(tag);
         }
+
+        public List<Tag> ReadTags()
+        {
+            return repo.GetTags();
+        }
     }
 }

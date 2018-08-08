@@ -1,0 +1,79 @@
+﻿@model List<BL.Domain.FilmKlassen.Tag>
+
+@{
+   ViewBag.Title = "Tags";
+}
+
+<h2>Tags</h2>
+
+<div class="row" style="padding-right:1%">
+   <p style="float:right">Resultaten: @Model.Count</p>
+</div>
+<div class="row">
+   @foreach (var tag in Model)
+   {
+      <div class="col-lg-3 col-md-4 col-md-offset-0 col-sm-5 col-xs-offset-1 poster">
+         <a href="@Url.Action("Tag", "Films", new { id = @tag.ID })" title="@tag.Naam">
+            @if (tag.Films.Count >= 4)
+            {
+               var source = "";
+               var gebruikteFotos = new List<int>();
+               Random rand = new Random();
+               var aantal = tag.Films.Count;
+
+               <div class="image">
+                  @for (int i = 0; i < 4; i++)
+                  {
+                     source = "https://image.tmdb.org/t/p/w300/";
+                     var index = 0;
+                     do
+                     {
+                        index = rand.Next(aantal);
+                     } while (gebruikteFotos.Contains(index));
+
+                     gebruikteFotos.Add(index);
+
+                     source += tag.Films[index].PosterPath;
+
+                     if (i != 3)
+                     {
+                        <img class="one_fourth" src="@source" alt="@tag.Films[index].Naam" style="margin-bottom: 0" />
+                     }
+                     else
+                     {
+                        <img class="one_fourth" src="@source" alt="@tag.Films[index].Naam" style="margin-bottom: 25px" />
+                     }
+                  }
+               </div>
+            }
+            else
+            {
+               var source = "https://image.tmdb.org/t/p/w300/";
+               var index = 0;
+
+               Random rand = new Random();
+               var aantal = tag.Films.Count;
+               index = rand.Next(aantal);
+
+               source += tag.Films[index].PosterPath;
+
+               <img class="image" src="@source" alt="@tag.Films[index].Naam" />
+            }
+
+            <div class="overlayPoster overlayZichtbaar">
+               <div class="posterOverlayContent">
+                  @tag.Naam
+               </div>
+            </div>
+         </a>
+      </div>
+   }
+</div>
+
+<style>
+   .one_fourth {
+      width: 50%;
+      height: auto;
+      float: left;
+   }
+</style>

@@ -328,6 +328,13 @@ namespace Trakt.Controllers
             return View(tag);
         }
 
+        public ActionResult Tags()
+        {
+            var tags = FilmMng.ReadTags().Where(t => t.Films.Count > 0).OrderBy(t => t.Naam).ToList();
+
+            return View(tags);
+        }
+
         public ActionResult NietOpArchief()
         {
             var gebruiker = GebruikerMng.GetGebruiker(int.Parse(User.Identity.GetUserId()));

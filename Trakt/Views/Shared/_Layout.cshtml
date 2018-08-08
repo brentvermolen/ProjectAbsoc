@@ -26,8 +26,14 @@
          </div>
          <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-               <li><a href="@Url.Action("Index","Films")">Films</a></li>
-               <li><a href="@Url.Action("Index","Collecties")">Collecties</a></li>
+               <li class="dropdown">
+                  <a class="dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Films <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                     <li><a href="@Url.Action("Index","Films")">Alle Films</a></li>
+                     <li><a href="@Url.Action("Index","Collecties")">Collecties</a></li>
+                     <li><a href="@Url.Action("Tags", "Films")">Tags</a></li>
+                  </ul>
+               </li>
                <li><a href="@Url.Action("Index","Series")">Series</a></li>
                <li><a href="@Url.Action("Index","Acteurs")">Acteurs</a></li>
             </ul>
@@ -44,8 +50,8 @@
                }
             </div>
             @*<form class="navbar-form navbar-right">
-         <input class="form-control" placeholder="Zoek..." type="text">
-      </form>*@
+                  <input class="form-control" placeholder="Zoek..." type="text">
+               </form>*@
          </div><!--/.nav-collapse -->
       </div>
    </nav>

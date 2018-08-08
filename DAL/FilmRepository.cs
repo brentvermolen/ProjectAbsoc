@@ -75,6 +75,11 @@ namespace DAL
             return t;
         }
 
+        public List<Tag> GetTags()
+        {
+            return ctx.Tags.ToList();
+        }
+
         public Tag CreateTag(string tag)
         {
             Tag t = new Tag()
