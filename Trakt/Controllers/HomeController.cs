@@ -12,6 +12,7 @@ using System.Text;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.IO;
+using Microsoft.AspNet.Identity;
 
 namespace Absoc.Controllers
 {
@@ -20,6 +21,7 @@ namespace Absoc.Controllers
     {
         private readonly FilmManager FilmMng = new FilmManager();
         private readonly SerieManager SerieMng = new SerieManager();
+        private readonly GebruikerManager GebruikerMng = new GebruikerManager();
 
         protected override void OnAuthorization(AuthorizationContext filterContext)
         {
@@ -35,7 +37,8 @@ namespace Absoc.Controllers
             {
                 LaatsteFilms = FilmMng.ReadFilms(FilmSortEnum.Toegevoegd, 12),
                 NieuwsteFilms = FilmMng.ReadFilms(FilmSortEnum.Release_Desc, 12),
-                Afleveringen = SerieMng.ReadAfleveringen(AfleveringSortEnum.Toegevoegd, 6)
+                Afleveringen = SerieMng.ReadAfleveringen(AfleveringSortEnum.Toegevoegd, 6),
+                Gebruiker = GebruikerMng.GetGebruiker(int.Parse(User.Identity.GetUserId()))
             };
 
             return View(model);

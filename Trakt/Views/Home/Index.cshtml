@@ -6,8 +6,11 @@
 
 <div class="jumbotron">
    <h1>Trakt</h1>
-   <p class="lead">Houd hier bij welke films en series er beschikbaar zijn voor op uw stick.</p>
-   <p class="">U kan ook zien welke films en series er al op uw schijf staan in '@Html.ActionLink("Mijn Archieven", "Index", "Archieven")'<p>
+   <p class="lead">Bekijk hier welke films en series er beschikbaar zijn.</p>
+   @if (Model.Gebruiker.Archief.Count > 0)
+   {
+      <p class="">U kan ook zien welke films en series er al op uw schijf staan in '@Html.ActionLink("Mijn Archieven", "Index", "Archieven")'</p>
+   }
 </div>
 <hr />
 @*<div class="row">
