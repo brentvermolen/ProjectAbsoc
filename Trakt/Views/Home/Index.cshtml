@@ -149,3 +149,23 @@
       </div>
    }
 </div>
+<hr />
+<h1>Random Films</h1>
+<div class="testimonial-group">
+   <div class="row">
+      @foreach (var film in Model.RandomFilms)
+      {
+         <div class="col-lg-3 col-md-4 col-md-offset-0 col-sm-5 col-sm-offset-1 poster">
+            <a href="@Url.Action("Details", "Films", new { id = @film.ID })" title="@film.Naam">
+               <img src="https://image.tmdb.org/t/p/w300/@film.PosterPath" onerror="this.src='/Content/Images/no_image.png'" class="image" alt="@film.Naam" style="max-width:100%; height:400px" />
+               <div class="overlayPoster">
+                  <div class="posterOverlayContent">
+                     <i class="glyphicon glyphicon-calendar"></i>
+                     @DateTime.Parse(film.ReleaseDate).ToString("dd/MM/yyyy")
+                  </div>
+               </div>
+            </a>
+         </div>
+      }
+   </div>
+</div>

@@ -33,8 +33,11 @@ namespace Absoc.Controllers
 
         public ActionResult Index()
         {
+            Random rnd = new Random();
+
             IndexViewModel model = new IndexViewModel()
             {
+                RandomFilms = FilmMng.ReadFilms().OrderBy(f => rnd.Next()).Take(12).ToList(),
                 LaatsteFilms = FilmMng.ReadFilms(FilmSortEnum.Toegevoegd, 12),
                 NieuwsteFilms = FilmMng.ReadFilms(FilmSortEnum.Release_Desc, 12),
                 Afleveringen = SerieMng.ReadAfleveringen(AfleveringSortEnum.Toegevoegd, 6),
