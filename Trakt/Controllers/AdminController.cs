@@ -452,7 +452,9 @@ namespace Trakt.Controllers
 
                         try
                         {
-                            serie.PosterPath = "https://thetvdb.com/banners/" + (string)json.SelectToken("data[0].fileName");
+                            var posterPath = (string)json.SelectToken("data").Max(t => t.SelectToken("ratingsInfo.average")).Parent.Parent.Parent.Parent.SelectToken("fileName");
+
+                            serie.PosterPath = "https://thetvdb.com/banners/" + posterPath;
                         }
                         catch (Exception) { }
                     }
