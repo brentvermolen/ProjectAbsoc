@@ -96,6 +96,7 @@ namespace DAL
         public void DeleteTag(int tag)
         {
             ctx.Tags.Remove(GetTag(tag));
+            ctx.SaveChanges();
         }
 
         public Tag GetTag(int id)

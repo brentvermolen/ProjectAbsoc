@@ -358,9 +358,9 @@ namespace Trakt.Controllers
         }
 
         [HttpPost]
-        public ActionResult VerwijderFilm(Film model)
+        public ActionResult VerwijderFilm(FilmDetailsViewModel model)
         {
-            FilmMng.RemoveFilm(model.ID);
+            FilmMng.RemoveFilm(model.Film.ID);
 
             return RedirectToAction("Index");
         }
