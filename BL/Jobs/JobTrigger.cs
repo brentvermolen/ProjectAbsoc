@@ -27,16 +27,27 @@ namespace BL.Jobs
 
             //scheduler.ScheduleJob(jobWeeklyReview, triggerWeeklyReview);
 
-            IJobDetail jobCleanActors = JobBuilder.Create<CleanActors>().Build();
-            ITrigger triggerCleanActors = TriggerBuilder.Create()
-                .WithIdentity("trigger2", "group2")
+            //IJobDetail jobCleanActors = JobBuilder.Create<CleanActors>().Build();
+            //ITrigger triggerCleanActors = TriggerBuilder.Create()
+            //    .WithIdentity("trigger2", "group2")
+            //    .StartNow()
+            //    .WithSimpleSchedule(x => x
+            //        .WithInterval(TimeSpan.FromDays(7))
+            //        .RepeatForever())
+            //    .Build();
+
+            //scheduler.ScheduleJob(jobCleanActors, triggerCleanActors);
+
+            IJobDetail jobStayOnline = JobBuilder.Create<StayOnline>().Build();
+            ITrigger triggerStayOnline = TriggerBuilder.Create()
+                .WithIdentity("trigger3", "group3")
                 .StartNow()
                 .WithSimpleSchedule(x => x
-                    .WithInterval(TimeSpan.FromDays(7))
+                    .WithInterval(TimeSpan.FromMinutes(2))
                     .RepeatForever())
                 .Build();
 
-            scheduler.ScheduleJob(jobCleanActors, triggerCleanActors);
+            scheduler.ScheduleJob(jobStayOnline, triggerStayOnline);
         }
     }
 }

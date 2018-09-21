@@ -25,7 +25,7 @@ namespace Absoc
             config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling
                         = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             
-            //JobTrigger.StartAsync();
+            JobTrigger.StartAsync();
         }
     }
 }
