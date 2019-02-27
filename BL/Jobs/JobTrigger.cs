@@ -38,16 +38,16 @@ namespace BL.Jobs
 
             //scheduler.ScheduleJob(jobCleanActors, triggerCleanActors);
 
-            IJobDetail jobStayOnline = JobBuilder.Create<StayOnline>().Build();
-            ITrigger triggerStayOnline = TriggerBuilder.Create()
-                .WithIdentity("trigger3", "group3")
-                .StartNow()
-                .WithSimpleSchedule(x => x
-                    .WithInterval(TimeSpan.FromMinutes(2))
-                    .RepeatForever())
-                .Build();
+            //IJobDetail jobStayOnline = JobBuilder.Create<StayOnline>().Build();
+            //ITrigger triggerStayOnline = TriggerBuilder.Create()
+            //    .WithIdentity("trigger3", "group3")
+            //    .StartNow()
+            //    .WithSimpleSchedule(x => x
+            //        .WithInterval(TimeSpan.FromMinutes(2))
+            //        .RepeatForever())
+            //    .Build();
 
-            scheduler.ScheduleJob(jobStayOnline, triggerStayOnline);
+            //scheduler.ScheduleJob(jobStayOnline, triggerStayOnline);
         }
     }
 }

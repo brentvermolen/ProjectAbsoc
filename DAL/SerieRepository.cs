@@ -41,7 +41,7 @@ namespace DAL
             switch (toegevoegd)
             {
                 default:
-                    return ctx.Afleveringen.OrderByDescending(a => a.Toegevoegd).ThenByDescending(a => a.Seizoen).ThenByDescending(a => a.Nummer).Take(top).ToList();
+                    return ctx.Afleveringen.OrderByDescending(a => a.Toegevoegd).ThenByDescending(s => s.SerieID).ThenByDescending(a => a.Seizoen).ThenByDescending(a => a.Nummer).Take(top).ToList();
             }
         }
 
